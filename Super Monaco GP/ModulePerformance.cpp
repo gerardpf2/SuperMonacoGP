@@ -1,8 +1,6 @@
 #include "ModulePerformance.h"
 
-#include <iostream>
-
-using namespace std;
+#include <stdio.h>
 
 ModulePerformance::ModulePerformance(GameEngine* gameEngine, bool active) :
 	Module(gameEngine, active)
@@ -20,9 +18,9 @@ bool ModulePerformance::update(float deltaTimeS)
 	{
 		printTimeS = 0.0f;
 
-		cout << "ModulePerformance::update" << endl;
-		cout << "\t(S) Current: " << deltaTimeS << ", Average: " << sumDeltaTimeS / updateTicks << endl;
-		cout << "\t(FPS) Current: " << 1.0f / deltaTimeS << ", Average: " << 1.0f / (sumDeltaTimeS / updateTicks) << endl;
+		printf("ModulePerformance::update\n");
+		printf("\t(S) Current: %.4f, Average: %.4f\n", deltaTimeS, sumDeltaTimeS / updateTicks);
+		printf("\t(FPS) Current: %.4f, Average: %.4f\n", 1.0f / deltaTimeS, 1.0f / (sumDeltaTimeS / updateTicks));
 	}
 
 	return true;
