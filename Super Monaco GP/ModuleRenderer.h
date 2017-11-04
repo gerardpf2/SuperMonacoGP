@@ -2,7 +2,10 @@
 #define _MODULE_RENDERER_
 
 #include "Module.h"
+#include "Globals.h"
 
+struct SDL_Rect;
+struct SDL_Color;
 struct SDL_Renderer;
 
 class ModuleRenderer : public Module
@@ -11,7 +14,7 @@ class ModuleRenderer : public Module
 
 		ModuleRenderer(GameEngine* gameEngine, bool active = true);
 
-		~ModuleRenderer();
+		virtual ~ModuleRenderer();
 
 		virtual bool setUp() override;
 
@@ -20,6 +23,10 @@ class ModuleRenderer : public Module
 		virtual bool postUpdate() override;
 
 		virtual void cleanUp() override;
+
+		void renderLine(const Position2i& position0, const Position2i& position1, const SDL_Color& color) const;
+
+		void renderRect(const SDL_Rect& rect, const SDL_Color& color) const;
 
 	private:
 

@@ -9,7 +9,7 @@ class ModulePerformance : public Module
 
 		ModulePerformance(GameEngine* gameEngine, bool active = true);
 
-		~ModulePerformance();
+		virtual ~ModulePerformance();
 
 		virtual bool update(float deltaTimeS) override;
 

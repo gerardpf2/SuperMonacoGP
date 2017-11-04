@@ -7,7 +7,7 @@ class Timer
 
 		Timer();
 
-		~Timer();
+		virtual ~Timer();
 
 		void start();
 

@@ -2,6 +2,8 @@
 
 #include <SDL.h>
 #include "Globals.h"
+#include "GameEngine.h"
+#include "ModuleInput.h"
 
 ModuleWindow::ModuleWindow(GameEngine* gameEngine, bool active) :
 	Module(gameEngine, active)
@@ -31,13 +33,8 @@ bool ModuleWindow::setUp()
 
 bool ModuleWindow::preUpdate()
 {
-	SDL_Event event;
-
-	while(SDL_PollEvent(&event))
-	{
-		if(event.type == SDL_QUIT) return false;
-		else if(event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) return false; //
-	}
+	if(getGameEngine()->getModuleInput()->getKeyPressed(SDL_SCANCODE_ESCAPE)) return false;
+	if(getGameEngine()->getModuleInput()->getWindowState() == WindowState::QUIT) return false;
 
 	return true;
 }

@@ -15,17 +15,16 @@ struct Tuple2
 };
 
 template<typename T>
-struct Tuple3 : public Tuple2<T>
+struct Tuple3
 {
-	Tuple3() :
-		Tuple2()
+	Tuple3()
 	{ }
 
 	Tuple3(T x, T y, T z) :
-		Tuple2(x, y), z(z)
+		x(x), y(y), z(z)
 	{ }
 
-	T z;
+	T x, y, z;
 };
 
 #endif

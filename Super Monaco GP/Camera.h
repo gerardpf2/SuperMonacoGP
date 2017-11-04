@@ -7,20 +7,25 @@ class Camera
 {
 	public:
 
-		Camera(const Position3f& position, float fieldOfView);
+		Camera();
 
-		~Camera();
+		virtual ~Camera();
+
+		const Position3f* getPosition() const;
+
+		void moveY(float incY);
+
+		void moveXZ(float incX, float incZ);
+
+		void follow(const Position3f& position);
 
 		void getPositionWorldToScreen(const Position3f& worldPosition, Position2i& screenPosition) const;
 
-	public:
-	// private:
-
-		Position3f position;
-
-		float fieldOfView;
+	private:
 
 		float depth;
+
+		Position3f position;
 };
 
 #endif

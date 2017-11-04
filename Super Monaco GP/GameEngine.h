@@ -7,6 +7,8 @@
 using namespace std;
 
 class Module;
+class ModuleInput;
+class ModuleWorld;
 class ModuleWindow;
 class ModuleRenderer;
 class ModulePerformance;
@@ -20,6 +22,10 @@ class GameEngine
 		virtual ~GameEngine();
 
 		void run();
+
+		ModuleInput* getModuleInput() const;
+
+		ModuleWorld* getModuleWorld() const;
 
 		ModuleWindow* getModuleWindow() const;
 
@@ -42,6 +48,10 @@ class GameEngine
 		Timer timer;
 
 		vector<Module*> modules;
+
+		ModuleInput* moduleInput = nullptr;
+
+		ModuleWorld* moduleWorld = nullptr;
 
 		ModuleWindow* moduleWindow = nullptr;
 

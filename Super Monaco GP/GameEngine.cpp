@@ -1,5 +1,7 @@
 #include "GameEngine.h"
 
+#include "ModuleInput.h"
+#include "ModuleWorld.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer.h"
 #include "ModulePerformance.h"
@@ -16,6 +18,16 @@ void GameEngine::run()
 		while(mainLoop());
 
 	cleanUp();
+}
+
+ModuleInput* GameEngine::getModuleInput() const
+{
+	return moduleInput;
+}
+
+ModuleWorld* GameEngine::getModuleWorld() const
+{
+	return moduleWorld;
 }
 
 ModuleWindow* GameEngine::getModuleWindow() const
@@ -35,8 +47,10 @@ ModulePerformance* GameEngine::getModulePerformance() const
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(3);
+	modules.reserve(4);
 
+	modules.push_back(moduleInput = new ModuleInput(this));
+	modules.push_back(moduleWorld = new ModuleWorld(this));
 	modules.push_back(moduleWindow = new ModuleWindow(this));
 	modules.push_back(moduleRenderer = new ModuleRenderer(this));
 	modules.push_back(modulePerformance = new ModulePerformance(this));
@@ -88,6 +102,8 @@ void GameEngine::cleanUp()
 
 	modules.clear();
 
+	moduleInput = nullptr;
+	moduleWorld = nullptr;
 	moduleWindow = nullptr;
 	moduleRenderer = nullptr;
 	modulePerformance = nullptr;
