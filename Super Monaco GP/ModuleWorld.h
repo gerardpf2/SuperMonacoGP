@@ -1,10 +1,14 @@
 #ifndef _MODULE_WORLD_
 #define _MODULE_WORLD_
 
+#include <vector>
 #include "Module.h"
+
+using namespace std;
 
 class Road;
 class Camera;
+class GameObject;
 
 class ModuleWorld : public Module
 {
@@ -16,11 +20,11 @@ class ModuleWorld : public Module
 
 		virtual bool setUp() override;
 
-		virtual bool preUpdate() override;
+		virtual bool preUpdate(float deltaTimeS) override;
 
 		virtual bool update(float deltaTimeS) override;
 
-		virtual bool postUpdate() override;
+		virtual bool postUpdate(float deltaTimeS) override;
 
 		virtual void cleanUp() override;
 
@@ -29,6 +33,8 @@ class ModuleWorld : public Module
 		Road* road = nullptr;
 
 		Camera* camera = nullptr;
+
+		vector<GameObject*> gameObjects;
 };
 
 #endif

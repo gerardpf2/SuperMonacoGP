@@ -31,7 +31,7 @@ bool ModuleWindow::setUp()
 	return true;
 }
 
-bool ModuleWindow::preUpdate()
+bool ModuleWindow::preUpdate(float deltaTimeS)
 {
 	if(getGameEngine()->getModuleInput()->getKeyPressed(SDL_SCANCODE_ESCAPE)) return false;
 	if(getGameEngine()->getModuleInput()->getWindowState() == WindowState::QUIT) return false;

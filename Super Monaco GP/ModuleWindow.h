@@ -15,7 +15,7 @@ class ModuleWindow : public Module
 
 		virtual bool setUp() override;
 
-		virtual bool preUpdate() override;
+		virtual bool preUpdate(float deltaTimeS) override;
 
 		virtual void cleanUp() override;
 

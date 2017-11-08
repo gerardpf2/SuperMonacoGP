@@ -1,31 +1,59 @@
 #include "Road.h"
 
-#include "Globals.h"
+#include "Camera.h"
 #include "Segment.h"
 
 Road::Road(float length)
 {
-	float zNear = 0.0f;
-	unsigned int nSegments = (unsigned int)ceilf(length / SEGMENT_LENGTH);
+	if(length < ROAD_MIN_LENGTH)
+		length = ROAD_MIN_LENGTH;
 
+	this->length = length;
+
+	unsigned int nSegments = (unsigned int)ceilf(length / SEGMENT_LENGTH);
 	segments.reserve(nSegments);
+
+	unsigned int colorIndex = 0;
+	unsigned int colors[2]{ BLACK, WHITE };
+
+	float currentZNear = 0.0f;
 
 	for(unsigned int i = 0; i < nSegments; ++i)
 	{
-		float zFar = zNear + SEGMENT_LENGTH;
+		Segment* segment = new Segment(currentZNear, colors[(colorIndex++) % 2]);
 
-		segments.push_back(new Segment(zNear, zFar));
-
-		zNear = zFar;
+		segments.push_back(segment);
+		currentZNear = segment->getZFar();
 	}
+
+	segments[0]->color = BLUE;
+	segments[segments.size() - 1]->color = GREEN;
 }
 
 Road::~Road()
 { }
 
-const Segment* Road::getSegmentAtZ(float z) const
+float Road::getLength() const
 {
-	return segments[(int)(z / SEGMENT_LENGTH) % segments.size()];
+	return length;
+}
+
+void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	float zOffset = 0.0f;
+	float zBase = camera->getBaseZ();
+	short maxScreenY = WINDOW_HEIGHT;
+
+	for(unsigned int i = 0; i < N_SEGMENTS_DRAW; ++i)
+	{
+		const Segment* segment = getSegmentAtZ(zBase);
+		
+		segment->render(zOffset, camera, moduleRenderer, maxScreenY);
+		
+		if(segment == segments[segments.size() - 1]) zOffset += length;
+
+		zBase += SEGMENT_LENGTH;
+	}
 }
 
 void Road::clear()
@@ -37,4 +65,9 @@ void Road::clear()
 	}
 
 	segments.clear();
+}
+
+const Segment* Road::getSegmentAtZ(float z) const
+{
+	return segments[(int)(z / SEGMENT_LENGTH) % segments.size()];
 }

@@ -3,29 +3,37 @@
 
 #include "Globals.h"
 
+class Road;
+
 class Camera
 {
 	public:
 
-		Camera();
-
 		virtual ~Camera();
 
-		const Position3f* getPosition() const;
+		virtual void update(float deltaTimeS);
 
-		void moveY(float incY);
+		float getBaseZ() const;
 
-		void moveXZ(float incX, float incZ);
+		bool getIsBehind(float z) const;
 
-		void follow(const Position3f& position);
+		void getPositionWorldToScreen(const Position3f& worldPosition, Position2s& screenPosition) const;
 
-		void getPositionWorldToScreen(const Position3f& worldPosition, Position2i& screenPosition) const;
+	protected:
 
-	private:
+		Camera(const Road* road);
+
+		void updateLimitZRoad();
+
+	protected:
 
 		float depth;
 
 		Position3f position;
+
+	private:
+
+		const Road* road;
 };
 
 #endif

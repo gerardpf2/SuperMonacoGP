@@ -16,7 +16,7 @@ bool ModuleInput::setUp()
 	return true;
 }
 
-bool ModuleInput::preUpdate()
+bool ModuleInput::preUpdate(float deltaTimeS)
 {
 	updateKeyStates();
 

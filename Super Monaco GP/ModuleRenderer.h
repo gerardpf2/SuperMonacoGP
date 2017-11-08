@@ -5,7 +5,6 @@
 #include "Globals.h"
 
 struct SDL_Rect;
-struct SDL_Color;
 struct SDL_Renderer;
 
 class ModuleRenderer : public Module
@@ -18,15 +17,17 @@ class ModuleRenderer : public Module
 
 		virtual bool setUp() override;
 
-		virtual bool preUpdate() override;
+		virtual bool preUpdate(float deltaTimeS) override;
 
-		virtual bool postUpdate() override;
+		virtual bool postUpdate(float deltaTimeS) override;
 
 		virtual void cleanUp() override;
 
-		void renderLine(const Position2i& position0, const Position2i& position1, const SDL_Color& color) const;
+		void renderRectangle(const SDL_Rect& rect, unsigned int color, bool filled = false) const;
 
-		void renderRect(const SDL_Rect& rect, const SDL_Color& color) const;
+		void renderLine(const Position2s& position0, const Position2s& position1, unsigned int color) const;
+
+		void renderTrapezoid(const Position2s& position0, const Position2s& position1, const Position2s& position2, const Position2s& position3, unsigned int color, bool filled = false) const;
 
 	private:
 

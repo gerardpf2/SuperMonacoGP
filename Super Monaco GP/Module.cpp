@@ -12,7 +12,7 @@ bool Module::setUp()
 	return true;
 }
 
-bool Module::preUpdate()
+bool Module::preUpdate(float deltaTimeS)
 {
 	return true;
 }
@@ -22,7 +22,7 @@ bool Module::update(float deltaTimeS)
 	return true;
 }
 
-bool Module::postUpdate()
+bool Module::postUpdate(float deltaTimeS)
 {
 	return true;
 }

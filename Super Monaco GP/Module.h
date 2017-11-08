@@ -11,11 +11,11 @@ class Module
 
 		virtual bool setUp();
 
-		virtual bool preUpdate();
+		virtual bool preUpdate(float deltaTimeS);
 
 		virtual bool update(float deltaTimeS);
 
-		virtual bool postUpdate();
+		virtual bool postUpdate(float deltaTimeS);
 
 		virtual void cleanUp();
 

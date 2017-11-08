@@ -1,8 +1,10 @@
 #include "ModuleWorld.h"
 
 #include "Road.h"
-#include "Camera.h"
 #include "GameEngine.h"
+#include "GameObject.h"
+#include "CameraFree.h"
+#include "CameraFollow.h"
 
 ModuleWorld::ModuleWorld(GameEngine* gameEngine, bool active) :
 	Module(gameEngine, active)
@@ -11,16 +13,9 @@ ModuleWorld::ModuleWorld(GameEngine* gameEngine, bool active) :
 ModuleWorld::~ModuleWorld()
 { }
 
-bool ModuleWorld::setUp()
-{
-	camera = new Camera();
-	road = new Road(1000.0f);
-
-	return true;
-}
-
 // Test ---
 
+#include <iostream>
 #include "ModuleInput.h"
 #include "ModuleRenderer.h"
 
@@ -29,7 +24,24 @@ float z = 0.0f;
 
 // --- Test
 
-bool ModuleWorld::preUpdate()
+bool ModuleWorld::setUp()
+{
+	road = new Road(20.0f);
+	camera = new CameraFollow(&z, road);
+	// camera = new CameraFree(road, getGameEngine()->getModuleInput());
+
+	// GameObjects ---
+
+	gameObjects.reserve(1);
+
+	gameObjects.push_back(new GameObject(50.0f, GREEN));
+
+	// --- GameObjects
+
+	return true;
+}
+
+bool ModuleWorld::preUpdate(float deltaTimeS)
 {
 	// Test ---
 
@@ -40,14 +52,9 @@ bool ModuleWorld::preUpdate()
 	if(moduleInput->getKeyPressed(SDL_SCANCODE_LEFT)) x -= 0.1f;
 	if(moduleInput->getKeyPressed(SDL_SCANCODE_RIGHT)) x += 0.1f;
 
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_W)) camera->moveY(0.1f);
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_S)) camera->moveY(-0.1f);
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_D)) camera->moveXZ(0.1f, 0.0f);
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_A)) camera->moveXZ(-0.1f, 0.0f);
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_E)) camera->moveXZ(0.0f, 0.1f);
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_Q)) camera->moveXZ(0.0f, -0.1f);
+	z = modF0ToL(z, road->getLength());
 
-	// camera->follow(Position3f{ x, 0.0f, z });
+	camera->update(deltaTimeS);
 
 	// --- Test
 
@@ -59,31 +66,42 @@ bool ModuleWorld::update(float deltaTimeS)
 	return true;
 }
 
-bool ModuleWorld::postUpdate()
+bool ModuleWorld::postUpdate(float deltaTimeS)
 {
+	road->render(camera, getGameEngine()->getModuleRenderer());
+
+	float zStart = modF0ToL(camera->getBaseZ(), road->getLength());
+
+	float zDrawn = 0.0f;
+	unsigned int index = 0;
+
+	for(unsigned int i = 0; i < (unsigned int)gameObjects.size(); ++i)
+	{
+		if(gameObjects[i]->getZ() >= zStart)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	while(false && zDrawn < DRAW_DISTANCE) //
+	{
+		float z = gameObjects[index++ % gameObjects.size()]->getZ();
+
+		// ...
+	}
+
 	// Test ---
 
-	Position2i p0, p1, p2, p3, p4, p5;
+	Position2s p0, p1;
 
 	camera->getPositionWorldToScreen(Position3f{ x, 0.0f, z }, p0);
 	camera->getPositionWorldToScreen(Position3f{ x, 5.0f, z }, p1);
 
-	camera->getPositionWorldToScreen(Position3f{ ROAD_MIN_X, 0.0f, camera->getPosition()->z + 0.1f }, p2);
-	camera->getPositionWorldToScreen(Position3f{ ROAD_MIN_X, 0.0f, 1000.0f }, p3);
-
-	camera->getPositionWorldToScreen(Position3f{ ROAD_MAX_X, 0.0f, camera->getPosition()->z + 0.1f }, p4);
-	camera->getPositionWorldToScreen(Position3f{ ROAD_MAX_X, 0.0f, 1000.0f }, p5);
-
 	ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
 
-	moduleRenderer->renderLine(p2, p3, WHITE);
-	moduleRenderer->renderLine(p4, p5, WHITE);
-
-	moduleRenderer->renderLine(Position2i{ 0, 240 }, Position2i{ 640, 240 }, WHITE);
-	moduleRenderer->renderLine(Position2i{ 320, 0 }, Position2i{ 320, 480 }, WHITE);
-
-	moduleRenderer->renderRect(SDL_Rect{ p0.x - 5, p0.y - 5, 10, 10 }, RED);
-	moduleRenderer->renderRect(SDL_Rect{ p1.x - 5, p1.y - 5, 10, 10 }, BLUE);
+	moduleRenderer->renderRectangle(SDL_Rect{ p0.x - 5, p0.y - 5, 10, 10 }, RED, true);
+	moduleRenderer->renderRectangle(SDL_Rect{ p1.x - 5, p1.y - 5, 10, 10 }, BLUE, true);
 
 	// --- Test
 
@@ -99,4 +117,12 @@ void ModuleWorld::cleanUp()
 
 	delete camera;
 	camera = nullptr;
+
+	for(int i = (int)gameObjects.size() - 1; i >= 0; --i)
+	{
+		delete gameObjects[i];
+		gameObjects[i] = nullptr;
+	}
+
+	gameObjects.clear();
 }

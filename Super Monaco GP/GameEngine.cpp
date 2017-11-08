@@ -47,7 +47,7 @@ ModulePerformance* GameEngine::getModulePerformance() const
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(4);
+	modules.reserve(5);
 
 	modules.push_back(moduleInput = new ModuleInput(this));
 	modules.push_back(moduleWorld = new ModuleWorld(this));
@@ -79,13 +79,13 @@ bool GameEngine::mainLoop()
 	bool mainLoop = true;
 
 	for(unsigned int i = 0; mainLoop && i < (unsigned int)modules.size(); ++i)
-		if(modules[i]->getActive()) mainLoop = modules[i]->preUpdate();
+		if(modules[i]->getActive()) mainLoop = modules[i]->preUpdate(deltaTimeS);
 
 	for(unsigned int i = 0; mainLoop && i < (unsigned int)modules.size(); ++i)
 		if(modules[i]->getActive()) mainLoop = modules[i]->update(deltaTimeS);
 
 	for(unsigned int i = 0; mainLoop && i < (unsigned int)modules.size(); ++i)
-		if(modules[i]->getActive()) mainLoop = modules[i]->postUpdate();
+		if(modules[i]->getActive()) mainLoop = modules[i]->postUpdate(deltaTimeS);
 
 	return mainLoop;
 }
