@@ -13,8 +13,8 @@
 #define CAMERA_FREE_SPEED_Y 10.0f
 #define CAMERA_FREE_SPEED_Z 10.0f
 
-#define SEGMENT_LENGTH 1.0f
-#define DRAW_DISTANCE 10.0f // 200.0f
+#define SEGMENT_LENGTH 0.5f
+#define DRAW_DISTANCE 200.0f
 #define N_SEGMENTS_DRAW (unsigned int)(DRAW_DISTANCE / SEGMENT_LENGTH)
 
 #define ROAD_WIDTH 20.0f
@@ -40,15 +40,8 @@ typedef Tuple3<float> Position3f;
 
 static float modF0ToL(float v, float l)
 {
-	v = fmodf(v, l);
-
-	if(v >= l) v -= l;
-	else if(v < 0.0f) v += l;
-
+	if((v = fmodf(v, l)) < 0.0f) v += l;
 	return v;
-
-	// if(v = fmodf(v, l) < 0.0f) v += l;
-	// return v;
 }
 
 #endif

@@ -15,20 +15,20 @@ ModuleWorld::~ModuleWorld()
 
 // Test ---
 
-#include <iostream>
+/* #include <iostream>
 #include "ModuleInput.h"
 #include "ModuleRenderer.h"
 
 float x = 0.0f;
-float z = 0.0f;
+float z = 0.0f; */
 
 // --- Test
 
 bool ModuleWorld::setUp()
 {
-	road = new Road(20.0f);
-	camera = new CameraFollow(&z, road);
-	// camera = new CameraFree(road, getGameEngine()->getModuleInput());
+	road = new Road();
+	// camera = new CameraFollow(&z, road);
+	camera = new CameraFree(road, getGameEngine()->getModuleInput());
 
 	// GameObjects ---
 
@@ -43,18 +43,18 @@ bool ModuleWorld::setUp()
 
 bool ModuleWorld::preUpdate(float deltaTimeS)
 {
+	camera->update(deltaTimeS);
+
 	// Test ---
 
-	ModuleInput* moduleInput = getGameEngine()->getModuleInput();
+	/* ModuleInput* moduleInput = getGameEngine()->getModuleInput();
 
 	if(moduleInput->getKeyPressed(SDL_SCANCODE_UP)) z += 0.1f;
 	if(moduleInput->getKeyPressed(SDL_SCANCODE_DOWN)) z -= 0.1f;
 	if(moduleInput->getKeyPressed(SDL_SCANCODE_LEFT)) x -= 0.1f;
 	if(moduleInput->getKeyPressed(SDL_SCANCODE_RIGHT)) x += 0.1f;
 
-	z = modF0ToL(z, road->getLength());
-
-	camera->update(deltaTimeS);
+	z = modF0ToL(z, road->getLength()); */
 
 	// --- Test
 
@@ -93,7 +93,7 @@ bool ModuleWorld::postUpdate(float deltaTimeS)
 
 	// Test ---
 
-	Position2s p0, p1;
+	/* Position2s p0, p1;
 
 	camera->getPositionWorldToScreen(Position3f{ x, 0.0f, z }, p0);
 	camera->getPositionWorldToScreen(Position3f{ x, 5.0f, z }, p1);
@@ -101,7 +101,7 @@ bool ModuleWorld::postUpdate(float deltaTimeS)
 	ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
 
 	moduleRenderer->renderRectangle(SDL_Rect{ p0.x - 5, p0.y - 5, 10, 10 }, RED, true);
-	moduleRenderer->renderRectangle(SDL_Rect{ p1.x - 5, p1.y - 5, 10, 10 }, BLUE, true);
+	moduleRenderer->renderRectangle(SDL_Rect{ p1.x - 5, p1.y - 5, 10, 10 }, BLUE, true); */
 
 	// --- Test
 

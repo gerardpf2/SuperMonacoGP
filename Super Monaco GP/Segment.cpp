@@ -3,12 +3,17 @@
 #include "Camera.h"
 #include "ModuleRenderer.h"
 
-Segment::Segment(float zNear, unsigned int color) :
-	zNear(zNear), zFar(zNear + SEGMENT_LENGTH), color(color)
+Segment::Segment(unsigned int index, float zNear, unsigned int color) :
+	index(index), zNear(zNear), zFar(zNear + SEGMENT_LENGTH), color(color)
 { }
 
 Segment::~Segment()
 { }
+
+unsigned int Segment::getIndex() const
+{
+	return index;
+}
 
 float Segment::getZNear() const
 {
@@ -20,14 +25,14 @@ float Segment::getZFar() const
 	return zFar;
 }
 
-void Segment::render(float offset, const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxScreenY) const
+void Segment::render(float xOffset, float dXOffset, float zOffset, const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxScreenY) const
 {
-	if(camera->getIsBehind(offset + zFar)) return;
+	if(camera->getIsBehind(zOffset + zFar)) return;
 
-	Position3f worldPositionNearLeft{ ROAD_MIN_X, 0.0f, offset + zNear };
-	Position3f worldPositionNearRight{ ROAD_MAX_X, 0.0f, offset + zNear };
-	Position3f worldPositionFarLeft{ ROAD_MIN_X, 0.0f, offset + zFar };
-	Position3f worldPositionFarRight{ ROAD_MAX_X, 0.0f, offset + zFar };
+	Position3f worldPositionNearLeft{ ROAD_MIN_X - xOffset, 0.0f, zOffset + zNear };
+	Position3f worldPositionNearRight{ ROAD_MAX_X - xOffset, 0.0f, zOffset + zNear };
+	Position3f worldPositionFarLeft{ ROAD_MIN_X - xOffset - dXOffset, 0.0f, zOffset + zFar };
+	Position3f worldPositionFarRight{ ROAD_MAX_X - xOffset - dXOffset, 0.0f, zOffset + zFar };
 
 	Position2s screenPositionNearLeft, screenPositionNearRight;
 	Position2s screenPositionFarLeft, screenPositionFarRight;
