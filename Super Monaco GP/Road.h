@@ -20,6 +20,10 @@ class Road
 
 		float getLength() const;
 
+		Segment* getSegmentAtZ(float z) const;
+
+		void addHill(float zStart, float enterLength, float holdLength, float leaveLength, float value) const;
+
 		void addCurve(float zStart, float enterLength, float holdLength, float leaveLength, float value) const;
 
 		void render(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
@@ -30,13 +34,17 @@ class Road
 
 		Segment* getSegment(int index) const;
 
-		Segment* getSegmentAtZ(float z) const;
+		void addHillEnter(unsigned int indexStart, unsigned int indexEnd, float enterLength, float value) const;
 
-		void addCurveEnter(unsigned int indexStart, unsigned int indexEnd, float value) const;
+		void addHillHold(unsigned int indexStart, unsigned int indexEnd, float holdLength, float value) const;
 
-		void addCurveHold(unsigned int indexStart, unsigned int indexEnd, float value) const;
+		void addHillLeave(unsigned int indexStart, unsigned int indexEnd, float leaveLength, float value) const;
 
-		void addCurveLeave(unsigned int indexStart, unsigned int indexEnd, float value) const;
+		void addCurveEnter(unsigned int indexStart, unsigned int indexEnd, float enterLength, float value) const;
+
+		void addCurveHold(unsigned int indexStart, unsigned int indexEnd, float holdLength, float value) const;
+
+		void addCurveLeave(unsigned int indexStart, unsigned int indexEnd, float leaveLength, float value) const;
 
 	private:
 

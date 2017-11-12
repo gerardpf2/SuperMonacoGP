@@ -17,8 +17,6 @@ class CameraFree : public Camera
 
 	private:
 
-		void moveY(float incY);
-
 		void moveZ(float incZ);
 
 	private:

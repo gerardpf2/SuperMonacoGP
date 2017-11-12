@@ -70,7 +70,7 @@ bool ModuleWorld::postUpdate(float deltaTimeS)
 {
 	road->render(camera, getGameEngine()->getModuleRenderer());
 
-	float zStart = modF0ToL(camera->getBaseZ(), road->getLength());
+	/* float zStart = modF0ToL(camera->getBaseZ(), road->getLength());
 
 	float zDrawn = 0.0f;
 	unsigned int index = 0;
@@ -89,7 +89,7 @@ bool ModuleWorld::postUpdate(float deltaTimeS)
 		float z = gameObjects[index++ % gameObjects.size()]->getZ();
 
 		// ...
-	}
+	} */
 
 	// Test ---
 

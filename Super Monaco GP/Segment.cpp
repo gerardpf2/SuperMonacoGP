@@ -29,10 +29,10 @@ void Segment::render(float xOffset, float dXOffset, float zOffset, const Camera*
 {
 	if(camera->getIsBehind(zOffset + zFar)) return;
 
-	Position3f worldPositionNearLeft{ ROAD_MIN_X - xOffset, 0.0f, zOffset + zNear };
-	Position3f worldPositionNearRight{ ROAD_MAX_X - xOffset, 0.0f, zOffset + zNear };
-	Position3f worldPositionFarLeft{ ROAD_MIN_X - xOffset - dXOffset, 0.0f, zOffset + zFar };
-	Position3f worldPositionFarRight{ ROAD_MAX_X - xOffset - dXOffset, 0.0f, zOffset + zFar };
+	Position3f worldPositionNearLeft{ ROAD_MIN_X - xOffset, yNear, zOffset + zNear };
+	Position3f worldPositionNearRight{ ROAD_MAX_X - xOffset, yNear, zOffset + zNear };
+	Position3f worldPositionFarLeft{ ROAD_MIN_X - xOffset - dXOffset, yFar, zOffset + zFar };
+	Position3f worldPositionFarRight{ ROAD_MAX_X - xOffset - dXOffset, yFar, zOffset + zFar };
 
 	Position2s screenPositionNearLeft, screenPositionNearRight;
 	Position2s screenPositionFarLeft, screenPositionFarRight;

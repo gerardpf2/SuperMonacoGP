@@ -31,6 +31,10 @@ class Segment
 		unsigned int color;
 
 		float dX = 0.0f;
+
+		float yNear = 0.0f;
+
+		float yFar = 0.0f;
 };
 
 #endif

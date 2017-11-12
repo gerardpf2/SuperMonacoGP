@@ -9,7 +9,7 @@ CameraFollow::~CameraFollow()
 
 void CameraFollow::update(float deltaTimeS)
 {
-	position.z = *followZ - position.y * depth;
+	// position.z = *followZ - position.y * depth;
 
 	updateLimitZRoad();
 }

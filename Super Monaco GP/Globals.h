@@ -5,12 +5,9 @@
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
+#define CAMERA_Y 5.0f
 #define CAMERA_FOV 90.0f
-#define CAMERA_MIN_Y 5.0f
-#define CAMERA_MAX_Y 15.0f
-#define CAMERA_INITIAL_Y (CAMERA_MIN_Y + CAMERA_MAX_Y) / 2.0f
 
-#define CAMERA_FREE_SPEED_Y 10.0f
 #define CAMERA_FREE_SPEED_Z 10.0f
 
 #define SEGMENT_LENGTH 0.5f
@@ -37,6 +34,17 @@ typedef Tuple2<short> Position2s;
 typedef Tuple3<float> Position3f;
 
 #include <math.h>
+
+static float degToRad(float d)
+{
+	return d * PI / 180.0f;
+}
+
+static int modI0ToL(int v, int l)
+{
+	if((v %= l) < 0) v += l;
+	return v;
+}
 
 static float modF0ToL(float v, float l)
 {

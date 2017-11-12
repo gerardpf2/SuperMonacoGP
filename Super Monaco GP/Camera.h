@@ -11,9 +11,11 @@ class Camera
 
 		virtual ~Camera();
 
+		const Position3f* getPosition() const;
+
 		virtual void update(float deltaTimeS);
 
-		float getBaseZ() const;
+		// float getBaseZ() const;
 
 		bool getIsBehind(float z) const;
 
@@ -27,11 +29,11 @@ class Camera
 
 	protected:
 
-		float depth;
-
 		Position3f position;
 
 	private:
+
+		float depth;
 
 		const Road* road;
 };

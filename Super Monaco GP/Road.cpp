@@ -26,22 +26,17 @@ Road::Road(float length)
 		currentZNear = segment->getZFar();
 	}
 
-	// segments[0]->color = BLUE;
-	// segments[segments.size() - 1]->color = GREEN;
+	segments[0]->color = GREEN;
+	segments[segments.size() - 1]->color = RED;
 
-	addCurve(10.0f, 10.0f, 10.0f, 10.0f, 0.05f);
+	addHill(10.0f, 20.0f, 10.0f, 20.0f, 10.0f);
+
+	addCurve(10.0f, 20.0f, 10.0f, 20.0f, 0.05f);
 
 	segments[getSegmentAtZ(10.0f)->getIndex()]->color = BLUE; // enter
-	segments[getSegmentAtZ(20.0f)->getIndex()]->color = BLUE; // hold
-	segments[getSegmentAtZ(30.0f)->getIndex()]->color = BLUE; // leave
-	segments[getSegmentAtZ(40.0f)->getIndex()]->color = BLUE; // exit
-
-	addCurve(40.0f, 10.0f, 10.0f, 10.0f, -0.05f);
-
-	segments[getSegmentAtZ(40.0f)->getIndex()]->color = GREEN; // enter
-	segments[getSegmentAtZ(50.0f)->getIndex()]->color = GREEN; // hold
-	segments[getSegmentAtZ(60.0f)->getIndex()]->color = GREEN; // leave
-	segments[getSegmentAtZ(70.0f)->getIndex()]->color = GREEN; // exit
+	segments[getSegmentAtZ(30.0f)->getIndex()]->color = BLUE; // hold
+	segments[getSegmentAtZ(40.0f)->getIndex()]->color = BLUE; // leave
+	segments[getSegmentAtZ(60.0f)->getIndex()]->color = BLUE; // exit
 }
 
 Road::~Road()
@@ -50,6 +45,28 @@ Road::~Road()
 float Road::getLength() const
 {
 	return length;
+}
+
+Segment* Road::getSegmentAtZ(float z) const
+{
+	return getSegment((int)(z / SEGMENT_LENGTH));
+}
+
+void Road::addHill(float zStart, float enterLength, float holdLength, float leaveLength, float value) const
+{
+	float zEnter = zStart;
+	float zHold = zEnter + enterLength;
+	float zLeave = zHold + holdLength;
+	float zExit = zLeave + leaveLength;
+
+	unsigned int indexEnter = getSegmentAtZ(zEnter)->getIndex();
+	unsigned int indexHold = getSegmentAtZ(zHold)->getIndex();
+	unsigned int indexLeave = getSegmentAtZ(zLeave)->getIndex();
+	unsigned int indexExit = getSegmentAtZ(zExit)->getIndex();
+
+	addHillEnter(indexEnter, indexHold, enterLength, value);
+	addHillHold(indexHold, indexLeave, holdLength, value);
+	addHillLeave(indexLeave, indexExit, leaveLength, value);
 }
 
 void Road::addCurve(float zStart, float enterLength, float holdLength, float leaveLength, float value) const
@@ -64,16 +81,17 @@ void Road::addCurve(float zStart, float enterLength, float holdLength, float lea
 	unsigned int indexLeave = getSegmentAtZ(zLeave)->getIndex();
 	unsigned int indexExit = getSegmentAtZ(zExit)->getIndex();
 
-	addCurveEnter(indexEnter, indexHold, value);
-	addCurveHold(indexHold, indexLeave, value);
-	addCurveLeave(indexLeave, indexExit, value);
+	addCurveEnter(indexEnter, indexHold, enterLength, value);
+	addCurveHold(indexHold, indexLeave, holdLength, value);
+	addCurveLeave(indexLeave, indexExit, leaveLength, value);
 }
 
 void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	float zOffset = 0.0f;
-	float zBase = camera->getBaseZ();
 	short maxScreenY = WINDOW_HEIGHT;
+
+	float zOffset = 0.0f;
+	float zBase = camera->getPosition()->z;
 
 	Segment* segment = getSegmentAtZ(zBase);
 
@@ -106,57 +124,76 @@ void Road::clear()
 
 Segment* Road::getSegment(int index) const
 {
-	return segments[index % segments.size()];
+	return segments[modI0ToL(index, segments.size())];
 }
 
-Segment* Road::getSegmentAtZ(float z) const
-{
-	return getSegment((int)(z / SEGMENT_LENGTH));
-}
-
-float easeIn(float a, float b, float percent)
-{
-	return a + (b - a) * powf(percent, 2.0f);
-}
-
-float easeOut(float a, float b, float percent)
-{
-	return a + (b - a) * (1.0f - powf(1.0f - percent, 2.0f));
-}
-
-/* float easeOut(float a, float b, float percent)
+float ease(float a, float b, float percent)
 {
 	return a + (b - a) * ((-cos(percent * PI) / 2.0f) + 0.5f);
-} */
-
-void Road::addCurveEnter(unsigned int indexStart, unsigned int indexEnd, float value) const
-{
-	float c = 0.0f;
-	unsigned int nSegments;
-
-	if(indexStart < indexEnd) nSegments = indexEnd - indexStart;
-	else if(indexStart > indexEnd) nSegments = (unsigned int)segments.size() - indexStart + indexEnd;
-	else nSegments = segments.size();
-
-	for(unsigned int i = indexStart; i != indexEnd; ++i, ++c)
-		getSegment(i)->dX += easeIn(0.0f, value, c / nSegments);
 }
 
-void Road::addCurveHold(unsigned int indexStart, unsigned int indexEnd, float value) const
+void Road::addHillEnter(unsigned int indexStart, unsigned int indexEnd, float enterLength, float value) const
+{
+	float c = 0.0f;
+	float nSegments = enterLength / SEGMENT_LENGTH;
+
+	for(unsigned int i = indexStart; i != indexEnd; ++i, ++c)
+	{
+		Segment* segment = getSegment(i);
+
+		segment->yNear = getSegment((int)segment->getIndex() - 1)->yFar;
+		segment->yFar = ease(0.0f, value, c / nSegments);
+	}
+}
+
+void Road::addHillHold(unsigned int indexStart, unsigned int indexEnd, float holdLength, float value) const
+{
+	float c = 0.0f;
+	float nSegments = holdLength / SEGMENT_LENGTH;
+
+	for(unsigned int i = indexStart; i != indexEnd; ++i, ++c)
+	{
+		Segment* segment = getSegment(i);
+
+		segment->yNear = getSegment((int)segment->getIndex() - 1)->yFar;
+		segment->yFar = ease(segment->yNear, value, c / nSegments);
+	}
+}
+
+void Road::addHillLeave(unsigned int indexStart, unsigned int indexEnd, float leaveLength, float value) const
+{
+	float c = 0.0f;
+	float nSegments = leaveLength / SEGMENT_LENGTH;
+
+	for(unsigned int i = indexStart; i != indexEnd; ++i, ++c)
+	{
+		Segment* segment = getSegment(i);
+
+		segment->yNear = getSegment((int)segment->getIndex() - 1)->yFar;
+		segment->yFar = ease(value, 0.0f, c / nSegments);
+	}
+}
+
+void Road::addCurveEnter(unsigned int indexStart, unsigned int indexEnd, float enterLength, float value) const
+{
+	float c = 0.0f;
+	float nSegments = enterLength / SEGMENT_LENGTH;
+
+	for(unsigned int i = indexStart; i != indexEnd; ++i, ++c)
+		getSegment(i)->dX = ease(0.0f, value, c / nSegments);
+}
+
+void Road::addCurveHold(unsigned int indexStart, unsigned int indexEnd, float holdLength, float value) const
 {
 	for(unsigned int i = indexStart; i != indexEnd; ++i)
-		getSegment(i)->dX += value;
+		getSegment(i)->dX = value;
 }
 
-void Road::addCurveLeave(unsigned int indexStart, unsigned int indexEnd, float value) const
+void Road::addCurveLeave(unsigned int indexStart, unsigned int indexEnd, float leaveLength, float value) const
 {
 	float c = 0.0f;
-	unsigned int nSegments;
-
-	if(indexStart < indexEnd) nSegments = indexEnd - indexStart;
-	else if(indexStart > indexEnd) nSegments = (unsigned int)segments.size() - indexStart + indexEnd;
-	else nSegments = segments.size();
+	float nSegments = leaveLength / SEGMENT_LENGTH;
 
 	for(unsigned int i = indexStart; i != indexEnd; ++i, ++c)
-		getSegment(i)->dX += easeOut(value, 0.0f, c / nSegments);
+		getSegment(i)->dX = ease(value, 0.0f, c / nSegments);
 }
