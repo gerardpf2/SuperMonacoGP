@@ -42,8 +42,15 @@ void Segment::render(float xOffset, float dXOffset, float zOffset, const Camera*
 	camera->getPositionWorldToScreen(worldPositionFarLeft, screenPositionFarLeft);
 	camera->getPositionWorldToScreen(worldPositionFarRight, screenPositionFarRight);
 
-	if(screenPositionFarLeft.y >= maxScreenY) return;
-	maxScreenY = screenPositionFarLeft.y;
+	if(screenPositionFarLeft.second >= maxScreenY) return;
+	maxScreenY = screenPositionFarLeft.second;
+
+	if(screenPositionNearRight.first <= 0 && screenPositionFarRight.first <= 0) return;
+	if(screenPositionNearLeft.first >= WINDOW_WIDTH && screenPositionFarLeft.first >= WINDOW_WIDTH) return;
+
+	if(screenPositionNearLeft.second <= 0 || screenPositionFarLeft.second >= WINDOW_HEIGHT) return;
+
+	if(screenPositionNearLeft.second <= screenPositionFarLeft.second) return;
 
 	moduleRenderer->renderTrapezoid(screenPositionNearLeft, screenPositionNearRight, screenPositionFarRight, screenPositionFarLeft, color, true);
 }

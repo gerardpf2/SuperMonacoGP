@@ -21,35 +21,9 @@
 
 #define PI 3.14159265358979323846f
 
-// 0XAABBGGRR
-#define RED 0xFF0000FF
-#define BLUE 0xFFFF0000
-#define GREEN 0xFF00FF00
-#define WHITE 0xFFFFFFFF
-#define BLACK 0xFF000000
-
 #include "Tuple.h"
 
-typedef Tuple2<short> Position2s;
-typedef Tuple3<float> Position3f;
-
-#include <math.h>
-
-static float degToRad(float d)
-{
-	return d * PI / 180.0f;
-}
-
-static int modI0ToL(int v, int l)
-{
-	if((v %= l) < 0) v += l;
-	return v;
-}
-
-static float modF0ToL(float v, float l)
-{
-	if((v = fmodf(v, l)) < 0.0f) v += l;
-	return v;
-}
+typedef Tuple2<short, short> Position2s;
+typedef Tuple3<float, float, float> Position3f;
 
 #endif

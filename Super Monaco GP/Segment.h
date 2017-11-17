@@ -1,7 +1,12 @@
 #ifndef _SEGMENT_
 #define _SEGMENT_
 
+#include <vector>
+
+using namespace std;
+
 class Camera;
+class GameObject;
 class ModuleRenderer;
 
 class Segment
@@ -35,6 +40,10 @@ class Segment
 		float yNear = 0.0f;
 
 		float yFar = 0.0f;
+
+		short clipY;
+
+		vector<GameObject*> gameObjects;
 };
 
 #endif

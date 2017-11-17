@@ -1,30 +1,33 @@
 #ifndef _TUPLE_
 #define _TUPLE_
 
-template<typename T>
+template<typename T0, typename T1>
 struct Tuple2
 {
 	Tuple2()
 	{ }
 
-	Tuple2(T x, T y) :
-		x(x), y(y)
+	Tuple2(T0 first, T1 second) :
+		first(first), second(secondy)
 	{ }
 
-	T x, y;
+	T0 first;
+	T1 second;
 };
 
-template<typename T>
+template<typename T0, typename T1, typename T2>
 struct Tuple3
 {
 	Tuple3()
 	{ }
 
-	Tuple3(T x, T y, T z) :
-		x(x), y(y), z(z)
+	Tuple3(T0 first, T1 second, T2 third) :
+		first(first), second(second), third(third)
 	{ }
 
-	T x, y, z;
+	T0 first;
+	T1 second;
+	T2 third;
 };
 
 #endif

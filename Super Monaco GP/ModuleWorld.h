@@ -8,6 +8,7 @@ using namespace std;
 
 class Road;
 class Camera;
+class Player;
 class GameObject;
 
 class ModuleWorld : public Module
@@ -30,9 +31,21 @@ class ModuleWorld : public Module
 
 	private:
 
+		void addGameObject(GameObject* gameObject);
+
+		// GameObject* getGameObject(int index) const;
+
+		// int getGameObjectIndexAt(float z) const;
+
+		// void getGameObjectIndicesAt(float z0, float z1, int& index0, int& index1) const;
+
+	private:
+
 		Road* road = nullptr;
 
 		Camera* camera = nullptr;
+
+		// Player* player = nullptr;
 
 		vector<GameObject*> gameObjects;
 };

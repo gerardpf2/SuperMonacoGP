@@ -1,7 +1,10 @@
 #include "Road.h"
 
+#include "Utils.h"
+#include "Colors.h"
 #include "Camera.h"
 #include "Segment.h"
+#include "GameObject.h"
 
 Road::Road(float length)
 {
@@ -10,7 +13,9 @@ Road::Road(float length)
 
 	this->length = length;
 
-	unsigned int nSegments = (unsigned int)ceilf(length / SEGMENT_LENGTH);
+	// this->length = 40.0f; //
+
+	unsigned int nSegments = (unsigned int)ceilf(this->length / SEGMENT_LENGTH);
 	segments.reserve(nSegments);
 
 	unsigned int colorIndex = 0;
@@ -33,10 +38,19 @@ Road::Road(float length)
 
 	addCurve(10.0f, 20.0f, 10.0f, 20.0f, 0.05f);
 
+	addHill(70.0f, 20.0f, 10.0f, 20.0f, -10.0f);
+
+	addCurve(70.0f, 20.0f, 10.0f, 20.0f, -0.05f);
+
 	segments[getSegmentAtZ(10.0f)->getIndex()]->color = BLUE; // enter
 	segments[getSegmentAtZ(30.0f)->getIndex()]->color = BLUE; // hold
 	segments[getSegmentAtZ(40.0f)->getIndex()]->color = BLUE; // leave
 	segments[getSegmentAtZ(60.0f)->getIndex()]->color = BLUE; // exit
+
+	segments[getSegmentAtZ(70.0f)->getIndex()]->color = YELLOW; // enter
+	segments[getSegmentAtZ(90.0f)->getIndex()]->color = YELLOW; // hold
+	segments[getSegmentAtZ(100.0f)->getIndex()]->color = YELLOW; // leave
+	segments[getSegmentAtZ(120.0f)->getIndex()]->color = YELLOW; // exit
 }
 
 Road::~Road()
@@ -91,7 +105,7 @@ void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) co
 	short maxScreenY = WINDOW_HEIGHT;
 
 	float zOffset = 0.0f;
-	float zBase = camera->getPosition()->z;
+	float zBase = camera->getPosition()->third;
 
 	Segment* segment = getSegmentAtZ(zBase);
 
@@ -100,14 +114,50 @@ void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) co
 
 	for(unsigned int i = 0; i < N_SEGMENTS_DRAW; ++i)
 	{
+		segment->clipY = maxScreenY;
 		segment->render(x, dX, zOffset, camera, moduleRenderer, maxScreenY);
-		
+
 		if(segment->getIndex() == (unsigned int)(segments.size() - 1)) zOffset += length;
 
 		x += dX;
 		dX += segment->dX;
 
 		segment = getSegment(segment->getIndex() + 1);
+	}
+
+	// GameObjects
+
+	zOffset = 0.0f;
+	zBase = camera->getPosition()->third;
+
+	segment = getSegmentAtZ(zBase);
+
+	x = 0.0f;
+	dX = segment->dX - segment->dX * fmodf(zBase, SEGMENT_LENGTH) / SEGMENT_LENGTH;
+
+	for(int i = (int)N_SEGMENTS_DRAW - 1; i >= 0; --i)
+	{
+		for(unsigned int i = 0; i < (unsigned int)segment->gameObjects.size(); ++i)
+		{
+			segment->gameObjects[i]->render(x, zOffset, camera, moduleRenderer, segment->clipY);
+		}
+
+		if(segment->getIndex() == (unsigned int)(segments.size() - 1)) zOffset += length;
+
+		x += dX;
+		dX += segment->dX;
+
+		segment = getSegment(segment->getIndex() + 1);
+
+		/* segment->clipY = maxScreenY;
+		segment->render(x, dX, zOffset, camera, moduleRenderer, maxScreenY);
+
+		if(segment->getIndex() == (unsigned int)(segments.size() - 1)) zOffset += length;
+
+		x += dX;
+		dX += segment->dX;
+
+		segment = getSegment(segment->getIndex() + 1); */
 	}
 }
 
@@ -125,11 +175,6 @@ void Road::clear()
 Segment* Road::getSegment(int index) const
 {
 	return segments[modI0ToL(index, segments.size())];
-}
-
-float ease(float a, float b, float percent)
-{
-	return a + (b - a) * ((-cos(percent * PI) / 2.0f) + 0.5f);
 }
 
 void Road::addHillEnter(unsigned int indexStart, unsigned int indexEnd, float enterLength, float value) const

@@ -131,6 +131,7 @@
     <ClCompile Include="ModuleRenderer.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleWorld.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Road.cpp" />
     <ClCompile Include="Segment.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFollow.h" />
     <ClInclude Include="CameraFree.h" />
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
@@ -148,10 +150,12 @@
     <ClInclude Include="ModuleRenderer.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleWorld.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Road.h" />
     <ClInclude Include="Segment.h" />
     <ClInclude Include="Tuple.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

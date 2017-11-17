@@ -1,0 +1,12 @@
+#ifndef _COLORS_
+#define _COLORS_
+
+// 0XAABBGGRR
+#define RED 0xFF0000FF
+#define BLUE 0xFFFF0000
+#define GREEN 0xFF00FF00
+#define WHITE 0xFFFFFFFF
+#define BLACK 0xFF000000
+#define YELLOW 0xFF00FFFF
+
+#endif

@@ -29,13 +29,13 @@ class Camera
 
 	protected:
 
+		float depth;
+
 		Position3f position;
 
 	private:
 
-		float depth;
-
-		const Road* road;
+		const Road* road = nullptr;
 };
 
 #endif

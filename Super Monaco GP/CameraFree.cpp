@@ -13,13 +13,15 @@ void CameraFree::update(float deltaTimeS)
 {
 	Camera::update(deltaTimeS);
 
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_W)) moveZ(deltaTimeS * CAMERA_FREE_SPEED_Z);
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_S)) moveZ(deltaTimeS * -CAMERA_FREE_SPEED_Z);
+	speedMultiplier = moduleInput->getKeyPressed(SDL_SCANCODE_SPACE) ? 5.0f : 1.0f;
+
+	if(moduleInput->getKeyPressed(SDL_SCANCODE_W)) moveZ(deltaTimeS * speedMultiplier * CAMERA_FREE_SPEED_Z);
+	if(moduleInput->getKeyPressed(SDL_SCANCODE_S)) moveZ(deltaTimeS * speedMultiplier * -CAMERA_FREE_SPEED_Z);
 }
 
 void CameraFree::moveZ(float incZ)
 {
-	position.z += incZ;
+	position.third += incZ;
 
 	updateLimitZRoad();
 }

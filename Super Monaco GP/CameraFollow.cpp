@@ -1,7 +1,7 @@
 #include "CameraFollow.h"
 
-CameraFollow::CameraFollow(const float* followZ, const Road* road) :
-	Camera(road), followZ(followZ)
+CameraFollow::CameraFollow(const Position3f* followPosition, const Road* road) :
+	Camera(road), followPosition(followPosition)
 { }
 
 CameraFollow::~CameraFollow()
@@ -9,7 +9,10 @@ CameraFollow::~CameraFollow()
 
 void CameraFollow::update(float deltaTimeS)
 {
-	// position.z = *followZ - position.y * depth;
+	Camera::update(deltaTimeS);
+
+	position.first = followPosition->first;
+	position.third = followPosition->third - position.second * depth;
 
 	updateLimitZRoad();
 }

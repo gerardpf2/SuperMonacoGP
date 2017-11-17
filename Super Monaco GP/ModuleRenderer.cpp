@@ -55,13 +55,13 @@ void ModuleRenderer::renderRectangle(const SDL_Rect& rect, unsigned int color, b
 
 void ModuleRenderer::renderLine(const Position2s& position0, const Position2s& position1, unsigned int color) const
 {
-	lineColor(renderer, position0.x, position0.y, position1.x, position1.y, color);
+	lineColor(renderer, position0.first, position0.second, position1.first, position1.second, color);
 }
 
 void ModuleRenderer::renderTrapezoid(const Position2s& position0, const Position2s& position1, const Position2s& position2, const Position2s& position3, unsigned int color, bool filled) const
 {
-	short positionsX[4]{ position0.x, position1.x, position2.x, position3.x };
-	short positionsY[4]{ position0.y, position1.y, position2.y, position3.y };
+	short positionsX[4]{ position0.first, position1.first, position2.first, position3.first };
+	short positionsY[4]{ position0.second, position1.second, position2.second, position3.second };
 
 	if(filled) filledPolygonColor(renderer, positionsX, positionsY, 4, color);
 	else polygonColor(renderer, positionsX, positionsY, 4, color);
