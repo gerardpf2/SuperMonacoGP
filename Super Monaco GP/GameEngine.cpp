@@ -1,8 +1,10 @@
 #include "GameEngine.h"
 
+#include "ModuleJson.h"
 #include "ModuleInput.h"
 #include "ModuleWorld.h"
 #include "ModuleWindow.h"
+#include "ModuleTexture.h"
 #include "ModuleRenderer.h"
 #include "ModulePerformance.h"
 
@@ -20,6 +22,11 @@ void GameEngine::run()
 	cleanUp();
 }
 
+ModuleJson* GameEngine::getModuleJson() const
+{
+	return moduleJson;
+}
+
 ModuleInput* GameEngine::getModuleInput() const
 {
 	return moduleInput;
@@ -35,6 +42,11 @@ ModuleWindow* GameEngine::getModuleWindow() const
 	return moduleWindow;
 }
 
+ModuleTexture* GameEngine::getModuleTexture() const
+{
+	return moduleTexture;
+}
+
 ModuleRenderer* GameEngine::getModuleRenderer() const
 {
 	return moduleRenderer;
@@ -47,13 +59,16 @@ ModulePerformance* GameEngine::getModulePerformance() const
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(5);
+	modules.reserve(7);
 
+	modules.push_back(moduleJson = new ModuleJson(this));
 	modules.push_back(moduleInput = new ModuleInput(this));
-	modules.push_back(moduleWorld = new ModuleWorld(this));
 	modules.push_back(moduleWindow = new ModuleWindow(this));
 	modules.push_back(moduleRenderer = new ModuleRenderer(this));
+	modules.push_back(moduleTexture = new ModuleTexture(this));
 	modules.push_back(modulePerformance = new ModulePerformance(this));
+
+	modules.push_back(moduleWorld = new ModuleWorld(this));
 }
 
 bool GameEngine::setUp()
@@ -102,9 +117,11 @@ void GameEngine::cleanUp()
 
 	modules.clear();
 
+	moduleJson = nullptr;
 	moduleInput = nullptr;
 	moduleWorld = nullptr;
 	moduleWindow = nullptr;
+	moduleTexture = nullptr;
 	moduleRenderer = nullptr;
 	modulePerformance = nullptr;
 }

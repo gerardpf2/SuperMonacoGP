@@ -7,7 +7,7 @@ class CameraFollow : public Camera
 {
 	public:
 
-		CameraFollow(const Position3f* followPosition, const Road* road);
+		CameraFollow(const WorldPosition* followPosition, const Road* road);
 
 		virtual ~CameraFollow();
 
@@ -15,7 +15,7 @@ class CameraFollow : public Camera
 
 	private:
 
-		const Position3f* followPosition;
+		const WorldPosition* followPosition;
 };
 
 #endif

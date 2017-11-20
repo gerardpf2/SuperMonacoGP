@@ -9,7 +9,7 @@ class Player : public GameObject
 {
 	public:
 
-		Player(const Position3f& position, const Road* road, const ModuleInput* moduleInput);
+		Player(const WorldPosition& position, const Road* road, const ModuleInput* moduleInput);
 
 		virtual ~Player();
 

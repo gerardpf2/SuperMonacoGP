@@ -1,21 +1,25 @@
 #ifndef _GAME_OBJECT_
 #define _GAME_OBJECT_
 
-#include "Globals.h"
+#include "Types.h"
+#include <SDL_rect.h>
 
 class Road;
 class Camera;
 class ModuleRenderer;
 
+// struct SDL_Texture;
+
 class GameObject
 {
 	public:
 
-		GameObject(const Position3f& position, const Road* road); //
+		GameObject(const WorldPosition& position, const Road* road, TextureInfo& textureInfo); //
+		// GameObject(const WorldPosition& position, const Road* road, SDL_Texture* texture, SDL_Rect& textureRect); //
 
 		virtual ~GameObject();
 
-		const Position3f* getPosition() const;
+		const WorldPosition* getPosition() const;
 
 		void elevate(float incY);
 
@@ -25,17 +29,25 @@ class GameObject
 
 	protected:
 
-		// GameObject(const Position3f& position, const Road* road);
+		// GameObject(const WorldPosition& position, const Road* road);
 
 		void updateLimitZRoad();
 
 	protected:
 
-		Position3f position;
+		WorldPosition position;
 
 	private:
 
 		const Road* road = nullptr;
+
+		TextureInfo textureInfo;
+
+		// SDL_Texture* texture;
+
+		// SDL_Rect textureRect;
+
+		Size size;
 };
 
 #endif

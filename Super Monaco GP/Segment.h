@@ -2,6 +2,7 @@
 #define _SEGMENT_
 
 #include <vector>
+#include "Types.h"
 
 using namespace std;
 
@@ -13,7 +14,7 @@ class Segment
 {
 	public:
 
-		Segment(unsigned int index, float zNear, unsigned int color);
+		Segment(unsigned int index, float zNear /* , unsigned int color */);
 
 		virtual ~Segment();
 
@@ -33,7 +34,11 @@ class Segment
 
 	public: //
 
-		unsigned int color;
+		// unsigned int color;
+
+		// unsigned int color0, color1, color2, color3, color4;
+
+		RumbleColors* rumbleColors;
 
 		float dX = 0.0f;
 
@@ -44,6 +49,8 @@ class Segment
 		short clipY;
 
 		vector<GameObject*> gameObjects;
+
+		float xOffset, zOffset;
 };
 
 #endif

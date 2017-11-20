@@ -1,5 +1,6 @@
 #include "CameraFree.h"
 
+#include "Globals.h"
 #include "ModuleInput.h"
 
 CameraFree::CameraFree(const Road* road, const ModuleInput* moduleInput) :

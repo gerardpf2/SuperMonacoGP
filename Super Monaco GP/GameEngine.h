@@ -7,9 +7,11 @@
 using namespace std;
 
 class Module;
+class ModuleJson;
 class ModuleInput;
 class ModuleWorld;
 class ModuleWindow;
+class ModuleTexture;
 class ModuleRenderer;
 class ModulePerformance;
 
@@ -23,11 +25,15 @@ class GameEngine
 
 		void run();
 
+		ModuleJson* getModuleJson() const;
+
 		ModuleInput* getModuleInput() const;
 
 		ModuleWorld* getModuleWorld() const;
 
 		ModuleWindow* getModuleWindow() const;
+
+		ModuleTexture* getModuleTexture() const;
 
 		ModuleRenderer* getModuleRenderer() const;
 
@@ -49,11 +55,15 @@ class GameEngine
 
 		vector<Module*> modules;
 
+		ModuleJson* moduleJson = nullptr;
+
 		ModuleInput* moduleInput = nullptr;
 
 		ModuleWorld* moduleWorld = nullptr;
 
 		ModuleWindow* moduleWindow = nullptr;
+
+		ModuleTexture* moduleTexture = nullptr;
 
 		ModuleRenderer* moduleRenderer = nullptr;
 

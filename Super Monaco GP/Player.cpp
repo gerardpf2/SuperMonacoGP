@@ -3,8 +3,8 @@
 #include "Road.h"
 #include "ModuleInput.h"
 
-Player::Player(const Position3f& position, const Road* road, const ModuleInput* moduleInput) :
-	GameObject(position, road), moduleInput(moduleInput)
+Player::Player(const WorldPosition& position, const Road* road, const ModuleInput* moduleInput) :
+	GameObject(position, road, TextureInfo{}), moduleInput(moduleInput)
 { }
 
 Player::~Player()

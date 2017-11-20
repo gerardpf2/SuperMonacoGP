@@ -19,7 +19,7 @@ Camera::Camera(const Road* road) :
 Camera::~Camera()
 { }
 
-const Position3f* Camera::getPosition() const
+const WorldPosition* Camera::getPosition() const
 {
 	return &position;
 }
@@ -43,12 +43,20 @@ bool Camera::getIsBehind(float z) const
 	return z - position.third <= depth;
 }
 
-void Camera::getPositionWorldToScreen(const Position3f& worldPosition, Position2s& screenPosition) const
+void Camera::project(const WorldPosition& worldPosition, ScreenPosition& screenPosition) const
 {
 	float scale = depth / (worldPosition.third - position.third);
 
 	screenPosition.first = (short)roundf((WINDOW_WIDTH / 2.0f) + (WINDOW_WIDTH / 2.0f) * scale * (worldPosition.first - position.first));
 	screenPosition.second = (short)roundf((WINDOW_HEIGHT / 2.0f) - (WINDOW_HEIGHT / 2.0f) * scale * (worldPosition.second - position.second));
+}
+
+void Camera::project(const WorldPosition& worldPositionBL, const WorldPosition& worldPositionBR, const WorldPosition& worldPositionUR, const WorldPosition& worldPositionUL, ScreenPosition& screenPositionBL, ScreenPosition& screenPositionBR, ScreenPosition& screenPositionUR, ScreenPosition& screenPositionUL) const
+{
+	project(worldPositionBL, screenPositionBL);
+	project(worldPositionBR, screenPositionBR);
+	project(worldPositionUR, screenPositionUR);
+	project(worldPositionUL, screenPositionUL);
 }
 
 void Camera::updateLimitZRoad()

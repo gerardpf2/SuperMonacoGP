@@ -1,6 +1,6 @@
 #include "CameraFollow.h"
 
-CameraFollow::CameraFollow(const Position3f* followPosition, const Road* road) :
+CameraFollow::CameraFollow(const WorldPosition* followPosition, const Road* road) :
 	Camera(road), followPosition(followPosition)
 { }
 

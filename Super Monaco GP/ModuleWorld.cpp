@@ -8,7 +8,9 @@
 #include "GameObject.h"
 #include "GameEngine.h"
 #include "CameraFree.h"
+#include "ModuleJson.h"
 #include "CameraFollow.h"
+#include "ModuleTexture.h"
 
 ModuleWorld::ModuleWorld(GameEngine* gameEngine, bool active) :
 	Module(gameEngine, active)
@@ -19,23 +21,36 @@ ModuleWorld::~ModuleWorld()
 
 bool ModuleWorld::setUp()
 {
-	road = new Road();
+	Document roadDocument;
+	getGameEngine()->getModuleJson()->read("Resources/Roads/Test.json", roadDocument);
+
+	road = new Road(roadDocument);
 
 	// GameObjects ---
 
-	gameObjects.reserve(3);
+	gameObjects.reserve(7);
 
-	addGameObject(new GameObject(Position3f{ 0.0f, 0.0f, 20.0f }, road));
-	addGameObject(new GameObject(Position3f{ 0.0f, 0.0f, 35.0f }, road));
-	addGameObject(new GameObject(Position3f{ 0.0f, 0.0f, 50.0f }, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 0.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
 
-	addGameObject(new GameObject(Position3f{ 0.0f, 0.0f, 80.0f }, road));
-	addGameObject(new GameObject(Position3f{ 0.0f, 0.0f, 95.0f }, road));
-	addGameObject(new GameObject(Position3f{ 0.0f, 0.0f, 110.0f }, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 2.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
 
-	/* gameObjects.push_back(new GameObject(Position3f{ 0.0f, 0.0f, 0.0f }, road));
-	gameObjects.push_back(new GameObject(Position3f{ 0.0f, 0.0f, 5.0f }, road));
-	gameObjects.push_back(new GameObject(Position3f{ 0.0f, 0.0f, 10.0f }, road)); */
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 4.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
+	
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 15.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
+
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 35.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
+
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 45.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
+
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 65.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
+
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 75.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
+
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 95.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
+
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 105.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
+
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 125.0f }, road, TextureInfo{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } }));
 
 	// --- GameObjects
 
@@ -66,16 +81,20 @@ bool ModuleWorld::update(float deltaTimeS)
 
 	camera->update(deltaTimeS);
 
-	return true;
-}
-
-#include <iostream>
-
-bool ModuleWorld::postUpdate(float deltaTimeS)
-{
 	ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
 
 	road->render(camera, moduleRenderer);
+
+	return true;
+}
+
+// #include <iostream>
+
+bool ModuleWorld::postUpdate(float deltaTimeS)
+{
+	/* ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
+
+	road->render(camera, moduleRenderer); */
 
 	// GameObjects ---
 
