@@ -122,6 +122,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFollow.cpp" />
     <ClCompile Include="CameraFree.cpp" />
+    <ClCompile Include="Car.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFollow.h" />
     <ClInclude Include="CameraFree.h" />
+    <ClInclude Include="Car.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameObject.h" />
@@ -157,7 +159,6 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Road.h" />
     <ClInclude Include="Segment.h" />
-    <ClInclude Include="Tuple.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Utils.h" />

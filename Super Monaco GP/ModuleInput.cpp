@@ -42,12 +42,12 @@ WindowState ModuleInput::getWindowState() const
 	return windowState;
 }
 
-KeyState ModuleInput::getKeyState(unsigned int scancode) const
+KeyState ModuleInput::getKeyState(uint scancode) const
 {
 	return keyStates[scancode];
 }
 
-bool ModuleInput::getKeyPressed(unsigned int scancode) const
+bool ModuleInput::getKeyPressed(uint scancode) const
 {
 	KeyState keyState = getKeyState(scancode);
 	return keyState == KeyState::DOWN || keyState == KeyState::REPEAT;
@@ -57,7 +57,7 @@ void ModuleInput::updateKeyStates()
 {
 	const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
 
-	for(unsigned int i = 0; i < (unsigned int)keyStates.size(); ++i)
+	for(uint i = 0; i < (uint)keyStates.size(); ++i)
 	{
 		if(keyboardState[i])
 			keyStates[i] = getKeyState(i) == KeyState::IDLE ? KeyState::DOWN : KeyState::REPEAT;

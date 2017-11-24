@@ -2,64 +2,57 @@
 
 #include "Road.h"
 #include "Utils.h"
-#include "Segment.h"
 
 Camera::Camera(const Road* road) :
 	road(road)
 {
-	depth = 1.0f / (float)tan(degToRad(CAMERA_FOV / 2.0f));
+	depth = 1.0f / tanf(degToRad(CAMERA_FOV / 2.0f));
 
-	position.first = 0.0f;
-	position.second = CAMERA_Y;
-	position.third = -position.second * depth;
+	position.x = 0.0f;
+	position.y = CAMERA_Y;
+	position.z = -position.y * depth;
 
-	updateLimitZRoad();
+	limitZ();
 }
 
 Camera::~Camera()
 { }
+
+float Camera::getDepth() const
+{
+	return depth;
+}
 
 const WorldPosition* Camera::getPosition() const
 {
 	return &position;
 }
 
+bool Camera::isBehind(float z) const
+{
+	return z - position.z <= depth;
+}
+
 void Camera::update(float deltaTimeS)
+{ }
+
+void Camera::project(const WorldPosition& worldPosition, WindowPosition& windowPosition) const
 {
-	Segment* segment = road->getSegmentAtZ(position.third);
+	float scale = depth / (worldPosition.z - position.z);
 
-	position.second = CAMERA_Y + linear(position.third, segment->getZNear(), segment->getZFar(), segment->yNear, segment->yFar);
-
-	updateLimitZRoad();
+	windowPosition.x = (short)roundf((WINDOW_WIDTH / 2.0f) + (WINDOW_WIDTH / 2.0f) * scale * (worldPosition.x - position.x));
+	windowPosition.y = (short)roundf((WINDOW_HEIGHT / 2.0f) - (WINDOW_HEIGHT / 2.0f) * scale * (worldPosition.y - position.y));
 }
 
-/* float Camera::getBaseZ() const
+void Camera::project(const WorldTrapezoid& worldTrapezoid, WindowTrapezoid& windowTrapezoid) const
 {
-	return position.third + position.second * depth;
-} */
-
-bool Camera::getIsBehind(float z) const
-{
-	return z - position.third <= depth;
+	project(worldTrapezoid.nl, windowTrapezoid.nl);
+	project(worldTrapezoid.nr, windowTrapezoid.nr);
+	project(worldTrapezoid.fr, windowTrapezoid.fr);
+	project(worldTrapezoid.fl, windowTrapezoid.fl);
 }
 
-void Camera::project(const WorldPosition& worldPosition, ScreenPosition& screenPosition) const
+void Camera::limitZ()
 {
-	float scale = depth / (worldPosition.third - position.third);
-
-	screenPosition.first = (short)roundf((WINDOW_WIDTH / 2.0f) + (WINDOW_WIDTH / 2.0f) * scale * (worldPosition.first - position.first));
-	screenPosition.second = (short)roundf((WINDOW_HEIGHT / 2.0f) - (WINDOW_HEIGHT / 2.0f) * scale * (worldPosition.second - position.second));
-}
-
-void Camera::project(const WorldPosition& worldPositionBL, const WorldPosition& worldPositionBR, const WorldPosition& worldPositionUR, const WorldPosition& worldPositionUL, ScreenPosition& screenPositionBL, ScreenPosition& screenPositionBR, ScreenPosition& screenPositionUR, ScreenPosition& screenPositionUL) const
-{
-	project(worldPositionBL, screenPositionBL);
-	project(worldPositionBR, screenPositionBR);
-	project(worldPositionUR, screenPositionUR);
-	project(worldPositionUL, screenPositionUL);
-}
-
-void Camera::updateLimitZRoad()
-{
-	position.third = modF0ToL(position.third, road->getLength());
+	position.z = modF0ToL(position.z, road->getLength());
 }

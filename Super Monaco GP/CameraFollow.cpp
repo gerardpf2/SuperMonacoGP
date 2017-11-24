@@ -1,5 +1,7 @@
 #include "CameraFollow.h"
 
+#include "Globals.h"
+
 CameraFollow::CameraFollow(const WorldPosition* followPosition, const Road* road) :
 	Camera(road), followPosition(followPosition)
 { }
@@ -9,10 +11,9 @@ CameraFollow::~CameraFollow()
 
 void CameraFollow::update(float deltaTimeS)
 {
-	Camera::update(deltaTimeS);
+	position.x = followPosition->x;
+	position.y = followPosition->y + CAMERA_Y;
+	position.z = followPosition->z - CAMERA_Y * depth;
 
-	position.first = followPosition->first;
-	position.third = followPosition->third - position.second * depth;
-
-	updateLimitZRoad();
+	limitZ();
 }

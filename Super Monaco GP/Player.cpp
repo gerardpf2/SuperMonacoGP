@@ -1,34 +1,24 @@
 #include "Player.h"
 
-#include "Road.h"
 #include "ModuleInput.h"
 
-Player::Player(const WorldPosition& position, const Road* road, const ModuleInput* moduleInput) :
-	GameObject(position, road, TextureInfo{}), moduleInput(moduleInput)
-{ }
+Player::Player(const WorldPosition& position, const Road* road, const ModuleInput* moduleInput, Texture* texture) :
+	Car(position, road, texture), moduleInput(moduleInput)
+{
+	maxVelocity = 60.0f; //
+}
 
 Player::~Player()
 { }
 
-void Player::update(float deltaTimeS)
+void Player::updateDirections(float deltaTimeS)
 {
-	// GameObject::update(deltaTimeS);
+	directionX = 0.0f;
+	directionZ = 0.0f;
 
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_D)) moveX(deltaTimeS * 10.0f);
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_A)) moveX(deltaTimeS * -10.0f);
+	if(moduleInput->getKeyPressed(SDL_SCANCODE_D)) directionX = 1.0f;
+	if(moduleInput->getKeyPressed(SDL_SCANCODE_A)) directionX = -1.0f;
 
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_W)) moveZ(deltaTimeS * 10.0f);
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_S)) moveZ(deltaTimeS * -10.0f);
-}
-
-void Player::moveX(float incX)
-{
-	position.first += incX;
-}
-
-void Player::moveZ(float incZ)
-{
-	position.third += incZ;
-
-	updateLimitZRoad();
+	if(moduleInput->getKeyPressed(SDL_SCANCODE_W)) directionZ = 1.0f;
+	if(moduleInput->getKeyPressed(SDL_SCANCODE_S)) directionZ = -1.0f;
 }

@@ -26,13 +26,9 @@ class ModuleRenderer : public Module
 
 		SDL_Renderer* getRenderer() const;
 
-		// void renderRectangle(const SDL_Rect& rect, unsigned int color, bool filled = false) const;
-
-		// void renderLine(const ScreenPosition& position0, const ScreenPosition& position1, unsigned int color) const;
-
 		void renderTexture(SDL_Texture* texture, const SDL_Rect& srcRect, const SDL_Rect& dstRect) const;
 
-		void renderTrapezoid(const ScreenPosition& position0, const ScreenPosition& position1, const ScreenPosition& position2, const ScreenPosition& position3, unsigned int color, bool filled = false) const;
+		void renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const;
 
 	private:
 

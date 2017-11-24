@@ -1,0 +1,80 @@
+{
+	"length" : 405.0,
+
+	"hills" :
+	[
+		{
+			"defAngle" : true,
+			"zStart" : 10.0,
+			"length" : 50.0,
+			"angle" : 15.0
+		},
+
+		{
+			"defAngle" : false,
+			"zStart" : 70.0,
+			"enterLength" : 70.0,
+			"holdLength" : 10.0,
+			"leaveLength" : 70.0,
+			"value" : 30.0
+		},
+		
+		{
+			"defAngle" : true,
+			"zStart" : 290.0,
+			"length" : 105.0,
+			"angle" : -15.0
+		}
+	],
+
+	"curves" :
+	[
+		{
+			"defAngle" : true,
+			"zStart" : 10.0,
+			"length" : 50.0,
+			"angle" : 60.0
+		},
+
+		{
+			"defAngle" : false,
+			"zStart" : 70.0,
+			"enterLength" : 15.0,
+			"holdLength" : 50.0,
+			"leaveLength" : 15.0,
+			"value" : -0.005
+		},
+		
+		{
+			"defAngle" : false,
+			"zStart" : 200.0,
+			"enterLength" : 15.0,
+			"holdLength" : 50.0,
+			"leaveLength" : 15.0,
+			"value" : 0.005
+		}
+	],
+	
+	"rumbleColors" :
+	[
+	  { "r" : 0, "g" : 160, "b" : 32, "a" : 255 },
+	  
+	  { "r" : 0, "g" : 128, "b" : 64, "a" : 255 },
+	  
+	  { "r" : 192, "g" : 32, "b" : 32, "a" : 255 },
+	  
+	  { "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
+	  
+	  { "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
+	  
+	  { "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
+	  
+	  { "r" : 96, "g" : 96, "b" : 96, "a" : 255 },
+	  
+	  { "r" : 96, "g" : 96, "b" : 96, "a" : 255 },
+	  
+	  { "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
+	  
+	  { "r" : 96, "g" : 96, "b" : 96, "a" : 255 }
+	]
+}

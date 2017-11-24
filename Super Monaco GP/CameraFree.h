@@ -21,8 +21,6 @@ class CameraFree : public Camera
 
 	private:
 
-		float speedMultiplier;
-
 		const ModuleInput* moduleInput = nullptr;
 };
 

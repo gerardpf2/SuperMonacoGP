@@ -15,7 +15,7 @@ void Timer::start()
 	lastTimeMs = SDL_GetTicks();
 }
 
-unsigned int Timer::getElapsedTimeMs() const
+uint Timer::getElapsedTimeMs() const
 {
 	return SDL_GetTicks() - lastTimeMs;
 }

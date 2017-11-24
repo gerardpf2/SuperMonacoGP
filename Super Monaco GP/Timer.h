@@ -1,6 +1,8 @@
 #ifndef _TIMER_
 #define _TIMER_
 
+#include "Types.h"
+
 class Timer
 {
 	public:
@@ -11,11 +13,11 @@ class Timer
 
 		void start();
 
-		unsigned int getElapsedTimeMs() const;
+		uint getElapsedTimeMs() const;
 
 	private:
 
-		unsigned int lastTimeMs;
+		uint lastTimeMs;
 };
 
 #endif

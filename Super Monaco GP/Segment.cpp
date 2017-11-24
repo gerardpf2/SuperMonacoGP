@@ -1,17 +1,20 @@
 #include "Segment.h"
 
+#include "Utils.h"
 #include "Camera.h"
 #include "Globals.h"
 #include "ModuleRenderer.h"
 
-Segment::Segment(unsigned int index, float zNear /* , unsigned int color */) :
-	index(index), zNear(zNear), zFar(zNear + SEGMENT_LENGTH) //, color(color)
+using namespace std;
+
+Segment::Segment(uint index, float zNear) :
+	index(index), zNear(zNear), zFar(zNear + SEGMENT_LENGTH)
 { }
 
 Segment::~Segment()
 { }
 
-unsigned int Segment::getIndex() const
+uint Segment::getIndex() const
 {
 	return index;
 }
@@ -26,149 +29,236 @@ float Segment::getZFar() const
 	return zFar;
 }
 
-#include "Colors.h"
-
-void Segment::render(float xOffset, float dXOffset, float zOffset, const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxScreenY) const
+float Segment::getCurve() const
 {
-	if(camera->getIsBehind(zOffset + zFar)) return;
+	return curve;
+}
 
-	WorldPosition worldPositionNearLeft3{ ROAD_MIN_X - xOffset, yNear, zOffset + zNear };
-	WorldPosition worldPositionNearRight3{ ROAD_MAX_X - xOffset, yNear, zOffset + zNear };
-	WorldPosition worldPositionFarLeft3{ ROAD_MIN_X - xOffset - dXOffset, yFar, zOffset + zFar };
-	WorldPosition worldPositionFarRight3{ ROAD_MAX_X - xOffset - dXOffset, yFar, zOffset + zFar };
+void Segment::setCurve(float curve)
+{
+	this->curve = curve;
+}
 
-	ScreenPosition screenPositionNearLeft3, screenPositionNearRight3;
-	ScreenPosition screenPositionFarLeft3, screenPositionFarRight3;
+float Segment::getYNear() const
+{
+	return yNear;
+}
 
-	camera->project(worldPositionNearLeft3, worldPositionNearRight3, worldPositionFarLeft3,  worldPositionFarRight3, screenPositionNearLeft3, screenPositionNearRight3, screenPositionFarLeft3, screenPositionFarRight3);
+void Segment::setYNear(float yNear)
+{
+	this->yNear = yNear;
+}
 
-	if(screenPositionFarLeft3.second >= maxScreenY) return;
-	maxScreenY = screenPositionFarLeft3.second;
+float Segment::getYFar() const
+{
+	return yFar;
+}
 
-	// Part 0 ---
+void Segment::setYFar(float yFar)
+{
+	this->yFar = yFar;
+}
 
-	ScreenPosition screenPositionNearLeft0 = screenPositionNearLeft3;
-	ScreenPosition screenPositionNearRight0 = screenPositionNearRight3;
-	ScreenPosition screenPositionFarLeft0 = screenPositionFarLeft3;
-	ScreenPosition screenPositionFarRight0 = screenPositionFarRight3;
+const RumbleColors* Segment::getRumbleColors() const
+{
+	return rumbleColors;
+}
 
-	screenPositionNearLeft0.first = screenPositionFarLeft0.first = 0;
-	screenPositionNearRight0.first = screenPositionFarRight0.first = WINDOW_WIDTH;
+void Segment::setRumbleColors(const RumbleColors* rumbleColors)
+{
+	this->rumbleColors = rumbleColors;
+}
 
-	moduleRenderer->renderTrapezoid(screenPositionNearLeft0, screenPositionNearRight0, screenPositionFarRight0, screenPositionFarLeft0, rumbleColors->first, true);
+const set<const GameObject*>* Segment::getGameObjects() const
+{
+	return &gameObjects;
+}
 
-	// --- Part 0
+void Segment::addGameObject(const GameObject* gameObject)
+{
+	gameObjects.insert(gameObject);
+}
 
-	if(screenPositionNearRight3.first <= 0 && screenPositionFarRight3.first <= 0) return;
-	if(screenPositionNearLeft3.first >= WINDOW_WIDTH && screenPositionFarLeft3.first >= WINDOW_WIDTH) return;
+void Segment::eraseGameObject(const GameObject* gameObject)
+{
+	gameObjects.erase(gameObject);
+}
 
-	if(screenPositionNearLeft3.second <= screenPositionFarLeft3.second) return;
-	if(screenPositionNearLeft3.second <= 0 || screenPositionFarLeft3.second >= WINDOW_HEIGHT) return;
+float Segment::getXOffsetNear() const
+{
+	return xOffsetNear;
+}
 
-	// Part 3 ---
+void Segment::setXOffsetNear(float xOffsetNear)
+{
+	this->xOffsetNear = xOffsetNear;
+}
 
-	moduleRenderer->renderTrapezoid(screenPositionNearLeft3, screenPositionNearRight3, screenPositionFarRight3, screenPositionFarLeft3, rumbleColors->fourth, true);
+float Segment::getXOffsetFar() const
+{
+	return xOffsetFar;
+}
 
-	// --- Part 3
+void Segment::setXOffsetFar(float xOffsetFar)
+{
+	this->xOffsetFar = xOffsetFar;
+}
 
-	// Part 1 Left ---
+float Segment::getZOffset() const
+{
+	return zOffset;
+}
 
-	WorldPosition worldPositionNearLeft1L = worldPositionNearLeft3;
-	WorldPosition worldPositionNearRight1L = worldPositionNearRight3;
-	WorldPosition worldPositionFarLeft1L = worldPositionFarLeft3;
-	WorldPosition worldPositionFarRight1L = worldPositionFarRight3;
+void Segment::setZOffset(float zOffset)
+{
+	this->zOffset = zOffset;
+}
 
-	worldPositionNearRight1L.first = worldPositionNearLeft1L.first + ROAD_RUMBLE_WIDTH;
-	worldPositionFarRight1L.first = worldPositionFarLeft1L.first + ROAD_RUMBLE_WIDTH;
+short Segment::getClipY() const
+{
+	return clipY;
+}
 
-	ScreenPosition screenPositionNearLeft1L, screenPositionNearRight1L;
-	ScreenPosition screenPositionFarLeft1L, screenPositionFarRight1L;
+void Segment::setClipY(short clipY)
+{
+	this->clipY = clipY;
+}
 
-	camera->project(worldPositionNearLeft1L, worldPositionNearRight1L, worldPositionFarLeft1L, worldPositionFarRight1L, screenPositionNearLeft1L, screenPositionNearRight1L, screenPositionFarLeft1L, screenPositionFarRight1L);
+void Segment::render(float xOffset, float dXOffset, float zOffset, const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY) const
+{
+	// Check if this segment is behind the camera
 
-	moduleRenderer->renderTrapezoid(screenPositionNearLeft1L, screenPositionNearRight1L, screenPositionFarRight1L, screenPositionFarLeft1L, rumbleColors->second, true);
+	if(camera->isBehind(zOffset + zFar)) return;
 
-	// --- Part 1 Left
+	// Project near and far points of this segment
 
-	// Part 1 Right ---
+	WorldPosition worldPositionNear{ -xOffset, yNear, zOffset + zNear };
+	WorldPosition worldPositionFar{ -xOffset - dXOffset, yFar, zOffset + zFar };
 
-	WorldPosition worldPositionNearLeft1R = worldPositionNearLeft3;
-	WorldPosition worldPositionNearRight1R = worldPositionNearRight3;
-	WorldPosition worldPositionFarLeft1R = worldPositionFarLeft3;
-	WorldPosition worldPositionFarRight1R = worldPositionFarRight3;
+	WindowPosition windowPositionNear, windowPositionFar;
 
-	worldPositionNearLeft1R.first = worldPositionNearRight1R.first - ROAD_RUMBLE_WIDTH;
-	worldPositionFarLeft1R.first = worldPositionFarRight1R.first - ROAD_RUMBLE_WIDTH;
+	camera->project(worldPositionNear, windowPositionNear);
+	camera->project(worldPositionFar, windowPositionFar);
 
-	ScreenPosition screenPositionNearLeft1R, screenPositionNearRight1R;
-	ScreenPosition screenPositionFarLeft1R, screenPositionFarRight1R;
+	// Check if the projected points are outside the window rect (y)
 
-	camera->project(worldPositionNearLeft1R, worldPositionNearRight1R, worldPositionFarLeft1R, worldPositionFarRight1R, screenPositionNearLeft1R, screenPositionNearRight1R, screenPositionFarLeft1R, screenPositionFarRight1R);
+	if(windowPositionFar.y >= maxWindowY) return;
+	maxWindowY = windowPositionFar.y;
 
-	moduleRenderer->renderTrapezoid(screenPositionNearLeft1R, screenPositionNearRight1R, screenPositionFarRight1R, screenPositionFarLeft1R, rumbleColors->second, true);
+	if(windowPositionNear.y <= windowPositionFar.y) return;
+	if(windowPositionNear.y <= 0 || windowPositionFar.y >= WINDOW_HEIGHT) return;
 
-	// --- Part 1 Right
+	// Some parts of this segment are visible
 
-	// Part 2 Left ---
+	// Segment parts 0 and 3 ---
 
-	WorldPosition worldPositionNearLeft2L = worldPositionNearLeft1L;
-	WorldPosition worldPositionNearRight2L = worldPositionNearRight1L;
-	WorldPosition worldPositionFarLeft2L = worldPositionFarLeft1L;
-	WorldPosition worldPositionFarRight2L = worldPositionFarRight1L;
+	WorldTrapezoid worldTrapezoid3;
 
-	worldPositionNearLeft2L.first = worldPositionNearRight2L.first + 1.0f;
-	worldPositionFarLeft2L.first = worldPositionFarRight2L.first + 1.0f;
-	worldPositionNearRight2L.first = worldPositionNearLeft2L.first + 1.0f;
-	worldPositionFarRight2L.first = worldPositionFarLeft2L.first + 1.0f;
+	worldTrapezoid3.nl = worldPositionNear;
+	worldTrapezoid3.nr = worldPositionNear;
+	worldTrapezoid3.fr = worldPositionFar;
+	worldTrapezoid3.fl = worldPositionFar;
 
-	ScreenPosition screenPositionNearLeft2L, screenPositionNearRight2L;
-	ScreenPosition screenPositionFarLeft2L, screenPositionFarRight2L;
+	worldTrapezoid3.nl.x += ROAD_MIN_X;
+	worldTrapezoid3.nr.x += ROAD_MAX_X;
+	worldTrapezoid3.fr.x += ROAD_MAX_X;
+	worldTrapezoid3.fl.x += ROAD_MIN_X;
 
-	camera->project(worldPositionNearLeft2L, worldPositionNearRight2L, worldPositionFarLeft2L, worldPositionFarRight2L, screenPositionNearLeft2L, screenPositionNearRight2L, screenPositionFarLeft2L, screenPositionFarRight2L);
+	WindowTrapezoid windowTrapezoid3;
 
-	moduleRenderer->renderTrapezoid(screenPositionNearLeft2L, screenPositionNearRight2L, screenPositionFarRight2L, screenPositionFarLeft2L, rumbleColors->third, true);
+	camera->project(worldTrapezoid3, windowTrapezoid3);
 
-	// --- Part 2 Left
+	WindowTrapezoid windowTrapezoid0 = windowTrapezoid3;
 
-	// Part 2 Right ---
+	windowTrapezoid0.nl.x = windowTrapezoid0.fl.x = 0;
+	windowTrapezoid0.nr.x = windowTrapezoid0.fr.x = WINDOW_WIDTH;
 
-	WorldPosition worldPositionNearLeft2R = worldPositionNearLeft1R;
-	WorldPosition worldPositionNearRight2R = worldPositionNearRight1R;
-	WorldPosition worldPositionFarLeft2R = worldPositionFarLeft1R;
-	WorldPosition worldPositionFarRight2R = worldPositionFarRight1R;
+	moduleRenderer->renderTrapezoid(windowTrapezoid0, rumbleColors->a);
 
-	worldPositionNearRight2R.first = worldPositionNearLeft2R.first - 1.0f;
-	worldPositionFarRight2R.first = worldPositionFarLeft2R.first - 1.0f;
-	worldPositionNearLeft2R.first = worldPositionNearRight2R.first - 1.0f;
-	worldPositionFarLeft2R.first = worldPositionFarRight2R.first - 1.0f;
+	if(isOutsideWindowX(windowTrapezoid3)) return;
 
-	ScreenPosition screenPositionNearLeft2R, screenPositionNearRight2R;
-	ScreenPosition screenPositionFarLeft2R, screenPositionFarRight2R;
+	moduleRenderer->renderTrapezoid(windowTrapezoid3, rumbleColors->d);
 
-	camera->project(worldPositionNearLeft2R, worldPositionNearRight2R, worldPositionFarLeft2R, worldPositionFarRight2R, screenPositionNearLeft2R, screenPositionNearRight2R, screenPositionFarLeft2R, screenPositionFarRight2R);
+	// --- Segment parts 0 and 3
 
-	moduleRenderer->renderTrapezoid(screenPositionNearLeft2R, screenPositionNearRight2R, screenPositionFarRight2R, screenPositionFarLeft2R, rumbleColors->third, true);
+	// Segment parts 1L and 1R ---
 
-	// --- Part 2 Right
+	WorldTrapezoid worldTrapezoid1L = worldTrapezoid3;
 
-	// Part 4 ---
+	worldTrapezoid1L.nr.x = worldTrapezoid1L.nl.x + ROAD_RUMBLE_WIDTH;
+	worldTrapezoid1L.fr.x = worldTrapezoid1L.fl.x + ROAD_RUMBLE_WIDTH;
 
-	WorldPosition worldPositionNearLeft4 = worldPositionNearLeft3;
-	WorldPosition worldPositionNearRight4 = worldPositionNearRight3;
-	WorldPosition worldPositionFarLeft4 = worldPositionFarLeft3;
-	WorldPosition worldPositionFarRight4 = worldPositionFarRight3;
+	WindowTrapezoid windowTrapezoid1L;
 
-	worldPositionNearLeft4.first = worldPositionNearLeft3.first + ROAD_WIDTH / 2.0f - 0.5f;
-	worldPositionNearRight4.first = worldPositionNearLeft4.first + 1.0f;
-	worldPositionFarLeft4.first = worldPositionFarLeft3.first + ROAD_WIDTH / 2.0f - 0.5f;
-	worldPositionFarRight4.first = worldPositionFarLeft4.first + 1.0f;
+	camera->project(worldTrapezoid1L, windowTrapezoid1L);
 
-	ScreenPosition screenPositionNearLeft4, screenPositionNearRight4;
-	ScreenPosition screenPositionFarLeft4, screenPositionFarRight4;
+	if(!(isOutsideWindowX(windowTrapezoid1L)))
+		moduleRenderer->renderTrapezoid(windowTrapezoid1L, rumbleColors->b);
+	
+	WorldTrapezoid worldTrapezoid1R = worldTrapezoid3;
 
-	camera->project(worldPositionNearLeft4, worldPositionNearRight4, worldPositionFarLeft4, worldPositionFarRight4, screenPositionNearLeft4, screenPositionNearRight4, screenPositionFarLeft4, screenPositionFarRight4);
+	worldTrapezoid1R.nl.x = worldTrapezoid1R.nr.x - ROAD_RUMBLE_WIDTH;
+	worldTrapezoid1R.fl.x = worldTrapezoid1R.fr.x - ROAD_RUMBLE_WIDTH;
 
-	moduleRenderer->renderTrapezoid(screenPositionNearLeft4, screenPositionNearRight4, screenPositionFarRight4, screenPositionFarLeft4, rumbleColors->fifth, true);
+	WindowTrapezoid windowTrapezoid1R;
 
-	// --- Part 4
+	camera->project(worldTrapezoid1R, windowTrapezoid1R);
+
+	if(!(isOutsideWindowX(windowTrapezoid1R)))
+		moduleRenderer->renderTrapezoid(windowTrapezoid1R, rumbleColors->b);
+
+	// --- Segment parts 1L and 1R
+
+	// Segment parts 2L and 2R ---
+
+	WorldTrapezoid worldTrapezoid2L = worldTrapezoid1L;
+
+	worldTrapezoid2L.nl.x = worldTrapezoid2L.nr.x + ROAD_RUMBLE_OFFSET_X_PARTS_1_2;
+	worldTrapezoid2L.fl.x = worldTrapezoid2L.fr.x + ROAD_RUMBLE_OFFSET_X_PARTS_1_2;
+	
+	worldTrapezoid2L.fr.x = worldTrapezoid2L.fl.x + ROAD_RUMBLE_WIDTH_PART_2;
+	worldTrapezoid2L.nr.x = worldTrapezoid2L.nl.x + ROAD_RUMBLE_WIDTH_PART_2;
+
+	WindowTrapezoid windowTrapezoid2L;
+
+	camera->project(worldTrapezoid2L, windowTrapezoid2L);
+
+	if(!(isOutsideWindowX(windowTrapezoid2L)))
+		moduleRenderer->renderTrapezoid(windowTrapezoid2L, rumbleColors->c);
+
+	WorldTrapezoid worldTrapezoid2R = worldTrapezoid1R;
+
+	worldTrapezoid2R.nr.x = worldTrapezoid2R.nl.x - ROAD_RUMBLE_OFFSET_X_PARTS_1_2;
+	worldTrapezoid2R.fr.x = worldTrapezoid2R.fl.x - ROAD_RUMBLE_OFFSET_X_PARTS_1_2;
+	
+	worldTrapezoid2R.nl.x = worldTrapezoid2R.nr.x - ROAD_RUMBLE_WIDTH_PART_2;
+	worldTrapezoid2R.fl.x = worldTrapezoid2R.fr.x - ROAD_RUMBLE_WIDTH_PART_2;
+
+	WindowTrapezoid windowTrapezoid2R;
+
+	camera->project(worldTrapezoid2R, windowTrapezoid2R);
+
+	if(!(isOutsideWindowX(windowTrapezoid2R)))
+		moduleRenderer->renderTrapezoid(windowTrapezoid2R, rumbleColors->c);
+
+	// --- Segment parts 2L and 2R
+
+	// Segment part 4 ---
+	
+	WorldTrapezoid worldTrapezoid4 = worldTrapezoid3;
+
+	worldTrapezoid4.nl.x = worldTrapezoid4.nl.x + ROAD_WIDTH / 2.0f - ROAD_RUMBLE_WIDTH_PART_4 / 2.0f;
+	worldTrapezoid4.fl.x = worldTrapezoid4.fl.x + ROAD_WIDTH / 2.0f - ROAD_RUMBLE_WIDTH_PART_4 / 2.0f;
+
+	worldTrapezoid4.nr.x = worldTrapezoid4.nl.x + ROAD_RUMBLE_WIDTH_PART_4;
+	worldTrapezoid4.fr.x = worldTrapezoid4.fl.x + ROAD_RUMBLE_WIDTH_PART_4;
+
+	WindowTrapezoid windowTrapezoid4;
+
+	camera->project(worldTrapezoid4, windowTrapezoid4);
+
+	if(!(isOutsideWindowX(windowTrapezoid4)))
+		moduleRenderer->renderTrapezoid(windowTrapezoid4, rumbleColors->e);
+
+	// --- Segment part 4
 }

@@ -1,25 +1,21 @@
 #ifndef _PLAYER_
 #define _PLAYER_
 
-#include "GameObject.h"
+#include "Car.h"
 
 class ModuleInput;
 
-class Player : public GameObject
+class Player : public Car
 {
 	public:
 
-		Player(const WorldPosition& position, const Road* road, const ModuleInput* moduleInput);
+		Player(const WorldPosition& position, const Road* road, const ModuleInput* moduleInput, Texture* texture);
 
 		virtual ~Player();
 
-		virtual void update(float deltaTimeS) override;
+	protected:
 
-	private:
-
-		void moveX(float incX);
-
-		void moveZ(float incZ);
+		virtual void updateDirections(float deltaTimeS) override;
 
 	private:
 

@@ -52,27 +52,15 @@ SDL_Renderer* ModuleRenderer::getRenderer() const
 	return renderer;
 }
 
-/* void ModuleRenderer::renderRectangle(const SDL_Rect& rect, unsigned int color, bool filled) const
-{
-	if(filled) boxColor(renderer, rect.x, rect.y, rect.x + rect.w, rect.y + rect.h, color);
-	else rectangleColor(renderer, rect.x, rect.y, rect.x + rect.w, rect.y + rect.h, color);
-} */
-
-/* void ModuleRenderer::renderLine(const ScreenPosition& position0, const ScreenPosition& position1, unsigned int color) const
-{
-	lineColor(renderer, position0.first, position0.second, position1.first, position1.second, color);
-} */
-
 void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect& srcRect, const SDL_Rect& dstRect) const
 {
 	SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
 }
 
-void ModuleRenderer::renderTrapezoid(const ScreenPosition& position0, const ScreenPosition& position1, const ScreenPosition& position2, const ScreenPosition& position3, unsigned int color, bool filled) const
+void ModuleRenderer::renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const
 {
-	short positionsX[4]{ position0.first, position1.first, position2.first, position3.first };
-	short positionsY[4]{ position0.second, position1.second, position2.second, position3.second };
+	short positionsX[4]{ windowTrapezoid.nl.x, windowTrapezoid.nr.x, windowTrapezoid.fr.x, windowTrapezoid.fl.x };
+	short positionsY[4]{ windowTrapezoid.nl.y, windowTrapezoid.nr.y, windowTrapezoid.fr.y, windowTrapezoid.fl.y };
 
-	if(filled) filledPolygonColor(renderer, positionsX, positionsY, 4, color);
-	else polygonColor(renderer, positionsX, positionsY, 4, color);
+	filledPolygonColor(renderer, positionsX, positionsY, 4, color);
 }

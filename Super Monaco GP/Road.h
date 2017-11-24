@@ -40,11 +40,11 @@ class Road
 
 		void addHill(float zStart, float enterLength, float holdLength, float leaveLength, float value) const;
 
-		void addHillEnter(unsigned int indexStart, unsigned int indexEnd, float enterLength, float value) const;
+		void addHillEnter(uint indexStart, uint indexEnd, float enterLength, float value) const;
 
-		void addHillHold(unsigned int indexStart, unsigned int indexEnd, float holdLength, float value) const;
+		void addHillHold(uint indexStart, uint indexEnd, float holdLength, float value) const;
 
-		void addHillLeave(unsigned int indexStart, unsigned int indexEnd, float leaveLength, float value) const;
+		void addHillLeave(uint indexStart, uint indexEnd, float leaveLength, float value) const;
 
 		void addCurves(const Value& value) const;
 
@@ -52,11 +52,11 @@ class Road
 
 		void addCurve(float zStart, float enterLength, float holdLength, float leaveLength, float value) const;
 
-		void addCurveEnter(unsigned int indexStart, unsigned int indexEnd, float enterLength, float value) const;
+		void addCurveEnter(uint indexStart, uint indexEnd, float enterLength, float value) const;
 
-		void addCurveHold(unsigned int indexStart, unsigned int indexEnd, float holdLength, float value) const;
+		void addCurveHold(uint indexStart, uint indexEnd, float holdLength, float value) const;
 
-		void addCurveLeave(unsigned int indexStart, unsigned int indexEnd, float leaveLength, float value) const;
+		void addCurveLeave(uint indexStart, uint indexEnd, float leaveLength, float value) const;
 
 		void setRumbleColors(const Value& value);
 

@@ -21,11 +21,7 @@ class ModuleWorld : public Module
 
 		virtual bool setUp() override;
 
-		virtual bool preUpdate(float deltaTimeS) override;
-
 		virtual bool update(float deltaTimeS) override;
-
-		virtual bool postUpdate(float deltaTimeS) override;
 
 		virtual void cleanUp() override;
 
@@ -33,19 +29,13 @@ class ModuleWorld : public Module
 
 		void addGameObject(GameObject* gameObject);
 
-		// GameObject* getGameObject(int index) const;
-
-		// int getGameObjectIndexAt(float z) const;
-
-		// void getGameObjectIndicesAt(float z0, float z1, int& index0, int& index1) const;
-
 	private:
 
 		Road* road = nullptr;
 
 		Camera* camera = nullptr;
 
-		// Player* player = nullptr;
+		Player* player = nullptr;
 
 		vector<GameObject*> gameObjects;
 };

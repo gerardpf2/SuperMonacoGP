@@ -66,7 +66,7 @@ void GameEngine::addInitialModules()
 	modules.push_back(moduleWindow = new ModuleWindow(this));
 	modules.push_back(moduleRenderer = new ModuleRenderer(this));
 	modules.push_back(moduleTexture = new ModuleTexture(this));
-	modules.push_back(modulePerformance = new ModulePerformance(this));
+	// modules.push_back(modulePerformance = new ModulePerformance(this));
 
 	modules.push_back(moduleWorld = new ModuleWorld(this));
 }
@@ -77,7 +77,7 @@ bool GameEngine::setUp()
 
 	bool setUp = true;
 
-	for(unsigned int i = 0; setUp && i < (unsigned int)modules.size(); ++i)
+	for(uint i = 0; setUp && i < (uint)modules.size(); ++i)
 		setUp = modules[i]->setUp();
 
 	timer.start();
@@ -93,13 +93,13 @@ bool GameEngine::mainLoop()
 
 	bool mainLoop = true;
 
-	for(unsigned int i = 0; mainLoop && i < (unsigned int)modules.size(); ++i)
+	for(uint i = 0; mainLoop && i < (uint)modules.size(); ++i)
 		if(modules[i]->getActive()) mainLoop = modules[i]->preUpdate(deltaTimeS);
 
-	for(unsigned int i = 0; mainLoop && i < (unsigned int)modules.size(); ++i)
+	for(uint i = 0; mainLoop && i < (uint)modules.size(); ++i)
 		if(modules[i]->getActive()) mainLoop = modules[i]->update(deltaTimeS);
 
-	for(unsigned int i = 0; mainLoop && i < (unsigned int)modules.size(); ++i)
+	for(uint i = 0; mainLoop && i < (uint)modules.size(); ++i)
 		if(modules[i]->getActive()) mainLoop = modules[i]->postUpdate(deltaTimeS);
 
 	return mainLoop;

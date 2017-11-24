@@ -5,53 +5,30 @@
 	[
 		{
 			"defAngle" : true,
-			"zStart" : 10.0,
-			"length" : 50.0,
+			"zStart" : 50.0,
+			"length" : 200.0,
 			"angle" : 15.0
-		},
-
-		{
-			"defAngle" : false,
-			"zStart" : 70.0,
-			"enterLength" : 70.0,
-			"holdLength" : 10.0,
-			"leaveLength" : 70.0,
-			"value" : 30.0
-		},
-		
-		{
-			"defAngle" : true,
-			"zStart" : 290.0,
-			"length" : 105.0,
-			"angle" : -15.0
 		}
 	],
 
 	"curves" :
 	[
 		{
-			"defAngle" : true,
-			"zStart" : 10.0,
-			"length" : 50.0,
-			"angle" : 60.0
-		},
-
-		{
 			"defAngle" : false,
-			"zStart" : 70.0,
-			"enterLength" : 15.0,
-			"holdLength" : 50.0,
-			"leaveLength" : 15.0,
-			"value" : -0.005
+			"zStart" : 100.0,
+			"enterLength" : 35.0,
+			"holdLength" : 30.0,
+			"leaveLength" : 35.0,
+			"value" : 0.01
 		},
 		
 		{
 			"defAngle" : false,
-			"zStart" : 200.0,
-			"enterLength" : 15.0,
-			"holdLength" : 50.0,
-			"leaveLength" : 15.0,
-			"value" : -0.05
+			"zStart" : 205.0,
+			"enterLength" : 35.0,
+			"holdLength" : 30.0,
+			"leaveLength" : 35.0,
+			"value" : -0.01
 		}
 	],
 	

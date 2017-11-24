@@ -2,6 +2,7 @@
 #define _UTILS_
 
 #include <math.h>
+#include "Types.h"
 #include "Globals.h"
 
 static float degToRad(float d)
@@ -21,19 +22,24 @@ static float modF0ToL(float v, float l)
 	return v;
 }
 
-static float ease(float a, float b, float percent)
+static float ease(float a, float b, float p)
 {
-	return a + (b - a) * ((-cos(percent * PI) / 2.0f) + 0.5f);
+	return a + (b - a) * ((-cosf(p * PI) / 2.0f) + 0.5f);
 }
 
-static float linear(float x, float x0, float x1, float y0, float y1)
+static float interpolate(float x, float x0, float x1, float y0, float y1)
 {
 	return y0 + ((x - x0) / (x1 - x0)) * (y1 - y0);
 }
 
-static unsigned int rgbaToUIint(unsigned int r, unsigned int g, unsigned int b, unsigned int a)
+static uint RGBAToUint(uint r, uint g, uint b, uint a)
 {
 	return a << 24 | b << 16 | g << 8 | r;
+}
+
+static bool isOutsideWindowX(const WindowTrapezoid& windowTrapezoid)
+{
+	return (windowTrapezoid.nr.x <= 0 && windowTrapezoid.fr.x <= 0) || (windowTrapezoid.nl.x >= WINDOW_WIDTH && windowTrapezoid.fl.x >= WINDOW_WIDTH);
 }
 
 #endif

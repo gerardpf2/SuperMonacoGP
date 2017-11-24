@@ -1,17 +1,24 @@
 #ifndef _TYPES_
 #define _TYPES_
 
-#include "Tuple.h"
+#include <SDL_rect.h>
 
-typedef Tuple2<float, float> Size;
-typedef Tuple2<short, short> ScreenPosition;
-typedef Tuple3<float, float, float> WorldPosition;
-
-struct SDL_Rect;
 struct SDL_Texture;
 
-typedef Tuple2<SDL_Texture*, SDL_Rect> TextureInfo;
+typedef unsigned int uint;
 
-typedef Tuple5<unsigned int, unsigned int, unsigned int, unsigned int, unsigned int> RumbleColors;
+struct Size { float w, h; };
+
+struct RumbleColors { uint a, b, c, d, e; };
+
+struct Texture { SDL_Texture* t; SDL_Rect r; };
+
+struct WindowPosition { short x, y; };
+
+struct WorldPosition { float x, y, z; };
+
+struct WindowTrapezoid { WindowPosition nl, nr, fr, fl; };
+
+struct WorldTrapezoid { WorldPosition nl, nr, fr, fl; };
 
 #endif

@@ -31,7 +31,7 @@ void ModuleTexture::cleanUp()
 
 SDL_Texture* ModuleTexture::getTexture(TextureType textureType) const
 {
-	return textures[(unsigned int)textureType];
+	return textures[(uint)textureType];
 }
 
 void ModuleTexture::load(const char* texturePath, TextureType textureType)
@@ -42,7 +42,7 @@ void ModuleTexture::load(const char* texturePath, TextureType textureType)
 	{
 		SDL_SetColorKey(surface, SDL_TRUE, MAGENTA);
 
-		textures[(unsigned int)textureType] = SDL_CreateTextureFromSurface(getGameEngine()->getModuleRenderer()->getRenderer(), surface);
+		textures[(uint)textureType] = SDL_CreateTextureFromSurface(getGameEngine()->getModuleRenderer()->getRenderer(), surface);
 
 		SDL_FreeSurface(surface);
 	}

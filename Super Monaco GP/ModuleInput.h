@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <vector>
+#include "Types.h"
 #include "Module.h"
 
 using namespace std;
@@ -38,9 +39,9 @@ class ModuleInput : public Module
 
 		WindowState getWindowState() const;
 
-		KeyState getKeyState(unsigned int scancode) const;
+		KeyState getKeyState(uint scancode) const;
 
-		bool getKeyPressed(unsigned int scancode) const;
+		bool getKeyPressed(uint scancode) const;
 
 	private:
 
