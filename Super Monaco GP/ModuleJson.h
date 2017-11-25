@@ -4,17 +4,15 @@
 #include "Module.h"
 #include "rapidjson/document.h"
 
-using namespace rapidjson;
-
 class ModuleJson : public Module
 {
 	public:
 
-		ModuleJson(GameEngine* gameEngine, bool active = true);
+		ModuleJson(GameEngine* gameEngine);
 
 		virtual ~ModuleJson();
 
-		void read(const char* path, Document& document) const;
+		void read(const char* path, rapidjson::Document& document) const;
 };
 
 #endif

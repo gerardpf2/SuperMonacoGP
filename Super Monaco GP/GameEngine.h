@@ -4,8 +4,6 @@
 #include <vector>
 #include "Timer.h"
 
-using namespace std;
-
 class Module;
 class ModuleJson;
 class ModuleInput;
@@ -23,21 +21,21 @@ class GameEngine
 
 		virtual ~GameEngine();
 
+		const ModuleJson* getModuleJson() const;
+
+		const ModuleInput* getModuleInput() const;
+
+		const ModuleWorld* getModuleWorld() const;
+
+		const ModuleWindow* getModuleWindow() const;
+
+		const ModuleTexture* getModuleTexture() const;
+
+		const ModuleRenderer* getModuleRenderer() const;
+
+		const ModulePerformance* getModulePerformance() const;
+
 		void run();
-
-		ModuleJson* getModuleJson() const;
-
-		ModuleInput* getModuleInput() const;
-
-		ModuleWorld* getModuleWorld() const;
-
-		ModuleWindow* getModuleWindow() const;
-
-		ModuleTexture* getModuleTexture() const;
-
-		ModuleRenderer* getModuleRenderer() const;
-
-		ModulePerformance* getModulePerformance() const;
 
 	private:
 
@@ -53,7 +51,7 @@ class GameEngine
 
 		Timer timer;
 
-		vector<Module*> modules;
+		std::vector<Module*> modules;
 
 		ModuleJson* moduleJson = nullptr;
 

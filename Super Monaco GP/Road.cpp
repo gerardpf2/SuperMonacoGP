@@ -5,6 +5,8 @@
 #include "Segment.h"
 #include "GameObject.h"
 
+using namespace rapidjson;
+
 Road::Road(const Document& document)
 {
 	// Length
@@ -32,7 +34,6 @@ Segment* Road::getSegmentAtZ(float z) const
 {
 	return getSegment((int)(z / SEGMENT_LENGTH));
 }
-
 
 void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
@@ -70,11 +71,7 @@ void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) co
 		Segment* segment = getSegment(baseSegment->getIndex() + i);
 
 		for(const GameObject* gameObject : *segment->getGameObjects())
-		{
-			float xOffset = interpolate(gameObject->getPosition()->z, segment->getZNear(), segment->getZFar(), segment->getXOffsetNear(), segment->getXOffsetFar());
-
-			gameObject->render(xOffset, segment->getZOffset(), camera, moduleRenderer, segment->getClipY());
-		}
+			gameObject->render(camera, moduleRenderer);
 	}
 }
 

@@ -4,12 +4,30 @@
 #include "ModuleWindow.h"
 #include <SDL2_gfxPrimitives.h>
 
-ModuleRenderer::ModuleRenderer(GameEngine* gameEngine, bool active) :
-	Module(gameEngine, active)
+ModuleRenderer::ModuleRenderer(GameEngine* gameEngine) :
+	Module(gameEngine)
 { }
 
 ModuleRenderer::~ModuleRenderer()
 { }
+
+SDL_Renderer* ModuleRenderer::getRenderer() const
+{
+	return renderer;
+}
+
+void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect& srcRect, const SDL_Rect& dstRect) const
+{
+	SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+}
+
+void ModuleRenderer::renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const
+{
+	short positionsX[4]{ windowTrapezoid.nl.x, windowTrapezoid.nr.x, windowTrapezoid.fr.x, windowTrapezoid.fl.x };
+	short positionsY[4]{ windowTrapezoid.nl.y, windowTrapezoid.nr.y, windowTrapezoid.fr.y, windowTrapezoid.fl.y };
+
+	filledPolygonColor(renderer, positionsX, positionsY, 4, color);
+}
 
 bool ModuleRenderer::setUp()
 {
@@ -45,22 +63,4 @@ void ModuleRenderer::cleanUp()
 		SDL_DestroyRenderer(renderer);
 		renderer = nullptr;
 	}
-}
-
-SDL_Renderer* ModuleRenderer::getRenderer() const
-{
-	return renderer;
-}
-
-void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect& srcRect, const SDL_Rect& dstRect) const
-{
-	SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
-}
-
-void ModuleRenderer::renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const
-{
-	short positionsX[4]{ windowTrapezoid.nl.x, windowTrapezoid.nr.x, windowTrapezoid.fr.x, windowTrapezoid.fl.x };
-	short positionsY[4]{ windowTrapezoid.nl.y, windowTrapezoid.nr.y, windowTrapezoid.fr.y, windowTrapezoid.fl.y };
-
-	filledPolygonColor(renderer, positionsX, positionsY, 4, color);
 }

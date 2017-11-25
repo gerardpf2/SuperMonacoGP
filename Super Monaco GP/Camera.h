@@ -11,17 +11,19 @@ class Camera
 
 		virtual ~Camera();
 
+		const Road* getRoad() const;
+
 		float getDepth() const;
 
 		const WorldPosition* getPosition() const;
 
 		bool isBehind(float z) const;
 
-		virtual void update(float deltaTimeS);
-
 		void project(const WorldPosition& worldPosition, WindowPosition& windowPosition) const;
 
 		void project(const WorldTrapezoid& worldTrapezoid, WindowTrapezoid& windowTrapezoid) const;
+
+		virtual void update(float deltaTimeS);
 
 	protected:
 
@@ -31,9 +33,11 @@ class Camera
 
 	protected:
 
-		float depth;
-
 		WorldPosition position;
+
+	private:
+
+		float depth;
 
 		const Road* road = nullptr;
 };

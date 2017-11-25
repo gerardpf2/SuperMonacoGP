@@ -1,12 +1,10 @@
 #ifndef _MODULE_INPUT_
 #define _MODULE_INPUT_
 
-#include <SDL.h>
 #include <vector>
 #include "Types.h"
 #include "Module.h"
-
-using namespace std;
+#include <SDL_events.h>
 
 enum class WindowState
 {
@@ -27,21 +25,21 @@ class ModuleInput : public Module
 {
 	public:
 
-		ModuleInput(GameEngine* gameEngine, bool active = true);
+		ModuleInput(GameEngine* gameEngine);
 
 		virtual ~ModuleInput();
+
+		WindowState getWindowState() const;
+
+		bool isKeyPressed(uint scancode) const;
+
+		KeyState getKeyState(uint scancode) const;
 
 		virtual bool setUp() override;
 
 		virtual bool preUpdate(float deltaTimeS) override;
 
 		virtual void cleanUp() override;
-
-		WindowState getWindowState() const;
-
-		KeyState getKeyState(uint scancode) const;
-
-		bool getKeyPressed(uint scancode) const;
 
 	private:
 
@@ -53,7 +51,7 @@ class ModuleInput : public Module
 
 		WindowState windowState;
 
-		vector<KeyState> keyStates;
+		std::vector<KeyState> keyStates;
 };
 
 #endif

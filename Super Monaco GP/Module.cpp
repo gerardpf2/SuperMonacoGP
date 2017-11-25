@@ -1,11 +1,16 @@
 #include "Module.h"
 
-Module::Module(GameEngine* gameEngine, bool active) :
-	gameEngine(gameEngine), active(active)
+Module::Module(GameEngine* gameEngine) :
+	gameEngine(gameEngine)
 { }
 
 Module::~Module()
 { }
+
+GameEngine* Module::getGameEngine() const
+{
+	return gameEngine;
+}
 
 bool Module::setUp()
 {
@@ -29,18 +34,3 @@ bool Module::postUpdate(float deltaTimeS)
 
 void Module::cleanUp()
 { }
-
-GameEngine* Module::getGameEngine() const
-{
-	return gameEngine;
-}
-
-bool Module::getActive() const
-{
-	return active;
-}
-
-void Module::setActive(bool active)
-{
-	this->active = active;
-}

@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-#include <SDL.h>
+#include <SDL_timer.h>
 
 Timer::Timer()
 {

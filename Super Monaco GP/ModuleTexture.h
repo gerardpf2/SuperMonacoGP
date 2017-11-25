@@ -4,28 +4,26 @@
 #include <vector>
 #include "Module.h"
 
-using namespace std;
-
 struct SDL_Texture;
 
 enum class TextureType
 {
-	TEST, //
+	TEST,
 };
 
 class ModuleTexture : public Module
 {
 	public:
 
-		ModuleTexture(GameEngine* gameEngine, bool active = true);
+		ModuleTexture(GameEngine* gameEngine);
 
 		virtual ~ModuleTexture();
+
+		SDL_Texture* getTexture(TextureType textureType) const;
 
 		virtual bool setUp() override;
 
 		virtual void cleanUp() override;
-
-		SDL_Texture* getTexture(TextureType textureType) const;
 
 	private:
 
@@ -33,10 +31,9 @@ class ModuleTexture : public Module
 
 		void unload(SDL_Texture*& texture);
 
-
 	private:
 
-		vector<SDL_Texture*> textures;
+		std::vector<SDL_Texture*> textures;
 };
 
 #endif

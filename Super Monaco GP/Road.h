@@ -5,9 +5,6 @@
 #include "Types.h"
 #include "rapidjson/document.h"
 
-using namespace std;
-using namespace rapidjson;
-
 class Camera;
 class Segment;
 class ModuleRenderer;
@@ -16,7 +13,7 @@ class Road
 {
 	public:
 
-		Road(const Document& document);
+		Road(const rapidjson::Document& document);
 
 		virtual ~Road();
 
@@ -34,7 +31,7 @@ class Road
 
 		void setLength(float length);
 
-		void addHills(const Value& value) const;
+		void addHills(const rapidjson::Value& value) const;
 
 		void addHill(float zStart, float length, float angle) const;
 
@@ -46,7 +43,7 @@ class Road
 
 		void addHillLeave(uint indexStart, uint indexEnd, float leaveLength, float value) const;
 
-		void addCurves(const Value& value) const;
+		void addCurves(const rapidjson::Value& value) const;
 
 		void addCurve(float zStart, float length, float angle) const;
 
@@ -58,15 +55,15 @@ class Road
 
 		void addCurveLeave(uint indexStart, uint indexEnd, float leaveLength, float value) const;
 
-		void setRumbleColors(const Value& value);
+		void setRumbleColors(const rapidjson::Value& value);
 
 	private:
 
 		float length;
 
-		vector<Segment*> segments;
+		std::vector<Segment*> segments;
 
-		vector<RumbleColors*> rumbleColors;
+		std::vector<RumbleColors*> rumbleColors;
 };
 
 #endif

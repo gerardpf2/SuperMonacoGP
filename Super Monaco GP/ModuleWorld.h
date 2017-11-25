@@ -4,8 +4,6 @@
 #include <vector>
 #include "Module.h"
 
-using namespace std;
-
 class Road;
 class Camera;
 class Player;
@@ -15,7 +13,7 @@ class ModuleWorld : public Module
 {
 	public:
 
-		ModuleWorld(GameEngine* gameEngine, bool active = true);
+		ModuleWorld(GameEngine* gameEngine);
 
 		virtual ~ModuleWorld();
 
@@ -37,7 +35,7 @@ class ModuleWorld : public Module
 
 		Player* player = nullptr;
 
-		vector<GameObject*> gameObjects;
+		std::vector<GameObject*> gameObjects;
 };
 
 #endif

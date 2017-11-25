@@ -34,16 +34,6 @@ class Segment
 
 		void setYFar(float yFar);
 
-		const RumbleColors* getRumbleColors() const;
-
-		void setRumbleColors(const RumbleColors* rumbleColors);
-
-		const std::set<const GameObject*>* getGameObjects() const;
-
-		void addGameObject(const GameObject* gameObject);
-
-		void eraseGameObject(const GameObject* gameObject);
-
 		float getXOffsetNear() const;
 
 		void setXOffsetNear(float xOffsetNear);
@@ -59,6 +49,16 @@ class Segment
 		short getClipY() const;
 
 		void setClipY(short clipY);
+
+		const RumbleColors* getRumbleColors() const;
+
+		void setRumbleColors(const RumbleColors* rumbleColors);
+
+		const std::set<const GameObject*>* getGameObjects() const;
+
+		void addGameObject(const GameObject* gameObject);
+
+		void eraseGameObject(const GameObject* gameObject);
 
 		void render(float xOffset, float dXOffset, float zOffset, const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY) const;
 
@@ -76,11 +76,11 @@ class Segment
 
 		std::set<const GameObject*> gameObjects;
 
-		float xOffsetNear, xOffsetFar; // Computed
+		float xOffsetNear, xOffsetFar;
 
-		float zOffset; // Computed
+		float zOffset;
 
-		short clipY; // Computed
+		short clipY;
 };
 
 #endif

@@ -2,8 +2,8 @@
 
 #include <stdio.h>
 
-ModulePerformance::ModulePerformance(GameEngine* gameEngine, bool active) :
-	Module(gameEngine, active)
+ModulePerformance::ModulePerformance(GameEngine* gameEngine) :
+	Module(gameEngine)
 { }
 
 ModulePerformance::~ModulePerformance()

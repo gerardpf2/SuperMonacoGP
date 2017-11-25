@@ -5,12 +5,17 @@
 #include "GameEngine.h"
 #include "ModuleRenderer.h"
 
-ModuleTexture::ModuleTexture(GameEngine* gameEngine, bool active) :
-	Module(gameEngine, active)
+ModuleTexture::ModuleTexture(GameEngine* gameEngine) :
+	Module(gameEngine)
 { }
 
 ModuleTexture::~ModuleTexture()
 { }
+
+SDL_Texture* ModuleTexture::getTexture(TextureType textureType) const
+{
+	return textures[(uint)textureType];
+}
 
 bool ModuleTexture::setUp()
 {
@@ -27,11 +32,6 @@ void ModuleTexture::cleanUp()
 		unload(textures[i]);
 
 	textures.clear();
-}
-
-SDL_Texture* ModuleTexture::getTexture(TextureType textureType) const
-{
-	return textures[(uint)textureType];
 }
 
 void ModuleTexture::load(const char* texturePath, TextureType textureType)

@@ -3,14 +3,23 @@
 #include "Road.h"
 #include "Utils.h"
 #include "Camera.h"
+#include "Segment.h"
 #include <SDL_rect.h>
+#include "Animation.h"
 #include "ModuleRenderer.h"
 
-GameObject::GameObject(const WorldPosition& position, const Road* road, Texture* texture) :
-	position(position), road(road), texture(texture)
+using namespace std;
+
+// GameObject::GameObject(const WorldPosition& position, const Texture* texture, const Road* road) :
+GameObject::GameObject(const WorldPosition& position, const vector<Animation*>* animations, const Road* road) :
+	position(position), animations(animations), road(road)
 {
-	size.w = (float)texture->r.w * SPRITE_SIZE_RATIO;
-	size.h = (float)texture->r.h * SPRITE_SIZE_RATIO;
+	// Revisar Size
+
+	// size.w = (float)texture->r.w * SPRITE_SIZE_RATIO;
+	// size.h = (float)texture->r.h * SPRITE_SIZE_RATIO;
+	size.w = (float)(*animations)[currentAnimation]->getCurrentFrame()->r.w * SPRITE_SIZE_RATIO;
+	size.h = (float)(*animations)[currentAnimation]->getCurrentFrame()->r.h * SPRITE_SIZE_RATIO;
 
 	limitZ();
 }
@@ -23,16 +32,41 @@ const WorldPosition* GameObject::getPosition() const
 	return &position;
 }
 
-void GameObject::elevate(float incY)
+/* const Texture* GameObject::getTexture() const
 {
-	position.y += incY;
+	return texture;
+} */
+
+const vector<Animation*>* GameObject::getAnimations() const
+{
+	return animations;
+}
+
+const Road* GameObject::getRoad() const
+{
+	return road;
+}
+
+void GameObject::elevate()
+{
+	Segment* segment = road->getSegmentAtZ(position.z);
+
+	position.y += interpolate(position.z, segment->getZNear(), segment->getZFar(), segment->getYNear(), segment->getYFar());
 }
 
 void GameObject::update(float deltaTimeS)
-{ }
-
-void GameObject::render(float xOffset, float zOffset, const Camera* camera, const ModuleRenderer* moduleRenderer, short clipY) const
 {
+	(*animations)[currentAnimation]->update(deltaTimeS);
+}
+
+void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	Segment* segment = road->getSegmentAtZ(position.z);
+
+	float xOffset = interpolate(position.z, segment->getZNear(), segment->getZFar(), segment->getXOffsetNear(), segment->getXOffsetFar());
+	float zOffset = segment->getZOffset();
+	short clipY = segment->getClipY();
+
 	if(camera->isBehind(zOffset + position.z)) return;
 
 	WorldPosition worldPositionBottomLeft{ position.x - size.w / 2.0f - xOffset, position.y, position.z + zOffset };
@@ -58,6 +92,9 @@ void GameObject::render(float xOffset, float zOffset, const Camera* camera, cons
 	dst.y = windowPositionBottomLeft.y - dst.h;
 
 	if(dst.y >= WINDOW_HEIGHT) return;
+
+	// SDL_Rect src = texture->r;
+	const Texture* texture = (*animations)[currentAnimation]->getCurrentFrame();
 
 	SDL_Rect src = texture->r;
 

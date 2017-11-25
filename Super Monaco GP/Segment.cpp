@@ -59,31 +59,6 @@ void Segment::setYFar(float yFar)
 	this->yFar = yFar;
 }
 
-const RumbleColors* Segment::getRumbleColors() const
-{
-	return rumbleColors;
-}
-
-void Segment::setRumbleColors(const RumbleColors* rumbleColors)
-{
-	this->rumbleColors = rumbleColors;
-}
-
-const set<const GameObject*>* Segment::getGameObjects() const
-{
-	return &gameObjects;
-}
-
-void Segment::addGameObject(const GameObject* gameObject)
-{
-	gameObjects.insert(gameObject);
-}
-
-void Segment::eraseGameObject(const GameObject* gameObject)
-{
-	gameObjects.erase(gameObject);
-}
-
 float Segment::getXOffsetNear() const
 {
 	return xOffsetNear;
@@ -122,6 +97,31 @@ short Segment::getClipY() const
 void Segment::setClipY(short clipY)
 {
 	this->clipY = clipY;
+}
+
+const RumbleColors* Segment::getRumbleColors() const
+{
+	return rumbleColors;
+}
+
+void Segment::setRumbleColors(const RumbleColors* rumbleColors)
+{
+	this->rumbleColors = rumbleColors;
+}
+
+const set<const GameObject*>* Segment::getGameObjects() const
+{
+	return &gameObjects;
+}
+
+void Segment::addGameObject(const GameObject* gameObject)
+{
+	gameObjects.insert(gameObject);
+}
+
+void Segment::eraseGameObject(const GameObject* gameObject)
+{
+	gameObjects.erase(gameObject);
 }
 
 void Segment::render(float xOffset, float dXOffset, float zOffset, const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY) const

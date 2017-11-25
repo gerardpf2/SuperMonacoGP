@@ -2,8 +2,10 @@
 
 #include "rapidjson/filereadstream.h"
 
-ModuleJson::ModuleJson(GameEngine* gameEngine, bool active) :
-	Module(gameEngine, active)
+using namespace rapidjson;
+
+ModuleJson::ModuleJson(GameEngine* gameEngine) :
+	Module(gameEngine)
 { }
 
 ModuleJson::~ModuleJson()

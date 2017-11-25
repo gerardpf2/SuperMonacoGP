@@ -1,24 +1,31 @@
 #include "Player.h"
 
+#include "Camera.h"
+#include "Globals.h"
 #include "ModuleInput.h"
 
-Player::Player(const WorldPosition& position, const Road* road, const ModuleInput* moduleInput, Texture* texture) :
-	Car(position, road, texture), moduleInput(moduleInput)
-{
-	maxVelocity = 60.0f; //
-}
+using namespace std;
+
+Player::Player(const WorldPosition& position, const vector<Animation*>* animations, const Road* road, const ModuleInput* moduleInput) :
+	Car(position, animations, road), moduleInput(moduleInput)
+{ }
 
 Player::~Player()
 { }
 
-void Player::updateDirections(float deltaTimeS)
+const ModuleInput* Player::getModuleInput() const
 {
-	directionX = 0.0f;
-	directionZ = 0.0f;
+	return moduleInput;
+}
 
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_D)) directionX = 1.0f;
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_A)) directionX = -1.0f;
+void Player::updateDirection(float deltaTimeS)
+{
+	direction.x = 0.0f;
+	direction.z = 0.0f;
 
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_W)) directionZ = 1.0f;
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_S)) directionZ = -1.0f;
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_D)) direction.x = 1.0f;
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_A)) direction.x = -1.0f;
+
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_W)) direction.z = 1.0f;
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_S)) direction.z = -1.0f;
 }

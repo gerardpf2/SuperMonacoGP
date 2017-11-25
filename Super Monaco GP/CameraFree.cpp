@@ -12,15 +12,20 @@ CameraFree::CameraFree(const Road* road, const ModuleInput* moduleInput) :
 CameraFree::~CameraFree()
 { }
 
+const ModuleInput* CameraFree::getModuleInput() const
+{
+	return moduleInput;
+}
+
 void CameraFree::update(float deltaTimeS)
 {
-	Segment* segment = road->getSegmentAtZ(position.z);
+	Segment* segment = getRoad()->getSegmentAtZ(position.z);
 	position.y = CAMERA_Y + interpolate(position.z, segment->getZNear(), segment->getZFar(), segment->getYNear(), segment->getYFar());
 
-	float speedMultiplier = moduleInput->getKeyPressed(SDL_SCANCODE_SPACE) ? 5.0f : 1.0f;
+	float speedMultiplier = moduleInput->isKeyPressed(SDL_SCANCODE_SPACE) ? 5.0f : 1.0f;
 
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_UP)) moveZ(speedMultiplier * CAMERA_FREE_SPEED_Z * deltaTimeS);
-	if(moduleInput->getKeyPressed(SDL_SCANCODE_DOWN)) moveZ(speedMultiplier * -CAMERA_FREE_SPEED_Z * deltaTimeS);
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_UP)) moveZ(speedMultiplier * CAMERA_FREE_SPEED_Z * deltaTimeS);
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_DOWN)) moveZ(speedMultiplier * -CAMERA_FREE_SPEED_Z * deltaTimeS);
 }
 
 void CameraFree::moveZ(float incZ)

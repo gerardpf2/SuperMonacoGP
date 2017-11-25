@@ -7,7 +7,8 @@ class Car : public GameObject
 {
 	public:
 
-		Car(const WorldPosition& position, const Road* road, Texture* texture);
+		// Car(const WorldPosition& position, const Texture* texture, const Road* road);
+		Car(const WorldPosition& position, const std::vector<Animation*>* animations, const Road* road);
 
 		virtual ~Car();
 
@@ -15,21 +16,15 @@ class Car : public GameObject
 
 	protected:
 
-		virtual void updateDirections(float deltaTimeS);
+		virtual void updateDirection(float deltaTimeS);
 
 	protected:
 
-		float acceleration = 10.0f;
+		Direction direction;
 
-		float deacceleration = acceleration;
+	private:
 
 		float velocity = 0.0f;
-
-		float maxVelocity = 50.0f; // 50.0f;
-
-		float directionX = 0.0f;
-
-		float directionZ = 1.0f;
 };
 
 #endif

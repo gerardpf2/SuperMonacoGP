@@ -18,6 +18,11 @@ Camera::Camera(const Road* road) :
 Camera::~Camera()
 { }
 
+const Road* Camera::getRoad() const
+{
+	return road;
+}
+
 float Camera::getDepth() const
 {
 	return depth;
@@ -32,9 +37,6 @@ bool Camera::isBehind(float z) const
 {
 	return z - position.z <= depth;
 }
-
-void Camera::update(float deltaTimeS)
-{ }
 
 void Camera::project(const WorldPosition& worldPosition, WindowPosition& windowPosition) const
 {
@@ -51,6 +53,9 @@ void Camera::project(const WorldTrapezoid& worldTrapezoid, WindowTrapezoid& wind
 	project(worldTrapezoid.fr, windowTrapezoid.fr);
 	project(worldTrapezoid.fl, windowTrapezoid.fl);
 }
+
+void Camera::update(float deltaTimeS)
+{ }
 
 void Camera::limitZ()
 {

@@ -14,47 +14,47 @@ GameEngine::GameEngine()
 GameEngine::~GameEngine()
 { }
 
+const ModuleJson* GameEngine::getModuleJson() const
+{
+	return moduleJson;
+}
+
+const ModuleInput* GameEngine::getModuleInput() const
+{
+	return moduleInput;
+}
+
+const ModuleWorld* GameEngine::getModuleWorld() const
+{
+	return moduleWorld;
+}
+
+const ModuleWindow* GameEngine::getModuleWindow() const
+{
+	return moduleWindow;
+}
+
+const ModuleTexture* GameEngine::getModuleTexture() const
+{
+	return moduleTexture;
+}
+
+const ModuleRenderer* GameEngine::getModuleRenderer() const
+{
+	return moduleRenderer;
+}
+
+const ModulePerformance* GameEngine::getModulePerformance() const
+{
+	return modulePerformance;
+}
+
 void GameEngine::run()
 {
 	if(setUp())
 		while(mainLoop());
 
 	cleanUp();
-}
-
-ModuleJson* GameEngine::getModuleJson() const
-{
-	return moduleJson;
-}
-
-ModuleInput* GameEngine::getModuleInput() const
-{
-	return moduleInput;
-}
-
-ModuleWorld* GameEngine::getModuleWorld() const
-{
-	return moduleWorld;
-}
-
-ModuleWindow* GameEngine::getModuleWindow() const
-{
-	return moduleWindow;
-}
-
-ModuleTexture* GameEngine::getModuleTexture() const
-{
-	return moduleTexture;
-}
-
-ModuleRenderer* GameEngine::getModuleRenderer() const
-{
-	return moduleRenderer;
-}
-
-ModulePerformance* GameEngine::getModulePerformance() const
-{
-	return modulePerformance;
 }
 
 void GameEngine::addInitialModules()
@@ -94,13 +94,13 @@ bool GameEngine::mainLoop()
 	bool mainLoop = true;
 
 	for(uint i = 0; mainLoop && i < (uint)modules.size(); ++i)
-		if(modules[i]->getActive()) mainLoop = modules[i]->preUpdate(deltaTimeS);
+		mainLoop = modules[i]->preUpdate(deltaTimeS);
 
 	for(uint i = 0; mainLoop && i < (uint)modules.size(); ++i)
-		if(modules[i]->getActive()) mainLoop = modules[i]->update(deltaTimeS);
+		mainLoop = modules[i]->update(deltaTimeS);
 
 	for(uint i = 0; mainLoop && i < (uint)modules.size(); ++i)
-		if(modules[i]->getActive()) mainLoop = modules[i]->postUpdate(deltaTimeS);
+		mainLoop = modules[i]->postUpdate(deltaTimeS);
 
 	return mainLoop;
 }

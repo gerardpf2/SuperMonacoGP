@@ -9,17 +9,17 @@ class ModuleWindow : public Module
 {
 	public:
 
-		ModuleWindow(GameEngine* gameEngine, bool active = true);
+		ModuleWindow(GameEngine* gameEngine);
 
 		virtual ~ModuleWindow();
+
+		SDL_Window* getWindow() const;
 
 		virtual bool setUp() override;
 
 		virtual bool preUpdate(float deltaTimeS) override;
 
 		virtual void cleanUp() override;
-
-		SDL_Window* getWindow() const;
 
 	private:
 

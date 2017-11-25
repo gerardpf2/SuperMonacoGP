@@ -19,16 +19,16 @@
 			"enterLength" : 35.0,
 			"holdLength" : 30.0,
 			"leaveLength" : 35.0,
-			"value" : 0.01
+			"value" : 0.005
 		},
 		
 		{
 			"defAngle" : false,
 			"zStart" : 205.0,
-			"enterLength" : 35.0,
-			"holdLength" : 30.0,
-			"leaveLength" : 35.0,
-			"value" : -0.01
+			"enterLength" : 70.0,
+			"holdLength" : 60.0,
+			"leaveLength" : 70.0,
+			"value" : -0.015
 		}
 	],
 	

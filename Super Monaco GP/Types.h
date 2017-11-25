@@ -9,6 +9,8 @@ typedef unsigned int uint;
 
 struct Size { float w, h; };
 
+struct Direction { float x, z; };
+
 struct RumbleColors { uint a, b, c, d, e; };
 
 struct Texture { SDL_Texture* t; SDL_Rect r; };

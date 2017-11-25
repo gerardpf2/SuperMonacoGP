@@ -9,13 +9,15 @@ class Player : public Car
 {
 	public:
 
-		Player(const WorldPosition& position, const Road* road, const ModuleInput* moduleInput, Texture* texture);
+		Player(const WorldPosition& position, const std::vector<Animation*>* animations, const Road* road, const ModuleInput* moduleInput);
 
 		virtual ~Player();
 
+		const ModuleInput* getModuleInput() const;
+
 	protected:
 
-		virtual void updateDirections(float deltaTimeS) override;
+		virtual void updateDirection(float deltaTimeS) override;
 
 	private:
 

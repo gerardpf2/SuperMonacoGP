@@ -5,12 +5,17 @@
 #include "GameEngine.h"
 #include "ModuleInput.h"
 
-ModuleWindow::ModuleWindow(GameEngine* gameEngine, bool active) :
-	Module(gameEngine, active)
+ModuleWindow::ModuleWindow(GameEngine* gameEngine) :
+	Module(gameEngine)
 { }
 
 ModuleWindow::~ModuleWindow()
 { }
+
+SDL_Window* ModuleWindow::getWindow() const
+{
+	return window;
+}
 
 bool ModuleWindow::setUp()
 {
@@ -33,7 +38,7 @@ bool ModuleWindow::setUp()
 
 bool ModuleWindow::preUpdate(float deltaTimeS)
 {
-	if(getGameEngine()->getModuleInput()->getKeyPressed(SDL_SCANCODE_ESCAPE)) return false;
+	if(getGameEngine()->getModuleInput()->isKeyPressed(SDL_SCANCODE_ESCAPE)) return false;
 	if(getGameEngine()->getModuleInput()->getWindowState() == WindowState::QUIT) return false;
 
 	return true;
@@ -48,9 +53,4 @@ void ModuleWindow::cleanUp()
 	}
 
 	SDL_Quit();
-}
-
-SDL_Window* ModuleWindow::getWindow() const
-{
-	return window;
 }

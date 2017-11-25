@@ -9,6 +9,8 @@ class Module
 
 		virtual ~Module();
 
+		GameEngine* getGameEngine() const;
+
 		virtual bool setUp();
 
 		virtual bool preUpdate(float deltaTimeS);
@@ -19,21 +21,13 @@ class Module
 
 		virtual void cleanUp();
 
-		GameEngine* getGameEngine() const;
-
-		bool getActive() const;
-
-		void setActive(bool active);
-
 	protected:
 
-		Module(GameEngine* gameEngine, bool active);
+		Module(GameEngine* gameEngine);
 
 	private:
 
 		GameEngine* gameEngine = nullptr;
-
-		bool active;
 };
 
 #endif

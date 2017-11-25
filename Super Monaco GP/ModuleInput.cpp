@@ -1,11 +1,28 @@
 #include "ModuleInput.h"
 
-ModuleInput::ModuleInput(GameEngine* gameEngine, bool active) :
-	Module(gameEngine, active)
+ModuleInput::ModuleInput(GameEngine* gameEngine) :
+	Module(gameEngine)
 { }
 
 ModuleInput::~ModuleInput()
 { }
+
+WindowState ModuleInput::getWindowState() const
+{
+	return windowState;
+}
+
+bool ModuleInput::isKeyPressed(uint scancode) const
+{
+	KeyState keyState = getKeyState(scancode);
+	
+	return keyState == KeyState::DOWN || keyState == KeyState::REPEAT;
+}
+
+KeyState ModuleInput::getKeyState(uint scancode) const
+{
+	return keyStates[scancode];
+}
 
 bool ModuleInput::setUp()
 {
@@ -23,9 +40,7 @@ bool ModuleInput::preUpdate(float deltaTimeS)
 	SDL_Event event;
 
 	while(SDL_PollEvent(&event))
-	{
 		updateWindowState(event);
-	}
 
 	return true;
 }
@@ -37,22 +52,6 @@ void ModuleInput::cleanUp()
 	keyStates.clear();
 }
 
-WindowState ModuleInput::getWindowState() const
-{
-	return windowState;
-}
-
-KeyState ModuleInput::getKeyState(uint scancode) const
-{
-	return keyStates[scancode];
-}
-
-bool ModuleInput::getKeyPressed(uint scancode) const
-{
-	KeyState keyState = getKeyState(scancode);
-	return keyState == KeyState::DOWN || keyState == KeyState::REPEAT;
-}
-
 void ModuleInput::updateKeyStates()
 {
 	const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
@@ -62,7 +61,7 @@ void ModuleInput::updateKeyStates()
 		if(keyboardState[i])
 			keyStates[i] = getKeyState(i) == KeyState::IDLE ? KeyState::DOWN : KeyState::REPEAT;
 		else
-			keyStates[i] = getKeyPressed(i) ? KeyState::UP : KeyState::IDLE;
+			keyStates[i] = isKeyPressed(i) ? KeyState::UP : KeyState::IDLE;
 	}
 }
 

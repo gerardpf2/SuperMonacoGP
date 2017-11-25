@@ -1,11 +1,13 @@
 #include "ModuleWorld.h"
 
 #include "Road.h"
+#include <vector>
 #include "Utils.h"
 #include "Colors.h"
 #include "Player.h"
 #include "Segment.h"
 #include <SDL_rect.h>
+#include "Animation.h"
 #include "GameObject.h"
 #include "GameEngine.h"
 #include "CameraFree.h"
@@ -13,8 +15,11 @@
 #include "CameraFollow.h"
 #include "ModuleTexture.h"
 
-ModuleWorld::ModuleWorld(GameEngine* gameEngine, bool active) :
-	Module(gameEngine, active)
+using namespace std;
+using namespace rapidjson;
+
+ModuleWorld::ModuleWorld(GameEngine* gameEngine) :
+	Module(gameEngine)
 { }
 
 ModuleWorld::~ModuleWorld()
@@ -33,41 +38,47 @@ bool ModuleWorld::setUp()
 
 	// Test texture
 	Texture* texture = new Texture{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } };
+	Texture* texture2 = new Texture{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 96, 67, 80, 45 } };
 
-	addGameObject(player = new Player(WorldPosition{ 0.0f, 0.0f, 0.0f }, road, getGameEngine()->getModuleInput(), texture));
+	// Test animation
+	vector<const Texture*>* frames = new vector<const Texture*>();
+	frames->reserve(2);
+	frames->push_back(texture);
+	frames->push_back(texture2);
 
-	addGameObject(new Car(WorldPosition{ 0.0f, 0.0f, 10.0f }, road, texture));
+	Animation* animation = new Animation(frames, 1.0f);
 
-	addGameObject(new GameObject(WorldPosition{ -2.0f, 0.0f, 4.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 2.0f, 0.0f, 6.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 8.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 15.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 35.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 45.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 65.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 75.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 95.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 105.0f }, road, texture));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 125.0f }, road, texture));
+	vector<Animation*>* animations = new vector<Animation*>();
+	animations->reserve(1);
+	animations->push_back(animation);
+
+	// addGameObject(player = new Player(WorldPosition{ 0.0f, 0.0f, 0.0f }, texture, road, getGameEngine()->getModuleInput()));
+	addGameObject(player = new Player(WorldPosition{ 0.0f, 0.0f, 0.0f }, animations, road, getGameEngine()->getModuleInput()));
+	
+	/* addGameObject(new Car(WorldPosition{ 0.0f, 0.0f, 10.0f }, texture, road));
+
+	addGameObject(new GameObject(WorldPosition{ -2.0f, 0.0f, 4.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 2.0f, 0.0f, 6.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 8.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 15.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 35.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 45.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 65.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 75.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 95.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 105.0f }, texture, road));
+	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 125.0f }, texture, road)); */
 
 	// --- GameObjects
 
-	camera = new CameraFollow(player->getPosition(), road);
+	camera = new CameraFollow(road, player->getPosition());
 	// camera = new CameraFree(road, getGameEngine()->getModuleInput());
 
-	for(uint i = 0; i < (uint)gameObjects.size(); ++i)
-	{
-		GameObject* gameObject = gameObjects[i];
-		
-		Segment* segment = road->getSegmentAtZ(gameObject->getPosition()->z);
-		
-		gameObject->elevate(interpolate(gameObject->getPosition()->z, segment->getZNear(), segment->getZFar(), segment->getYNear(), segment->getYFar()));
-	}
+	for(GameObject* gameObject : gameObjects)
+		gameObject->elevate();
 
 	return true;
 }
-
-#include "ModuleRenderer.h"
 
 bool ModuleWorld::update(float deltaTimeS)
 {

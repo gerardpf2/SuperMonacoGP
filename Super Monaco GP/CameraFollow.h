@@ -7,15 +7,17 @@ class CameraFollow : public Camera
 {
 	public:
 
-		CameraFollow(const WorldPosition* followPosition, const Road* road);
+		CameraFollow(const Road* road, const WorldPosition* followPosition);
 
 		virtual ~CameraFollow();
+
+		const WorldPosition* getFollowPosition() const;
 
 		virtual void update(float deltaTimeS) override;
 
 	private:
 
-		const WorldPosition* followPosition;
+		const WorldPosition* followPosition = nullptr;
 };
 
 #endif

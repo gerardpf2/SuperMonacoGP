@@ -7,7 +7,7 @@ class ModulePerformance : public Module
 {
 	public:
 
-		ModulePerformance(GameEngine* gameEngine, bool active = true);
+		ModulePerformance(GameEngine* gameEngine);
 
 		virtual ~ModulePerformance();
 

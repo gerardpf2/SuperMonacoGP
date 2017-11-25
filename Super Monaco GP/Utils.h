@@ -22,6 +22,11 @@ static float modF0ToL(float v, float l)
 	return v;
 }
 
+static float clamp(float v, float min, float max)
+{
+	return fminf(fmaxf(v, min), max);
+}
+
 static float ease(float a, float b, float p)
 {
 	return a + (b - a) * ((-cosf(p * PI) / 2.0f) + 0.5f);

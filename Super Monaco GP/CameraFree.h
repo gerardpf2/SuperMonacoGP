@@ -13,6 +13,8 @@ class CameraFree : public Camera
 
 		virtual ~CameraFree();
 
+		const ModuleInput* getModuleInput() const;
+
 		virtual void update(float deltaTimeS) override;
 
 	private:
