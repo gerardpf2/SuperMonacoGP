@@ -3,12 +3,13 @@
 #include "Road.h"
 #include "Utils.h"
 #include "Segment.h"
+#include "Animation.h"
+#include "AnimationGroup.h"
 
 using namespace std;
 
-// Car::Car(const WorldPosition& position, const Texture* texture, const Road* road):
-Car::Car(const WorldPosition& position, const vector<Animation*>* animations, const Road* road) :
-	GameObject(position, animations, road)
+Car::Car(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road) :
+	GameObject(position, animationGroup, road)
 { }
 
 Car::~Car()
@@ -41,6 +42,9 @@ void Car::update(float deltaTimeS)
 	Segment* newSegment = getRoad()->getSegmentAtZ(position.z);
 
 	float speedPercent = velocity / maxVelocity;
+
+	animationGroup->getCurrent()->setTimeMultiplier(speedPercent);
+	
 	float dX = 0.5f * ROAD_WIDTH * speedPercent * deltaTimeS;
 
 	position.x += direction.x * dX;

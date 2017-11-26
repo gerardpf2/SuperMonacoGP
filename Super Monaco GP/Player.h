@@ -9,7 +9,7 @@ class Player : public Car
 {
 	public:
 
-		Player(const WorldPosition& position, const std::vector<Animation*>* animations, const Road* road, const ModuleInput* moduleInput);
+		Player(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road, const ModuleInput* moduleInput);
 
 		virtual ~Player();
 

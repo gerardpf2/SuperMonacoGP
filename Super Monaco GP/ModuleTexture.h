@@ -3,13 +3,21 @@
 
 #include <vector>
 #include "Module.h"
+#include "rapidjson/document.h"
 
-struct SDL_Texture;
+enum class TextureGroupType
+{
+	PLAYER,
+};
 
 enum class TextureType
 {
-	TEST,
+	PLAYER_TEXTURE_0,
+	PLAYER_TEXTURE_1,
 };
+
+struct Texture;
+struct SDL_Texture;
 
 class ModuleTexture : public Module
 {
@@ -19,7 +27,7 @@ class ModuleTexture : public Module
 
 		virtual ~ModuleTexture();
 
-		SDL_Texture* getTexture(TextureType textureType) const;
+		const Texture* getTexture(TextureType textureType) const;
 
 		virtual bool setUp() override;
 
@@ -27,13 +35,17 @@ class ModuleTexture : public Module
 
 	private:
 
-		void load(const char* texturePath, TextureType textureType);
+		void load(const rapidjson::Document& document);
+
+		void load(TextureGroupType textureGroupType, const char* texturePath);
 
 		void unload(SDL_Texture*& texture);
 
 	private:
 
-		std::vector<SDL_Texture*> textures;
+		std::vector<Texture*> textures;
+
+		std::vector<SDL_Texture*> textureGroups;
 };
 
 #endif

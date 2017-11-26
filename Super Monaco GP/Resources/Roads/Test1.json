@@ -1,105 +1,44 @@
 {
 	"length" : 405.0,
-
 	"hills" :
 	[
+		{
+			"defAngle" : true,
+			"zStart" : 50.0,
+			"length" : 200.0,
+			"angle" : 15.0
+		}
 	],
-
 	"curves" :
 	[
 		{
 			"defAngle" : false,
-			"zStart" : 0.0,
-			"enterLength" : 10.0,
-			"holdLength" : 30.0,
-			"leaveLength" : 10.0,
-			"value" : 0.05
-		},
-		
-		{
-			"defAngle" : false,
-			"zStart" : 50.0,
-			"enterLength" : 10.0,
-			"holdLength" : 30.0,
-			"leaveLength" : 10.0,
-			"value" : -0.05
-		},
-		
-		{
-			"defAngle" : false,
 			"zStart" : 100.0,
-			"enterLength" : 10.0,
+			"enterLength" : 35.0,
 			"holdLength" : 30.0,
-			"leaveLength" : 10.0,
-			"value" : -0.05
+			"leaveLength" : 35.0,
+			"value" : 0.005
 		},
-		
 		{
 			"defAngle" : false,
-			"zStart" : 150.0,
-			"enterLength" : 10.0,
-			"holdLength" : 30.0,
-			"leaveLength" : 10.0,
-			"value" : 0.05
-		},
-		
-		{
-			"defAngle" : false,
-			"zStart" : 200.0,
-			"enterLength" : 10.0,
-			"holdLength" : 30.0,
-			"leaveLength" : 10.0,
-			"value" : -0.05
-		},
-		
-		{
-			"defAngle" : false,
-			"zStart" : 250.0,
-			"enterLength" : 10.0,
-			"holdLength" : 30.0,
-			"leaveLength" : 10.0,
-			"value" : 0.05
-		},
-		
-		{
-			"defAngle" : false,
-			"zStart" : 300.0,
-			"enterLength" : 10.0,
-			"holdLength" : 30.0,
-			"leaveLength" : 10.0,
-			"value" : 0.05
-		},
-		
-		{
-			"defAngle" : false,
-			"zStart" : 350.0,
-			"enterLength" : 10.0,
-			"holdLength" : 30.0,
-			"leaveLength" : 10.0,
-			"value" : -0.05
+			"zStart" : 205.0,
+			"enterLength" : 70.0,
+			"holdLength" : 60.0,
+			"leaveLength" : 70.0,
+			"value" : -0.015
 		}
 	],
-	
 	"rumbleColors" :
 	[
-	  { "r" : 0, "g" : 160, "b" : 32, "a" : 255 },
-	  
-	  { "r" : 0, "g" : 128, "b" : 64, "a" : 255 },
-	  
-	  { "r" : 192, "g" : 32, "b" : 32, "a" : 255 },
-	  
-	  { "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
-	  
-	  { "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
-	  
-	  { "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
-	  
-	  { "r" : 96, "g" : 96, "b" : 96, "a" : 255 },
-	  
-	  { "r" : 96, "g" : 96, "b" : 96, "a" : 255 },
-	  
-	  { "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
-	  
-	  { "r" : 96, "g" : 96, "b" : 96, "a" : 255 }
+		{ "r" : 0, "g" : 160, "b" : 32, "a" : 255 },
+		{ "r" : 0, "g" : 128, "b" : 64, "a" : 255 },
+		{ "r" : 192, "g" : 32, "b" : 32, "a" : 255 },
+		{ "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
+		{ "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
+		{ "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
+		{ "r" : 96, "g" : 96, "b" : 96, "a" : 255 },
+		{ "r" : 96, "g" : 96, "b" : 96, "a" : 255 },
+		{ "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
+		{ "r" : 96, "g" : 96, "b" : 96, "a" : 255 }
 	]
 }

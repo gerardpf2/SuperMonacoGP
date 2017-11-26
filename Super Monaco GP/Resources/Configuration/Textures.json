@@ -1,0 +1,22 @@
+{
+	"textureGroups" :
+	[
+		{
+			"type" : 0,
+			"path" : "Resources/Textures/Test.bmp"
+		}
+	],
+	"textures" :
+	[
+		{
+			"type" : 0,
+			"groupType" : 0,
+			"rect" : { "x" : 184, "y" : 11, "w" : 80, "h" : 45 }
+		},
+		{
+			"type" : 1,
+			"groupType" : 0,
+			"rect" : { "x" : 96, "y" : 67, "w" : 80, "h" : 45 }
+		}
+	]
+}

@@ -13,7 +13,8 @@
 #include "CameraFree.h"
 #include "ModuleJson.h"
 #include "CameraFollow.h"
-#include "ModuleTexture.h"
+#include "ModuleAnimation.h"
+#include "AnimationGroup.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -28,7 +29,7 @@ ModuleWorld::~ModuleWorld()
 bool ModuleWorld::setUp()
 {
 	Document roadDocument;
-	getGameEngine()->getModuleJson()->read("Resources/Roads/Test2.json", roadDocument);
+	getGameEngine()->getModuleJson()->read("Resources/Roads/Test1.json", roadDocument);
 
 	road = new Road(roadDocument);
 
@@ -36,38 +37,15 @@ bool ModuleWorld::setUp()
 
 	gameObjects.reserve(7);
 
-	// Test texture
-	Texture* texture = new Texture{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 184, 11, 80, 45 } };
-	Texture* texture2 = new Texture{ getGameEngine()->getModuleTexture()->getTexture(TextureType::TEST), SDL_Rect{ 96, 67, 80, 45 } };
+	AnimationGroup* animationGroup = getGameEngine()->getModuleAnimation()->getAnimationGroupCopy(AnimationGroupType::PLAYER);
+	AnimationGroup* animationGroup2 = getGameEngine()->getModuleAnimation()->getAnimationGroupCopy(AnimationGroupType::PLAYER);
+	AnimationGroup* animationGroup3 = getGameEngine()->getModuleAnimation()->getAnimationGroupCopy(AnimationGroupType::PLAYER);
 
-	// Test animation
-	vector<const Texture*>* frames = new vector<const Texture*>();
-	frames->reserve(2);
-	frames->push_back(texture);
-	frames->push_back(texture2);
-
-	Animation* animation = new Animation(frames, 1.0f);
-
-	vector<Animation*>* animations = new vector<Animation*>();
-	animations->reserve(1);
-	animations->push_back(animation);
-
-	// addGameObject(player = new Player(WorldPosition{ 0.0f, 0.0f, 0.0f }, texture, road, getGameEngine()->getModuleInput()));
-	addGameObject(player = new Player(WorldPosition{ 0.0f, 0.0f, 0.0f }, animations, road, getGameEngine()->getModuleInput()));
+	addGameObject(player = new Player(WorldPosition{ 0.0f, 0.0f, 0.0f }, animationGroup, road, getGameEngine()->getModuleInput()));
 	
-	/* addGameObject(new Car(WorldPosition{ 0.0f, 0.0f, 10.0f }, texture, road));
-
-	addGameObject(new GameObject(WorldPosition{ -2.0f, 0.0f, 4.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 2.0f, 0.0f, 6.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 8.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 15.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 35.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 45.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 65.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 75.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 95.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 105.0f }, texture, road));
-	addGameObject(new GameObject(WorldPosition{ 0.0f, 0.0f, 125.0f }, texture, road)); */
+	addGameObject(new Car(WorldPosition{ 0.0f, 0.0f, 10.0f }, animationGroup2, road));
+	
+	addGameObject(new GameObject(WorldPosition{ 5.0f, 0.0f, 5.0f }, animationGroup3, road));
 
 	// --- GameObjects
 
@@ -94,13 +72,19 @@ bool ModuleWorld::update(float deltaTimeS)
 
 void ModuleWorld::cleanUp()
 {
-	road->clear();
+	if(road)
+	{
+		road->clear();
 
-	delete road;
-	road = nullptr;
+		delete road;
+		road = nullptr;
+	}
 
-	delete camera;
-	camera = nullptr;
+	if(camera)
+	{
+		delete camera;
+		camera = nullptr;
+	}
 
 	player = nullptr;
 

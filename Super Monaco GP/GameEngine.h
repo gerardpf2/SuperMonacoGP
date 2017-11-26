@@ -11,6 +11,7 @@ class ModuleWorld;
 class ModuleWindow;
 class ModuleTexture;
 class ModuleRenderer;
+class ModuleAnimation;
 class ModulePerformance;
 
 class GameEngine
@@ -21,19 +22,21 @@ class GameEngine
 
 		virtual ~GameEngine();
 
-		const ModuleJson* getModuleJson() const;
+		ModuleJson* getModuleJson() const;
 
-		const ModuleInput* getModuleInput() const;
+		ModuleInput* getModuleInput() const;
 
-		const ModuleWorld* getModuleWorld() const;
+		ModuleWorld* getModuleWorld() const;
 
-		const ModuleWindow* getModuleWindow() const;
+		ModuleWindow* getModuleWindow() const;
 
-		const ModuleTexture* getModuleTexture() const;
+		ModuleTexture* getModuleTexture() const;
 
-		const ModuleRenderer* getModuleRenderer() const;
+		ModuleRenderer* getModuleRenderer() const;
 
-		const ModulePerformance* getModulePerformance() const;
+		ModuleAnimation* getModuleAnimation() const;
+
+		ModulePerformance* getModulePerformance() const;
 
 		void run();
 
@@ -64,6 +67,8 @@ class GameEngine
 		ModuleTexture* moduleTexture = nullptr;
 
 		ModuleRenderer* moduleRenderer = nullptr;
+
+		ModuleAnimation* moduleAnimation = nullptr;
 
 		ModulePerformance* modulePerformance = nullptr;
 };

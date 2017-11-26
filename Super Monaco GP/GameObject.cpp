@@ -6,20 +6,15 @@
 #include "Segment.h"
 #include <SDL_rect.h>
 #include "Animation.h"
+#include "AnimationGroup.h"
 #include "ModuleRenderer.h"
 
-using namespace std;
-
-// GameObject::GameObject(const WorldPosition& position, const Texture* texture, const Road* road) :
-GameObject::GameObject(const WorldPosition& position, const vector<Animation*>* animations, const Road* road) :
-	position(position), animations(animations), road(road)
+GameObject::GameObject(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road) :
+	position(position), animationGroup(animationGroup), road(road)
 {
 	// Revisar Size
-
-	// size.w = (float)texture->r.w * SPRITE_SIZE_RATIO;
-	// size.h = (float)texture->r.h * SPRITE_SIZE_RATIO;
-	size.w = (float)(*animations)[currentAnimation]->getCurrentFrame()->r.w * SPRITE_SIZE_RATIO;
-	size.h = (float)(*animations)[currentAnimation]->getCurrentFrame()->r.h * SPRITE_SIZE_RATIO;
+	size.w = (float)animationGroup->getCurrent()->getCurrentFrame()->r->w * SPRITE_SIZE_RATIO;
+	size.h = (float)animationGroup->getCurrent()->getCurrentFrame()->r->h * SPRITE_SIZE_RATIO;
 
 	limitZ();
 }
@@ -32,14 +27,9 @@ const WorldPosition* GameObject::getPosition() const
 	return &position;
 }
 
-/* const Texture* GameObject::getTexture() const
+const AnimationGroup* GameObject::getAnimationGroup() const
 {
-	return texture;
-} */
-
-const vector<Animation*>* GameObject::getAnimations() const
-{
-	return animations;
+	return animationGroup;
 }
 
 const Road* GameObject::getRoad() const
@@ -56,7 +46,7 @@ void GameObject::elevate()
 
 void GameObject::update(float deltaTimeS)
 {
-	(*animations)[currentAnimation]->update(deltaTimeS);
+	animationGroup->update(deltaTimeS);
 }
 
 void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
@@ -93,10 +83,9 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 
 	if(dst.y >= WINDOW_HEIGHT) return;
 
-	// SDL_Rect src = texture->r;
-	const Texture* texture = (*animations)[currentAnimation]->getCurrentFrame();
+	const Texture* texture = animationGroup->getCurrent()->getCurrentFrame();
 
-	SDL_Rect src = texture->r;
+	SDL_Rect src = *texture->r;
 
 	if(dst.y + dst.h > clipY)
 	{

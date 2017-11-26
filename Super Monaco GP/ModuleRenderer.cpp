@@ -26,6 +26,7 @@ void ModuleRenderer::renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uin
 	short positionsX[4]{ windowTrapezoid.nl.x, windowTrapezoid.nr.x, windowTrapezoid.fr.x, windowTrapezoid.fl.x };
 	short positionsY[4]{ windowTrapezoid.nl.y, windowTrapezoid.nr.y, windowTrapezoid.fr.y, windowTrapezoid.fl.y };
 
+	// O.o ReportMemoryLeaks() o.O
 	filledPolygonColor(renderer, positionsX, positionsY, 4, color);
 }
 

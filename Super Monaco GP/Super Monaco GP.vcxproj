@@ -120,6 +120,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="AnimationGroup.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFollow.cpp" />
     <ClCompile Include="CameraFree.cpp" />
@@ -128,6 +129,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Module.cpp" />
+    <ClCompile Include="ModuleAnimation.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleJson.cpp" />
     <ClCompile Include="ModulePerformance.cpp" />
@@ -142,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="AnimationGroup.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFollow.h" />
     <ClInclude Include="CameraFree.h" />
@@ -150,7 +153,9 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="MemLeaks.h" />
     <ClInclude Include="Module.h" />
+    <ClInclude Include="ModuleAnimation.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleJson.h" />
     <ClInclude Include="ModulePerformance.h" />

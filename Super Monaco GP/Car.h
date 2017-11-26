@@ -7,8 +7,7 @@ class Car : public GameObject
 {
 	public:
 
-		// Car(const WorldPosition& position, const Texture* texture, const Road* road);
-		Car(const WorldPosition& position, const std::vector<Animation*>* animations, const Road* road);
+		Car(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road);
 
 		virtual ~Car();
 

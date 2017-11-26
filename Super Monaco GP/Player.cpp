@@ -6,8 +6,8 @@
 
 using namespace std;
 
-Player::Player(const WorldPosition& position, const vector<Animation*>* animations, const Road* road, const ModuleInput* moduleInput) :
-	Car(position, animations, road), moduleInput(moduleInput)
+Player::Player(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road, const ModuleInput* moduleInput) :
+	Car(position, animationGroup, road), moduleInput(moduleInput)
 { }
 
 Player::~Player()

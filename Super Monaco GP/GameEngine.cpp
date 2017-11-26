@@ -6,6 +6,7 @@
 #include "ModuleWindow.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
+#include "ModuleAnimation.h"
 #include "ModulePerformance.h"
 
 GameEngine::GameEngine()
@@ -14,37 +15,42 @@ GameEngine::GameEngine()
 GameEngine::~GameEngine()
 { }
 
-const ModuleJson* GameEngine::getModuleJson() const
+ModuleJson* GameEngine::getModuleJson() const
 {
 	return moduleJson;
 }
 
-const ModuleInput* GameEngine::getModuleInput() const
+ModuleInput* GameEngine::getModuleInput() const
 {
 	return moduleInput;
 }
 
-const ModuleWorld* GameEngine::getModuleWorld() const
+ModuleWorld* GameEngine::getModuleWorld() const
 {
 	return moduleWorld;
 }
 
-const ModuleWindow* GameEngine::getModuleWindow() const
+ModuleWindow* GameEngine::getModuleWindow() const
 {
 	return moduleWindow;
 }
 
-const ModuleTexture* GameEngine::getModuleTexture() const
+ModuleTexture* GameEngine::getModuleTexture() const
 {
 	return moduleTexture;
 }
 
-const ModuleRenderer* GameEngine::getModuleRenderer() const
+ModuleRenderer* GameEngine::getModuleRenderer() const
 {
 	return moduleRenderer;
 }
 
-const ModulePerformance* GameEngine::getModulePerformance() const
+ModuleAnimation* GameEngine::getModuleAnimation() const
+{
+	return moduleAnimation;
+}
+
+ModulePerformance* GameEngine::getModulePerformance() const
 {
 	return modulePerformance;
 }
@@ -66,6 +72,7 @@ void GameEngine::addInitialModules()
 	modules.push_back(moduleWindow = new ModuleWindow(this));
 	modules.push_back(moduleRenderer = new ModuleRenderer(this));
 	modules.push_back(moduleTexture = new ModuleTexture(this));
+	modules.push_back(moduleAnimation = new ModuleAnimation(this));
 	// modules.push_back(modulePerformance = new ModulePerformance(this));
 
 	modules.push_back(moduleWorld = new ModuleWorld(this));
@@ -123,5 +130,6 @@ void GameEngine::cleanUp()
 	moduleWindow = nullptr;
 	moduleTexture = nullptr;
 	moduleRenderer = nullptr;
+	moduleAnimation = nullptr;
 	modulePerformance = nullptr;
 }

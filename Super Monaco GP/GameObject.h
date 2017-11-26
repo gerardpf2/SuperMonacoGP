@@ -1,27 +1,24 @@
 #ifndef _GAME_OBJECT_
 #define _GAME_OBJECT_
 
-#include <vector>
 #include "Types.h"
 
 class Road;
 class Camera;
-class Animation;
+class AnimationGroup;
 class ModuleRenderer;
 
 class GameObject
 {
 	public:
 
-		// GameObject(const WorldPosition& position, const Texture* texture, const Road* road);
-		GameObject(const WorldPosition& position, const std::vector<Animation*>* animations, const Road* road);
+		GameObject(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road);
 
 		virtual ~GameObject();
 
 		const WorldPosition* getPosition() const;
 
-		// const Texture* getTexture() const;
-		const std::vector<Animation*>* getAnimations() const;
+		const AnimationGroup* getAnimationGroup() const;
 
 		const Road* getRoad() const;
 
@@ -39,17 +36,15 @@ class GameObject
 
 		WorldPosition position;
 
+	protected:
+
+		const AnimationGroup* animationGroup = nullptr;
+
 	private:
 
 		Size size;
 
 		const Road* road = nullptr;
-
-		// const Texture* texture = nullptr;
-
-		uint currentAnimation = 0;
-
-		const std::vector<Animation*>* animations = nullptr;
 };
 
 #endif

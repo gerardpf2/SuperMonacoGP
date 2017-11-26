@@ -1,8 +1,7 @@
 #ifndef _TYPES_
 #define _TYPES_
 
-#include <SDL_rect.h>
-
+struct SDL_Rect;
 struct SDL_Texture;
 
 typedef unsigned int uint;
@@ -13,7 +12,7 @@ struct Direction { float x, z; };
 
 struct RumbleColors { uint a, b, c, d, e; };
 
-struct Texture { SDL_Texture* t; SDL_Rect r; };
+struct Texture { SDL_Texture* t; const SDL_Rect* r; };
 
 struct WindowPosition { short x, y; };
 
