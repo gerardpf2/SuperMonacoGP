@@ -40,7 +40,8 @@ void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) co
 	short maxWindowY = WINDOW_HEIGHT;
 
 	float zOffset = 0.0f;
-	float zBase = camera->getPosition()->z;
+	float zBase = camera->getBaseZ();
+	// float zBase = camera->getPosition()->z;
 
 	Segment* baseSegment = getSegmentAtZ(zBase);
 

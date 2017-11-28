@@ -3,6 +3,11 @@
 #include "Road.h"
 #include "Utils.h"
 
+float Camera::getBaseZ() const
+{
+	return position.z + CAMERA_Y * depth;
+}
+
 Camera::Camera(const Road* road) :
 	road(road)
 {
@@ -59,5 +64,6 @@ void Camera::update(float deltaTimeS)
 
 void Camera::limitZ()
 {
-	position.z = modF0ToL(position.z, road->getLength());
+	//position.z = modF0ToL(position.z, road->getLength());
+	position.z = modF0ToL(getBaseZ(), road->getLength()) - CAMERA_Y * depth;
 }

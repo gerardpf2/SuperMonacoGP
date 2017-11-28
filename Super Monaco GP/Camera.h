@@ -9,6 +9,8 @@ class Camera
 {
 	public:
 
+		float getBaseZ() const;
+
 		virtual ~Camera();
 
 		const Road* getRoad() const;
