@@ -7,7 +7,7 @@ class Car : public GameObject
 {
 	public:
 
-		Car(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road);
+		Car(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road);
 
 		virtual ~Car();
 

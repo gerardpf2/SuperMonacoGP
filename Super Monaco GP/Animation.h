@@ -3,27 +3,24 @@
 
 #include <vector>
 #include "Types.h"
-#include "rapidjson/document.h"
-
-class ModuleTexture;
-enum class AnimationType;
 
 class Animation
 {
 	public:
 
-		Animation(const Animation& animation);
-		Animation(const rapidjson::Value& value, const ModuleTexture* moduleTexture);
+		Animation(uint id, const std::vector<const Texture*>* textures, float endTime, bool loop /* , bool inverse */);
 
 		virtual ~Animation();
 
-		AnimationType getType() const;
+		uint getId() const;
 
 		const std::vector<const Texture*>* getTextures() const;
 
 		float getEndTime() const;
 
 		bool getLoop() const;
+
+		// bool getInverse() const;
 
 		bool hasEnded() const;
 
@@ -37,17 +34,19 @@ class Animation
 
 		void update(float deltaTimeS);
 
-		void cleanUp(bool isBase = false);
+		void cleanUp();
 
 	private:
 
-		AnimationType type;
+		uint id;
 
-		std::vector<const Texture*>* textures = nullptr;
+		const std::vector<const Texture*>* textures = nullptr;
 
 		float endTime;
 
 		bool loop;
+
+		// bool inverse;
 
 		bool ended = false;
 

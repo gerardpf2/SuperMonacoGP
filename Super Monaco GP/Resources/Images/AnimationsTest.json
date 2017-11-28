@@ -1,0 +1,21 @@
+{
+	"INFO" : "",
+	"animationGroupId" : 0,
+	"textureGroupPath" : "Resources/Images/TexturesTest.json",
+	"animations" :
+	[
+		{
+			"INFO" : "",
+			"loop" : true,
+			"endTime" : 1.0,
+			"textureIds" : [ 0, 1 ]
+		}
+	],
+	"animationContainers" :
+	[
+		{
+			"INFO" : "",
+			"animationIds" : [ 0 ]
+		}
+	]
+}

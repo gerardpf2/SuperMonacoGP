@@ -1,0 +1,16 @@
+{
+	"INFO" : "",
+	"textureGroupId" : 0,
+	"bmpPath" : "Resources/Images/Test.bmp",
+	"textures" :
+	[
+		{
+			"INFO" : "",
+			"x" : 184, "y" : 11, "w" : 80, "h" : 45
+		},
+		{
+			"INFO" : "",
+			"x" : 96, "y" : 67, "w" : 80, "h" : 45
+		}
+	]
+}

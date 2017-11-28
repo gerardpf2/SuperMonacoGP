@@ -1,38 +1,21 @@
 #include "Animation.h"
 
 #include "Utils.h"
-#include "ModuleTexture.h"
 
 using namespace std;
-using namespace rapidjson;
 
-Animation::Animation(const Animation& animation) :
-	type(animation.type), textures(animation.textures), endTime(animation.endTime), loop(animation.loop)
+Animation::Animation(uint id, const vector<const Texture*>* textures, float endTime, bool loop /* , bool inverse */) :
+	id(id), textures(textures), endTime(endTime), loop(loop) /* , inverse(inverse) */
 {
-	reset();
-}
-
-Animation::Animation(const Value& value, const ModuleTexture* moduleTexture)
-{
-	type = (AnimationType)value["type"].GetUint();
-	endTime = value["endTime"].GetFloat();
-	loop = value["loop"].GetBool();
-
-	const Value& texturesJson = value["textures"];
-	textures = new vector<const Texture*>(texturesJson.Size(), nullptr);
-
-	for(SizeType i = 0; i < texturesJson.Size(); ++i)
-		(*textures)[i] = moduleTexture->getTexture((TextureType)texturesJson[i].GetUint());
-
-	reset();
+	// if(inverse) currentTime = (1.0f - 1.0f / (0.5f + textures->size())) * endTime;
 }
 
 Animation::~Animation()
 { }
 
-AnimationType Animation::getType() const
+uint Animation::getId() const
 {
-	return type;
+	return id;
 }
 
 const vector<const Texture*>* Animation::getTextures() const
@@ -49,6 +32,11 @@ bool Animation::getLoop() const
 {
 	return loop;
 }
+
+/* bool Animation::getInverse() const
+{
+	return inverse;
+} */
 
 bool Animation::hasEnded() const
 {
@@ -80,20 +68,17 @@ void Animation::reset()
 
 void Animation::update(float deltaTimeS)
 {
-	float newTime = currentTime + timeMultiplier * deltaTimeS;
+	// float inverseMultiplier = inverse ? -1.0f : 1.0f;
+
+	float newTime = currentTime + /* inverseMultiplier * */ timeMultiplier * deltaTimeS;
 
 	if((ended = ended || newTime >= endTime) && !loop) return;
+	// if((ended = ended || (!inverse && newTime >= endTime) || (inverse && newTime <= 0.0f)) && !loop) return;
 
 	currentTime = modF0ToL(newTime, endTime);
 }
 
-void Animation::cleanUp(bool isBase)
+void Animation::cleanUp()
 {
-	if(isBase)
-	{
-		textures->clear();
-		delete textures;
-	}
-
 	textures = nullptr;
 }

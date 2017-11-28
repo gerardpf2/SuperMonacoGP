@@ -6,15 +6,15 @@
 #include "Segment.h"
 #include <SDL_rect.h>
 #include "Animation.h"
-#include "AnimationGroup.h"
 #include "ModuleRenderer.h"
+#include "AnimationContainer.h"
 
-GameObject::GameObject(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road) :
-	position(position), animationGroup(animationGroup), road(road)
+GameObject::GameObject(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road) :
+	position(position), animationContainer(animationContainer), road(road)
 {
 	// Revisar Size
-	size.w = (float)animationGroup->getCurrent()->getCurrentFrame()->r->w * SPRITE_SIZE_RATIO;
-	size.h = (float)animationGroup->getCurrent()->getCurrentFrame()->r->h * SPRITE_SIZE_RATIO;
+	size.w = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->w * SPRITE_SIZE_RATIO;
+	size.h = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->h * SPRITE_SIZE_RATIO;
 
 	limitZ();
 }
@@ -27,9 +27,9 @@ const WorldPosition* GameObject::getPosition() const
 	return &position;
 }
 
-const AnimationGroup* GameObject::getAnimationGroup() const
+const AnimationContainer* GameObject::getAnimationContainer() const
 {
-	return animationGroup;
+	return animationContainer;
 }
 
 const Road* GameObject::getRoad() const
@@ -46,7 +46,7 @@ void GameObject::elevate()
 
 void GameObject::update(float deltaTimeS)
 {
-	animationGroup->update(deltaTimeS);
+	animationContainer->update(deltaTimeS);
 }
 
 void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
@@ -83,7 +83,7 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 
 	if(dst.y >= WINDOW_HEIGHT) return;
 
-	const Texture* texture = animationGroup->getCurrent()->getCurrentFrame();
+	const Texture* texture = animationContainer->getCurrentAnimation()->getCurrentFrame();
 
 	SDL_Rect src = *texture->r;
 

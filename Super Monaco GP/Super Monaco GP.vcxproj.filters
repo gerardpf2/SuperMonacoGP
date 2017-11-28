@@ -78,7 +78,7 @@
     <ClCompile Include="ModuleAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationGroup.cpp">
+    <ClCompile Include="AnimationContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,10 +155,10 @@
     <ClInclude Include="ModuleAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationGroup.h">
+    <ClInclude Include="MemLeaks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MemLeaks.h">
+    <ClInclude Include="AnimationContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

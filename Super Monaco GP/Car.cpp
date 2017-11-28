@@ -4,12 +4,12 @@
 #include "Utils.h"
 #include "Segment.h"
 #include "Animation.h"
-#include "AnimationGroup.h"
+#include "AnimationContainer.h"
 
 using namespace std;
 
-Car::Car(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road) :
-	GameObject(position, animationGroup, road)
+Car::Car(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road) :
+	GameObject(position, animationContainer, road)
 { }
 
 Car::~Car()
@@ -43,7 +43,7 @@ void Car::update(float deltaTimeS)
 
 	float speedPercent = velocity / maxVelocity;
 
-	animationGroup->getCurrent()->setTimeMultiplier(speedPercent);
+	animationContainer->getCurrentAnimation()->setTimeMultiplier(speedPercent);
 	
 	float dX = 0.5f * ROAD_WIDTH * speedPercent * deltaTimeS;
 
@@ -53,6 +53,8 @@ void Car::update(float deltaTimeS)
 	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
 
 	position.y = interpolate(position.z, newSegment->getZNear(), newSegment->getZFar(), newSegment->getYNear(), newSegment->getYFar());
+
+	acceleration *= (1.0f - speedPercent);
 
 	velocity += direction.z * acceleration * deltaTimeS;
 	velocity -= (1.0f - direction.z) * deacceleration * deltaTimeS;

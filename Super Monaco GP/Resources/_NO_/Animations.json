@@ -2,7 +2,7 @@
 	"animations" :
 	[
 		{
-			"type" : 0,
+			"id" : 0,
 			"loop" : true,
 			"endTime" : 1.0,
 			"textures" : [ 0, 1 ]
@@ -11,7 +11,7 @@
 	"animationGroups" :
 	[
 		{
-			"type" : 0,
+			"id" : 0,
 			"current" : 0,
 			"animations" : [ 0 ]
 		}

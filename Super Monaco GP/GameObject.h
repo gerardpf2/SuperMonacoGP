@@ -5,20 +5,20 @@
 
 class Road;
 class Camera;
-class AnimationGroup;
 class ModuleRenderer;
+class AnimationContainer;
 
 class GameObject
 {
 	public:
 
-		GameObject(const WorldPosition& position, const AnimationGroup* animationGroup, const Road* road);
+		GameObject(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road);
 
 		virtual ~GameObject();
 
 		const WorldPosition* getPosition() const;
 
-		const AnimationGroup* getAnimationGroup() const;
+		const AnimationContainer* getAnimationContainer() const;
 
 		const Road* getRoad() const;
 
@@ -38,7 +38,7 @@ class GameObject
 
 	protected:
 
-		const AnimationGroup* animationGroup = nullptr;
+		const AnimationContainer* animationContainer = nullptr;
 
 	private:
 

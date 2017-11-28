@@ -14,7 +14,7 @@
 #include "ModuleJson.h"
 #include "CameraFollow.h"
 #include "ModuleAnimation.h"
-#include "AnimationGroup.h"
+#include "AnimationContainer.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -37,15 +37,21 @@ bool ModuleWorld::setUp()
 
 	gameObjects.reserve(7);
 
-	AnimationGroup* animationGroup = getGameEngine()->getModuleAnimation()->getAnimationGroupCopy(AnimationGroupType::PLAYER);
-	AnimationGroup* animationGroup2 = getGameEngine()->getModuleAnimation()->getAnimationGroupCopy(AnimationGroupType::PLAYER);
-	AnimationGroup* animationGroup3 = getGameEngine()->getModuleAnimation()->getAnimationGroupCopy(AnimationGroupType::PLAYER);
+	getGameEngine()->getModuleAnimation()->load("Resources/Images/AnimationsTest.json");
 
-	addGameObject(player = new Player(WorldPosition{ 0.0f, 0.0f, 0.0f }, animationGroup, road, getGameEngine()->getModuleInput()));
+	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(0, 0);
+	AnimationContainer* animationContainer2 = getGameEngine()->getModuleAnimation()->getAnimationContainer(0, 0);
+	AnimationContainer* animationContainer3 = getGameEngine()->getModuleAnimation()->getAnimationContainer(0, 0);
+
+	/* AnimationGroup* animationGroup = getGameEngine()->getModuleAnimation()->getAnimationGroupCopy(AnimationGroupType::PLAYER);
+	AnimationGroup* animationGroup2 = getGameEngine()->getModuleAnimation()->getAnimationGroupCopy(AnimationGroupType::PLAYER);
+	AnimationGroup* animationGroup3 = getGameEngine()->getModuleAnimation()->getAnimationGroupCopy(AnimationGroupType::PLAYER); */
+
+	addGameObject(player = new Player(WorldPosition{ 0.0f, 0.0f, 0.0f }, animationContainer, road, getGameEngine()->getModuleInput()));
 	
-	addGameObject(new Car(WorldPosition{ 0.0f, 0.0f, 10.0f }, animationGroup2, road));
+	addGameObject(new Car(WorldPosition{ 0.0f, 0.0f, 10.0f }, animationContainer2, road));
 	
-	addGameObject(new GameObject(WorldPosition{ 5.0f, 0.0f, 5.0f }, animationGroup3, road));
+	addGameObject(new GameObject(WorldPosition{ 5.0f, 0.0f, 5.0f }, animationContainer3, road));
 
 	// --- GameObjects
 
@@ -72,6 +78,8 @@ bool ModuleWorld::update(float deltaTimeS)
 
 void ModuleWorld::cleanUp()
 {
+	getGameEngine()->getModuleAnimation()->unload(0);
+
 	if(road)
 	{
 		road->clear();
