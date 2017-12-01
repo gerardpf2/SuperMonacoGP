@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>E:\Windows\GitHub\Super Monaco GP\Super Monaco GP\rapidjson;E:\Windows\GitHub\Super Monaco GP\Super Monaco GP\SDL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Windows\GitHub\Super Monaco GP\Super Monaco GP\SDL\libx86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\rapidjson;$(ProjectDir)\SDL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\SDL\libx86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,13 +123,13 @@
     <ClCompile Include="AnimationContainer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFollow.cpp" />
-    <ClCompile Include="CameraFree.cpp" />
     <ClCompile Include="Car.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Module.cpp" />
     <ClCompile Include="ModuleAnimation.cpp" />
+    <ClCompile Include="ModuleGameObject.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleJson.cpp" />
     <ClCompile Include="ModulePerformance.cpp" />
@@ -147,15 +147,14 @@
     <ClInclude Include="AnimationContainer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFollow.h" />
-    <ClInclude Include="CameraFree.h" />
     <ClInclude Include="Car.h" />
-    <ClInclude Include="Colors.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="MemLeaks.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAnimation.h" />
+    <ClInclude Include="ModuleGameObject.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleJson.h" />
     <ClInclude Include="ModulePerformance.h" />

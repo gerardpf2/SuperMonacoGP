@@ -1,0 +1,37 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"animationGroupId" : 0,
+	"textureGroupPath" : "Resources/Configurations/Textures/TexturesTest.json",
+	"animations" :
+	[
+		{
+			"_info" : "",
+			
+			"loop" : true,
+			"endTime" : 1.0,
+			"textureIds" : [ 0, 1 ]
+		},
+		{
+			"_info" : "",
+			
+			"loop" : true,
+			"endTime" : 5.0,
+			"textureIds" : [ 1, 0 ]
+		}
+	],
+	"animationContainers" :
+	[
+		{
+			"_info" : "",
+			
+			"animationIds" : [ 0 ]
+		},
+		{
+			"_info" : "",
+			
+			"animationIds" : [ 1 ]
+		}
+	]
+}

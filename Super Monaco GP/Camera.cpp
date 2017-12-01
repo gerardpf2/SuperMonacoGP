@@ -3,11 +3,6 @@
 #include "Road.h"
 #include "Utils.h"
 
-float Camera::getBaseZ() const
-{
-	return position.z + CAMERA_Y * depth;
-}
-
 Camera::Camera(const Road* road) :
 	road(road)
 {
@@ -15,7 +10,7 @@ Camera::Camera(const Road* road) :
 
 	position.x = 0.0f;
 	position.y = CAMERA_Y;
-	position.z = -position.y * depth;
+	position.z = -getOffsetZ();
 
 	limitZ();
 }
@@ -38,9 +33,19 @@ const WorldPosition* Camera::getPosition() const
 	return &position;
 }
 
+float Camera::getOffsetZ() const
+{
+	return CAMERA_Y * depth;
+}
+
+float Camera::getBasePositionZ() const
+{
+	return position.z + getOffsetZ();
+}
+
 bool Camera::isBehind(float z) const
 {
-	return z - position.z <= depth;
+	return z + depth <= getBasePositionZ();
 }
 
 void Camera::project(const WorldPosition& worldPosition, WindowPosition& windowPosition) const
@@ -48,7 +53,7 @@ void Camera::project(const WorldPosition& worldPosition, WindowPosition& windowP
 	float scale = depth / (worldPosition.z - position.z);
 
 	windowPosition.x = (short)roundf((WINDOW_WIDTH / 2.0f) + (WINDOW_WIDTH / 2.0f) * scale * (worldPosition.x - position.x));
-	windowPosition.y = (short)roundf((WINDOW_HEIGHT / 2.0f) - (WINDOW_HEIGHT / 2.0f) * scale * (worldPosition.y - position.y));
+	windowPosition.y = (short)roundf((WINDOW_HEIGHT / 1.5f) - (WINDOW_HEIGHT / 3.0f) * scale * (worldPosition.y - position.y));
 }
 
 void Camera::project(const WorldTrapezoid& worldTrapezoid, WindowTrapezoid& windowTrapezoid) const
@@ -64,6 +69,5 @@ void Camera::update(float deltaTimeS)
 
 void Camera::limitZ()
 {
-	//position.z = modF0ToL(position.z, road->getLength());
-	position.z = modF0ToL(getBaseZ(), road->getLength()) - CAMERA_Y * depth;
+	position.z = modF0ToL(getBasePositionZ(), road->getLength()) - getOffsetZ();
 }

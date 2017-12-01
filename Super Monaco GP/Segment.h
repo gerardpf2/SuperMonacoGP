@@ -60,7 +60,7 @@ class Segment
 
 		void eraseGameObject(const GameObject* gameObject);
 
-		void render(float xOffset, float dXOffset, float zOffset, const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY) const;
+		void render(const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY) const;
 
 	private:
 

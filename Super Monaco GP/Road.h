@@ -7,23 +7,26 @@
 
 class Camera;
 class Segment;
+class ModuleJson;
 class ModuleRenderer;
 
 class Road
 {
 	public:
 
-		Road(const rapidjson::Document& document);
+		Road();
 
 		virtual ~Road();
+
+		void load(const char* jsonPath, const ModuleJson* moduleJson);
+
+		void unload();
 
 		float getLength() const;
 
 		Segment* getSegmentAtZ(float z) const;
 
 		void render(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
-
-		void clear();
 
 	private:
 

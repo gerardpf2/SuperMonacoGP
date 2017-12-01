@@ -10,13 +10,13 @@ class AnimationContainer
 {
 	public:
 
-		AnimationContainer(uint id, uint currentAnimationId, std::map<uint, Animation*>* animations);
-
-		// AnimationContainer(const AnimationContainer& animationGroup, ModuleAnimation* moduleAnimation);
+		AnimationContainer(uint id, uint animationGroupId, uint currentAnimationId, std::map<uint, Animation*>* animations);
 
 		virtual ~AnimationContainer();
 
 		uint getId() const;
+
+		uint getAnimationGroupId() const;
 
 		uint getCurrentAnimationId() const;
 
@@ -34,11 +34,13 @@ class AnimationContainer
 
 	private:
 
-		uint id;
+		uint id; // Constructor
 
-		uint currentAnimationId;
+		uint animationGroupId; // Constructor
 
-		std::map<uint, Animation*>* animations;
+		uint currentAnimationId; // Constructor
+
+		std::map<uint, Animation*>* animations = nullptr; // Constructor
 };
 
 #endif

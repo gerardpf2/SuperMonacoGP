@@ -25,7 +25,7 @@ class ModuleWorld : public Module
 
 	private:
 
-		void addGameObject(GameObject* gameObject);
+		void addGameObject(GameObject* gameObject, float xOffsetRoad = 0.0f);
 
 	private:
 

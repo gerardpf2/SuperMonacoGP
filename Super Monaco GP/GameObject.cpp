@@ -9,7 +9,15 @@
 #include "ModuleRenderer.h"
 #include "AnimationContainer.h"
 
-GameObject::GameObject(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road) :
+GameObject::GameObject(uint id, const AnimationContainer* animationContainer) :
+	id(id), animationContainer(animationContainer)
+{
+	// Revisar Size
+	size.w = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->w * SPRITE_SIZE_RATIO;
+	size.h = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->h * SPRITE_SIZE_RATIO;
+}
+
+/* GameObject::GameObject(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road) :
 	position(position), animationContainer(animationContainer), road(road)
 {
 	// Revisar Size
@@ -17,14 +25,14 @@ GameObject::GameObject(const WorldPosition& position, const AnimationContainer* 
 	size.h = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->h * SPRITE_SIZE_RATIO;
 
 	limitZ();
-}
+} */
 
 GameObject::~GameObject()
 { }
 
-const WorldPosition* GameObject::getPosition() const
+uint GameObject::getId() const
 {
-	return &position;
+	return id;
 }
 
 const AnimationContainer* GameObject::getAnimationContainer() const
@@ -32,9 +40,26 @@ const AnimationContainer* GameObject::getAnimationContainer() const
 	return animationContainer;
 }
 
+const WorldPosition* GameObject::getPosition() const
+{
+	return &position;
+}
+
+void GameObject::setPosition(const WorldPosition& position)
+{
+	this->position = position;
+
+	limitZ();
+}
+
 const Road* GameObject::getRoad() const
 {
 	return road;
+}
+
+void GameObject::setRoad(const Road* road)
+{
+	this->road = road;
 }
 
 void GameObject::elevate()
@@ -42,6 +67,11 @@ void GameObject::elevate()
 	Segment* segment = road->getSegmentAtZ(position.z);
 
 	position.y += interpolate(position.z, segment->getZNear(), segment->getZFar(), segment->getYNear(), segment->getYFar());
+}
+
+void GameObject::moveX(float incX)
+{
+	position.x += incX;
 }
 
 void GameObject::update(float deltaTimeS)
@@ -99,6 +129,11 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 	}
 
 	moduleRenderer->renderTexture(texture->t, src, dst);
+}
+
+void GameObject::cleanUp()
+{
+	// ...
 }
 
 void GameObject::limitZ()

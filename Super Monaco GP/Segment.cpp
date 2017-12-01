@@ -124,7 +124,7 @@ void Segment::eraseGameObject(const GameObject* gameObject)
 	gameObjects.erase(gameObject);
 }
 
-void Segment::render(float xOffset, float dXOffset, float zOffset, const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY) const
+void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY) const
 {
 	// Check if this segment is behind the camera
 
@@ -132,8 +132,8 @@ void Segment::render(float xOffset, float dXOffset, float zOffset, const Camera*
 
 	// Project near and far points of this segment
 
-	WorldPosition worldPositionNear{ -xOffset, yNear, zOffset + zNear };
-	WorldPosition worldPositionFar{ -xOffset - dXOffset, yFar, zOffset + zFar };
+	WorldPosition worldPositionNear{ -xOffsetNear, yNear, zOffset + zNear };
+	WorldPosition worldPositionFar{ -xOffsetFar, yFar, zOffset + zFar };
 
 	WindowPosition windowPositionNear, windowPositionFar;
 

@@ -9,9 +9,11 @@ class Player : public Car
 {
 	public:
 
-		Player(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road, const ModuleInput* moduleInput);
+		Player(uint id, const AnimationContainer* animationContainer, const ModuleInput* moduleInput);
 
 		virtual ~Player();
+
+		virtual GameObjectType getType() const override;
 
 		const ModuleInput* getModuleInput() const;
 

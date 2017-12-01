@@ -8,12 +8,22 @@
 
 using namespace std;
 
-Car::Car(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road) :
-	GameObject(position, animationContainer, road)
+Car::Car(uint id, const AnimationContainer* animationContainer) :
+	GameObject(id, animationContainer)
 { }
 
 Car::~Car()
 { }
+
+GameObjectType Car::getType() const
+{
+	return GameObjectType::CAR;
+}
+
+float Car::getVelocity() const
+{
+	return velocity;
+}
 
 void Car::update(float deltaTimeS)
 {
@@ -21,14 +31,16 @@ void Car::update(float deltaTimeS)
 
 	float maxVelocity = CAR_MAX_VELOCITY;
 	float acceleration = CAR_ACCELERATION_ROAD;
-	float deacceleration = CAR_ACCELERATION_ROAD;
+	float deacceleration = CAR_DEACCELERATION_ROAD;
 	float deaccelerationFriction = CAR_DEACCELERATION_FRICTION_ROAD;
+	float deaccelerationFrictionExtra = CAR_DEACCELERATION_FRICTION_EXTRA_ROAD;
 
 	if(position.x < ROAD_MIN_X || position.x > ROAD_MAX_X)
 	{
 		acceleration = CAR_ACCELERATION_GRASS;
 		deacceleration = CAR_DEACCELERATION_GRASS;
 		deaccelerationFriction = CAR_DEACCELERATION_FRICTION_GRASS;
+		deaccelerationFrictionExtra = CAR_DEACCELERATION_FRICTION_EXTRA_GRASS;
 	}
 
 	updateDirection(deltaTimeS);
@@ -54,13 +66,15 @@ void Car::update(float deltaTimeS)
 
 	position.y = interpolate(position.z, newSegment->getZNear(), newSegment->getZFar(), newSegment->getYNear(), newSegment->getYFar());
 
-	acceleration *= (1.0f - speedPercent);
+	acceleration *= (1.0f - powf(speedPercent, 2.0f));
 
-	velocity += direction.z * acceleration * deltaTimeS;
-	velocity -= (1.0f - direction.z) * deacceleration * deltaTimeS;
+	velocity -= deaccelerationFriction * deltaTimeS;
+
+	if(direction.z == 1.0f) velocity += acceleration * deltaTimeS;
+	else if(direction.z == -1.0f) velocity -= deacceleration * deltaTimeS;
 
 	if(velocity > CAR_DEACCELERATION_FRICTION_LIMIT_VELOCITY)
-		velocity -= deaccelerationFriction * deltaTimeS;
+		velocity -= deaccelerationFrictionExtra * deltaTimeS;
 
 	velocity = clamp(velocity, 0.0f, maxVelocity);
 

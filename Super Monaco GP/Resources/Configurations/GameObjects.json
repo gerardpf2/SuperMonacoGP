@@ -1,0 +1,22 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"gameObjects" :
+	[
+		{
+			"_info" : "Player(id 0, type 0). Do not move.",
+			
+			"type" : 0,
+			"animationGroupPath" : "Resources/Configurations/Animations/AnimationsTest.json",
+			"animationContainerId" : 0
+		},
+		{
+			"_info" : "Car(id 1, type 1). Do not move.",
+			
+			"type" : 1,
+			"animationGroupPath" : "Resources/Configurations/Animations/AnimationsTest.json",
+			"animationContainerId" : 0
+		}
+	]
+}

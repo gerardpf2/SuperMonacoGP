@@ -4,79 +4,37 @@
 #include "Camera.h"
 #include "Segment.h"
 #include "GameObject.h"
+#include "ModuleJson.h"
 
 using namespace rapidjson;
 
-Road::Road(const Document& document)
-{
-	// Length
-	setLength(document["length"].GetFloat());
-
-	// Hills
-	addHills(document["hills"]);
-
-	// Curves
-	addCurves(document["curves"]);
-
-	// RumbleColors
-	setRumbleColors(document["rumbleColors"]);
-}
+Road::Road()
+{ }
 
 Road::~Road()
 { }
 
-float Road::getLength() const
+void Road::load(const char* jsonPath, const ModuleJson* moduleJson)
 {
-	return length;
+	unload();
+
+	Document jsonDocument;
+	moduleJson->read("Resources/Configurations/Roads/Test1.json", jsonDocument);
+
+	// Length
+	setLength(jsonDocument["length"].GetFloat());
+
+	// Hills
+	addHills(jsonDocument["hills"]);
+
+	// Curves
+	addCurves(jsonDocument["curves"]);
+
+	// RumbleColors
+	setRumbleColors(jsonDocument["rumbleColors"]);
 }
 
-Segment* Road::getSegmentAtZ(float z) const
-{
-	return getSegment((int)(z / SEGMENT_LENGTH));
-}
-
-void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
-{
-	short maxWindowY = WINDOW_HEIGHT;
-
-	float zOffset = 0.0f;
-	float zBase = camera->getBaseZ();
-	// float zBase = camera->getPosition()->z;
-
-	Segment* baseSegment = getSegmentAtZ(zBase);
-
-	float x = 0.0f;
-	float dX = baseSegment->getCurve() - baseSegment->getCurve() * fmodf(zBase, SEGMENT_LENGTH) / SEGMENT_LENGTH;
-
-	for(uint i = 0; i < N_SEGMENTS_DRAW; ++i)
-	{
-		Segment* segment = getSegment(baseSegment->getIndex() + i);
-
-		segment->setXOffsetNear(x);
-		segment->setXOffsetFar(x + dX);
-		segment->setZOffset(zOffset);
-		segment->setClipY(maxWindowY);
-
-		segment->render(x, dX, zOffset, camera, moduleRenderer, maxWindowY);
-
-		x += dX;
-		dX += segment->getCurve();
-
-		if(segment->getIndex() == (uint)(segments.size() - 1)) zOffset += length;
-	}
-
-	// GameObjects
-
-	for(int i = N_SEGMENTS_DRAW - 1; i >= 0; --i)
-	{
-		Segment* segment = getSegment(baseSegment->getIndex() + i);
-
-		for(const GameObject* gameObject : *segment->getGameObjects())
-			gameObject->render(camera, moduleRenderer);
-	}
-}
-
-void Road::clear()
+void Road::unload()
 {
 	for(int i = (int)segments.size() - 1; i >= 0; --i)
 	{
@@ -93,6 +51,56 @@ void Road::clear()
 	}
 
 	rumbleColors.clear();
+}
+
+float Road::getLength() const
+{
+	return length;
+}
+
+Segment* Road::getSegmentAtZ(float z) const
+{
+	return getSegment((int)(z / SEGMENT_LENGTH));
+}
+
+void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	short maxWindowY = WINDOW_HEIGHT;
+
+	float zOffset = 0.0f;
+	float zBase = camera->getBasePositionZ();
+
+	Segment* baseSegment = getSegmentAtZ(zBase);
+
+	float x = 0.0f;
+	float dX = baseSegment->getCurve() - baseSegment->getCurve() * fmodf(zBase, SEGMENT_LENGTH) / SEGMENT_LENGTH;
+
+	for(uint i = 0; i < N_SEGMENTS_DRAW; ++i)
+	{
+		Segment* segment = getSegment(baseSegment->getIndex() + i);
+
+		segment->setXOffsetNear(x);
+		segment->setXOffsetFar(x + dX);
+		segment->setZOffset(zOffset);
+		segment->setClipY(maxWindowY);
+
+		x += dX;
+		dX += segment->getCurve();
+
+		segment->render(camera, moduleRenderer, maxWindowY);
+
+		if(segment->getIndex() == (uint)(segments.size() - 1)) zOffset += length;
+	}
+
+	// GameObjects
+
+	for(int i = N_SEGMENTS_DRAW - 1; i >= 0; --i)
+	{
+		Segment* segment = getSegment(baseSegment->getIndex() + i);
+
+		for(const GameObject* gameObject : *segment->getGameObjects())
+			gameObject->render(camera, moduleRenderer);
+	}
 }
 
 Segment* Road::getSegment(int index) const
@@ -148,9 +156,9 @@ void Road::addHills(const Value& value) const
 
 void Road::addHill(float zStart, float length, float angle) const
 {
-	float enterLength = length * 0.475f;
-	float holdLength = length * 0.05f;
-	float leaveLength = length * 0.475f;
+	float enterLength = length * ROAD_HILL_ENTER_PERCENT;
+	float holdLength = length * ROAD_HILL_HOLD_PERCENT;
+	float leaveLength = length * ROAD_HILL_LEAVE_PERCENT;
 
 	float value = (enterLength + holdLength / 2.0f) * tanf(degToRad(angle));
 
@@ -249,9 +257,9 @@ void Road::addCurves(const Value& value) const
 
 void Road::addCurve(float zStart, float length, float angle) const
 {
-	float enterLength = length * 0.333f;
-	float holdLength = length * 0.333f;
-	float leaveLength = length * 0.333f;
+	float enterLength = length * ROAD_CURVE_ENTER_PERCENT;
+	float holdLength = length * ROAD_CURVE_HOLD_PERCENT;
+	float leaveLength = length * ROAD_CURVE_LEAVE_PERCENT;
 
 	float value = length * sinf(degToRad(angle)) / powf(length / SEGMENT_LENGTH, 2.0f);
 

@@ -7,6 +7,7 @@
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
 #include "ModuleAnimation.h"
+#include "ModuleGameObject.h" //
 #include "ModulePerformance.h"
 
 GameEngine::GameEngine()
@@ -50,6 +51,11 @@ ModuleAnimation* GameEngine::getModuleAnimation() const
 	return moduleAnimation;
 }
 
+ModuleGameObject* GameEngine::getModuleGameObject() const //
+{
+	return moduleGameObject;
+}
+
 ModulePerformance* GameEngine::getModulePerformance() const
 {
 	return modulePerformance;
@@ -65,7 +71,7 @@ void GameEngine::run()
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(7);
+	modules.reserve(8);
 
 	modules.push_back(moduleJson = new ModuleJson(this));
 	modules.push_back(moduleInput = new ModuleInput(this));
@@ -73,6 +79,7 @@ void GameEngine::addInitialModules()
 	modules.push_back(moduleRenderer = new ModuleRenderer(this));
 	modules.push_back(moduleTexture = new ModuleTexture(this));
 	modules.push_back(moduleAnimation = new ModuleAnimation(this));
+	modules.push_back(moduleGameObject = new ModuleGameObject(this)); //
 	// modules.push_back(modulePerformance = new ModulePerformance(this));
 
 	modules.push_back(moduleWorld = new ModuleWorld(this));
@@ -131,5 +138,6 @@ void GameEngine::cleanUp()
 	moduleTexture = nullptr;
 	moduleRenderer = nullptr;
 	moduleAnimation = nullptr;
+	moduleGameObject = nullptr; //
 	modulePerformance = nullptr;
 }

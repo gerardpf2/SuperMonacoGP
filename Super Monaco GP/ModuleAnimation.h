@@ -28,7 +28,11 @@ class ModuleAnimation : public Module
 
 		AnimationContainer* getAnimationContainer(uint idAnimationGroup, uint idAnimationContainer) const;
 
-		// virtual void cleanUp() override;
+	private:
+
+		bool isAlreadyLoaded(const char* jsonPath, uint& idAnimationGroup) const;
+
+		bool isAlreadyUnloaded(uint idAnimationGroup, const char*& jsonPath) const;
 
 	private:
 
@@ -36,47 +40,13 @@ class ModuleAnimation : public Module
 
 		std::map<uint, std::vector<AnimationContainer*>*> animationContainerGroups;
 
+		std::map<uint, uint> animationGroupsTextureGroupId;
+
 		std::map<uint, std::list<Animation*>*> usedAnimations;
 
 		std::map<uint, std::list<AnimationContainer*>*> usedAnimationContainers;
 
-		// std::map<const char*, uint> loadedAnimationGroups;
-
-	/* public:
-
-		ModuleAnimation(GameEngine* gameEngine);
-
-		virtual ~ModuleAnimation();
-
-		Animation* getAnimationCopy(uint animationId);
-
-		AnimationGroup* getAnimationGroupCopy(uint animationGroupId);
-
-		virtual bool setUp() override;
-
-		virtual void cleanUp() override;
-
-	private:
-
-		void load(const rapidjson::Document& documentJson);
-
-		void loadAnimationGroups(const rapidjson::Value& animationGroupsJson);
-
-		void loadAnimationGroup(const rapidjson::Value& animationGroupJson);
-
-		void loadAnimations(const rapidjson::Value& animationsJson);
-
-		void loadAnimation(const rapidjson::Value& animationJson);
-
-	private:
-
-		std::vector<Animation*> animations;
-
-		std::list<Animation*> usedAnimations;
-
-		std::vector<AnimationGroup*> animationGroups;
-
-		std::list<AnimationGroup*> usedAnimationGroups; */
+		std::list<std::pair<const char*, uint>> loadedAnimationGroups;
 };
 
 #endif

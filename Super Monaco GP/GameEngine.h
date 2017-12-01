@@ -12,6 +12,7 @@ class ModuleWindow;
 class ModuleTexture;
 class ModuleRenderer;
 class ModuleAnimation;
+class ModuleGameObject; //
 class ModulePerformance;
 
 class GameEngine
@@ -35,6 +36,8 @@ class GameEngine
 		ModuleRenderer* getModuleRenderer() const;
 
 		ModuleAnimation* getModuleAnimation() const;
+
+		ModuleGameObject* getModuleGameObject() const; //
 
 		ModulePerformance* getModulePerformance() const;
 
@@ -69,6 +72,8 @@ class GameEngine
 		ModuleRenderer* moduleRenderer = nullptr;
 
 		ModuleAnimation* moduleAnimation = nullptr;
+
+		ModuleGameObject* moduleGameObject = nullptr; //
 
 		ModulePerformance* modulePerformance = nullptr;
 };

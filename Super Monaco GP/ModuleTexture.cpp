@@ -1,7 +1,6 @@
 #include "ModuleTexture.h"
 
 #include <SDL.h>
-#include "Colors.h"
 #include "ModuleJson.h"
 #include "GameEngine.h"
 #include "ModuleRenderer.h"
@@ -18,10 +17,8 @@ ModuleTexture::~ModuleTexture()
 
 uint ModuleTexture::load(const char* jsonPath)
 {
-	// Check if already loaded
-
-	// map<const char*, uint>::iterator it = loadedTextureGroups.find(jsonPath);
-	// if(it != loadedTextureGroups.end()) return it->second;
+	uint tmpTextureGroupId;
+	if(isAlreadyLoaded(jsonPath, tmpTextureGroupId)) return tmpTextureGroupId;
 
 	Document jsonDocument;
 	getGameEngine()->getModuleJson()->read(jsonPath, jsonDocument);
@@ -32,38 +29,34 @@ uint ModuleTexture::load(const char* jsonPath)
 	const char* bmpPath = jsonDocument["bmpPath"].GetString();
 	const Value& texturesJson = jsonDocument["textures"];
 
-	unload(textureGroupId);
-
 	SDL_Texture* texture = loadTexture(bmpPath);
 
-	vector<Texture*>* textures = new vector<Texture*>(); // texturesJson.Size(), nullptr);
+	vector<Texture*>* textures = new vector<Texture*>();
 	textures->reserve(texturesJson.Size());
 
 	for(SizeType i = 0; i < texturesJson.Size(); ++i)
 	{
 		// textureId, rect
 
-		uint textureId = i; // texturesJson[i]["textureId"].GetUint();
-		const Value& rectJson = texturesJson[i]; // texturesJson[i]["rect"];
+		uint textureId = i;
+		const Value& rectJson = texturesJson[i];
 
 		SDL_Rect* rect = new SDL_Rect{ rectJson["x"].GetInt(), rectJson["y"].GetInt(), rectJson["w"].GetInt(), rectJson["h"].GetInt() };
 
-		// (*textures)[textureId] = new Texture{ texture, rect };
 		textures->push_back(new Texture{ texture, rect });
 	}
 
 	textureGroups[textureGroupId] = pair<SDL_Texture*, vector<Texture*>*>(texture, textures);
 
-	// loadedTextureGroups[jsonPath] = textureGroupId;
+	loadedTextureGroups.push_back(pair<const char*, uint>(jsonPath, textureGroupId));
 
 	return textureGroupId;
 }
 
 void ModuleTexture::unload(uint idTextureGroup)
 {
-	// Check if already unloaded
-
-	if(textureGroups.find(idTextureGroup) == textureGroups.end()) return;
+	const char* tmpJsonPath;
+	if(isAlreadyUnloaded(idTextureGroup, tmpJsonPath)) return;
 
 	pair<SDL_Texture*, vector<Texture*>*>& textureGroup = textureGroups[idTextureGroup];
 
@@ -86,6 +79,8 @@ void ModuleTexture::unload(uint idTextureGroup)
 	textureGroup.second = nullptr;
 
 	textureGroups.erase(idTextureGroup);
+
+	loadedTextureGroups.remove(pair<const char*, uint>(tmpJsonPath, idTextureGroup));
 }
 
 const Texture* ModuleTexture::get(uint idTextureGroup, uint idTexture) const
@@ -100,8 +95,7 @@ SDL_Texture* ModuleTexture::loadTexture(const char* bmpPath) const
 
 	if(surface)
 	{
-		SDL_SetColorKey(surface, SDL_TRUE, MAGENTA);
-		
+		SDL_SetColorKey(surface, SDL_TRUE, 0xFF00FF);
 		texture = SDL_CreateTextureFromSurface(getGameEngine()->getModuleRenderer()->getRenderer(), surface);
 
 		SDL_FreeSurface(surface); surface = nullptr;
@@ -118,123 +112,28 @@ void ModuleTexture::unloadTexture(SDL_Texture*& texture) const
 	}
 }
 
-/* #include <SDL.h>
-#include "Colors.h"
-#include "GameEngine.h"
-#include "ModuleJson.h"
-#include "ModuleRenderer.h"
-
-using namespace rapidjson;
-
-ModuleTexture::ModuleTexture(GameEngine* gameEngine) :
-	Module(gameEngine)
-{ }
-
-ModuleTexture::~ModuleTexture()
-{ }
-
-const Texture* ModuleTexture::getTexture(uint textureId) const
+bool ModuleTexture::isAlreadyLoaded(const char* jsonPath, uint& idTextureGroup) const
 {
-	return textures[textureId];
+	for(list<pair<const char*, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
+		if(strcmp(it->first, jsonPath) == 0)
+		{
+			idTextureGroup = it->second;
+
+			return true;
+		}
+
+	return false;
 }
 
-bool ModuleTexture::setUp()
+bool ModuleTexture::isAlreadyUnloaded(uint idTextureGroup, const char*& jsonPath) const
 {
-	Document documentJson;
-	getGameEngine()->getModuleJson()->read("Resources/Configuration/Textures.json", documentJson);
+	for(list<pair<const char*, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
+		if(it->second == idTextureGroup)
+		{
+			jsonPath = it->first;
 
-	load(documentJson);
+			return false;
+		}
 
 	return true;
 }
-
-void ModuleTexture::cleanUp()
-{
-	for(int i = (int)textureGroups.size() - 1; i >= 0; --i)
-		unloadTexture(textureGroups[i]);
-
-	textureGroups.clear();
-
-	for(int i = (int)textures.size() - 1; i >= 0; --i)
-	{
-		if(textures[i])
-		{
-			textures[i]->t = nullptr;
-
-			delete textures[i]->r;
-			textures[i]->r = nullptr;
-
-			delete textures[i];
-			textures[i] = nullptr;
-		}
-	}
-
-	textures.clear();
-}
-
-void ModuleTexture::load(const Document& documentJson)
-{
-	// Texture groups must be loaded first
-
-	loadTextureGroups(documentJson["textureGroups"]);
-	loadTextures(documentJson["textures"]);
-}
-
-void ModuleTexture::loadTextureGroups(const Value& textureGroupsJson)
-{
-	textureGroups.resize(textureGroupsJson.Size(), nullptr);
-
-	for(SizeType i = 0; i < textureGroupsJson.Size(); ++i)
-		loadTextureGroup(textureGroupsJson[i]);
-}
-
-void ModuleTexture::loadTextureGroup(const Value& textureGroupJson)
-{
-	// Id, Path
-
-	loadTexture(textureGroupJson["id"].GetUint(), textureGroupJson["path"].GetString());
-}
-
-void ModuleTexture::loadTextures(const Value& texturesJson)
-{
-	textures.resize(texturesJson.Size(), nullptr);
-
-	for(SizeType i = 0; i < texturesJson.Size(); ++i)
-		loadTexture(texturesJson[i]);
-}
-
-void ModuleTexture::loadTexture(const Value& textureJson)
-{
-	// Id, Group id, Rect
-
-	const Value& rJson = textureJson["rect"];
-
-	SDL_Texture* t = textureGroups[textureJson["groupId"].GetUint()];
-	SDL_Rect* r = new SDL_Rect{ rJson["x"].GetInt(), rJson["y"].GetInt(), rJson["w"].GetInt(), rJson["h"].GetInt() };
-
-	textures[textureJson["id"].GetUint()] = new Texture{ t, r };
-}
-
-void ModuleTexture::loadTexture(uint textureGroupId, const char* texturePath)
-{
-	SDL_Surface* surface = SDL_LoadBMP(texturePath);
-
-	if(surface)
-	{
-		SDL_SetColorKey(surface, SDL_TRUE, MAGENTA);
-
-		textureGroups[textureGroupId] = SDL_CreateTextureFromSurface(getGameEngine()->getModuleRenderer()->getRenderer(), surface);
-
-		SDL_FreeSurface(surface);
-		surface = nullptr;
-	}
-}
-
-void ModuleTexture::unloadTexture(SDL_Texture*& texture)
-{
-	if(texture)
-	{
-		SDL_DestroyTexture(texture);
-		texture = nullptr;
-	}
-} */

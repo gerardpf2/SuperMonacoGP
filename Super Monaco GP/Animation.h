@@ -8,19 +8,19 @@ class Animation
 {
 	public:
 
-		Animation(uint id, const std::vector<const Texture*>* textures, float endTime, bool loop /* , bool inverse */);
+		Animation(uint id, float endTime, bool loop, const std::vector<const Texture*>* textures);
+
+		Animation(const Animation& animation);
 
 		virtual ~Animation();
 
 		uint getId() const;
 
-		const std::vector<const Texture*>* getTextures() const;
-
 		float getEndTime() const;
 
 		bool getLoop() const;
 
-		// bool getInverse() const;
+		const std::vector<const Texture*>* getTextures() const;
 
 		bool hasEnded() const;
 
@@ -38,21 +38,19 @@ class Animation
 
 	private:
 
-		uint id;
+		uint id; // Constructor
 
-		const std::vector<const Texture*>* textures = nullptr;
+		float endTime; // Constructor
 
-		float endTime;
+		bool loop; // Constructor
 
-		bool loop;
+		const std::vector<const Texture*>* textures = nullptr; // Constructor
 
-		// bool inverse;
+		bool ended;
 
-		bool ended = false;
+		float currentTime;
 
-		float currentTime = 0.0f;
-
-		float timeMultiplier = 1.0f;
+		float timeMultiplier;
 };
 
 #endif

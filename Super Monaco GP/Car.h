@@ -7,9 +7,13 @@ class Car : public GameObject
 {
 	public:
 
-		Car(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road);
+		Car(uint id, const AnimationContainer* animationContainer);
 
 		virtual ~Car();
+
+		virtual GameObjectType getType() const override;
+
+		float getVelocity() const;
 
 		virtual void update(float deltaTimeS) override;
 

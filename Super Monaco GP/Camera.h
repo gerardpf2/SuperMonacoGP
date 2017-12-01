@@ -9,8 +9,6 @@ class Camera
 {
 	public:
 
-		float getBaseZ() const;
-
 		virtual ~Camera();
 
 		const Road* getRoad() const;
@@ -18,6 +16,10 @@ class Camera
 		float getDepth() const;
 
 		const WorldPosition* getPosition() const;
+
+		float getOffsetZ() const;
+
+		float getBasePositionZ() const;
 
 		bool isBehind(float z) const;
 

@@ -1,15 +1,19 @@
 {
-	"INFO" : "",
+	"_WARNING" : "",
+	"_info" : "",
+	
 	"textureGroupId" : 0,
 	"bmpPath" : "Resources/Images/Test.bmp",
 	"textures" :
 	[
 		{
-			"INFO" : "",
+			"_info" : "",
+			
 			"x" : 184, "y" : 11, "w" : 80, "h" : 45
 		},
 		{
-			"INFO" : "",
+			"_info" : "",
+			
 			"x" : 96, "y" : 67, "w" : 80, "h" : 45
 		}
 	]
