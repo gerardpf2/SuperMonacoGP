@@ -4,48 +4,28 @@
 	[
 		{
 			"defAngle" : true,
-			"zStart" : 10.0,
-			"length" : 50.0,
+			"zStart" : 50.0,
+			"length" : 200.0,
 			"angle" : 15.0
-		},
-		{
-			"defAngle" : false,
-			"zStart" : 70.0,
-			"enterLength" : 70.0,
-			"holdLength" : 10.0,
-			"leaveLength" : 70.0,
-			"value" : 30.0
-		},
-		{
-			"defAngle" : true,
-			"zStart" : 290.0,
-			"length" : 105.0,
-			"angle" : -15.0
 		}
 	],
 	"curves" :
 	[
 		{
-			"defAngle" : true,
-			"zStart" : 10.0,
-			"length" : 50.0,
-			"angle" : 60.0
-		},
-		{
 			"defAngle" : false,
-			"zStart" : 70.0,
-			"enterLength" : 15.0,
-			"holdLength" : 50.0,
-			"leaveLength" : 15.0,
-			"value" : -0.005
-		},
-		{
-			"defAngle" : false,
-			"zStart" : 200.0,
-			"enterLength" : 15.0,
-			"holdLength" : 50.0,
-			"leaveLength" : 15.0,
+			"zStart" : 100.0,
+			"enterLength" : 35.0,
+			"holdLength" : 30.0,
+			"leaveLength" : 35.0,
 			"value" : 0.005
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 205.0,
+			"enterLength" : 70.0,
+			"holdLength" : 60.0,
+			"leaveLength" : 70.0,
+			"value" : -0.015
 		}
 	],
 	"rumbleColors" :
@@ -60,5 +40,53 @@
 		{ "r" : 96, "g" : 96, "b" : 96, "a" : 255 },
 		{ "r" : 224, "g" : 224, "b" : 224, "a" : 255 },
 		{ "r" : 96, "g" : 96, "b" : 96, "a" : 255 }
+	],
+	"gameObjectDefinitions" :
+	[
+		{
+			"id" : 2,
+			"offsetX" : 1.0,
+			"position" : { "x" : 0.0, "y" : 0.0, "z" : 10.0 }
+		},
+		{
+			"id" : 2,
+			"offsetX" : -1.0,
+			"position" : { "x" : 0.0, "y" : 0.0, "z" : 10.0 }
+		},
+		{
+			"id" : 3,
+			"offsetX" : 1.0,
+			"position" : { "x" : 0.0, "y" : 0.0, "z" : 15.0 }
+		},
+		{
+			"id" : 3,
+			"offsetX" : -1.0,
+			"position" : { "x" : 0.0, "y" : 0.0, "z" : 15.0 }
+		},
+		{
+			"id" : 2,
+			"offsetX" : 0.0,
+			"position" : { "x" : -4.0, "y" : 10.0, "z" : 7.5 }
+		},
+		{
+			"id" : 3,
+			"offsetX" : 0.0,
+			"position" : { "x" : -2.0, "y" : 10.0, "z" : 7.5 }
+		},
+		{
+			"id" : 3,
+			"offsetX" : 0.0,
+			"position" : { "x" : 0.0, "y" : 10.0, "z" : 7.5 }
+		},
+		{
+			"id" : 3,
+			"offsetX" : 0.0,
+			"position" : { "x" : 2.0, "y" : 10.0, "z" : 7.5 }
+		},
+		{
+			"id" : 2,
+			"offsetX" : 0.0,
+			"position" : { "x" : 4.0, "y" : 10.0, "z" : 7.5 }
+		}
 	]
 }

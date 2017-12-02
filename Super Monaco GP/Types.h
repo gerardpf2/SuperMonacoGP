@@ -22,4 +22,6 @@ struct WindowTrapezoid { WindowPosition nl, nr, fr, fl; };
 
 struct WorldTrapezoid { WorldPosition nl, nr, fr, fl; };
 
+struct RoadGameObjectDefinition { uint id; float offsetX; WorldPosition wp; };
+
 #endif

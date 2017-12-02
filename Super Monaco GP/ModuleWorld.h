@@ -2,11 +2,11 @@
 #define _MODULE_WORLD_
 
 #include <vector>
+#include "Types.h"
 #include "Module.h"
 
 class Road;
 class Camera;
-class Player;
 class GameObject;
 
 class ModuleWorld : public Module
@@ -25,7 +25,7 @@ class ModuleWorld : public Module
 
 	private:
 
-		void addGameObject(GameObject* gameObject, float xOffsetRoad = 0.0f);
+		GameObject* addGameObject(uint id, const WorldPosition& worldPosition, float xOffsetRoad = 0.0f);
 
 	private:
 
@@ -33,7 +33,7 @@ class ModuleWorld : public Module
 
 		Camera* camera = nullptr;
 
-		Player* player = nullptr;
+		GameObject* player = nullptr;
 
 		std::vector<GameObject*> gameObjects;
 };

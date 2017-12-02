@@ -117,14 +117,14 @@ uint ModuleAnimation::load(const char* jsonPath)
 
 	animationGroupsTextureGroupId[animationGroupId] = textureGroupId;
 
-	loadedAnimationGroups.push_back(pair<const char*, uint>(jsonPath, animationGroupId));
+	loadedAnimationGroups.push_back(pair<string, uint>(jsonPath, animationGroupId));
 
 	return animationGroupId;
 }
 
 void ModuleAnimation::unload(uint idAnimationGroup)
 {
-	const char* tmpJsonPath;
+	string tmpJsonPath;
 	if(isAlreadyUnloaded(idAnimationGroup, tmpJsonPath)) return;
 
 	pair<vector<vector<const Texture*>*>*, vector<Animation*>*>& animationGroup = animationGroups[idAnimationGroup];
@@ -216,7 +216,7 @@ void ModuleAnimation::unload(uint idAnimationGroup)
 
 	animationGroupsTextureGroupId.erase(idAnimationGroup);
 
-	loadedAnimationGroups.remove(pair<const char*, uint>(tmpJsonPath, idAnimationGroup));
+	loadedAnimationGroups.remove(pair<string, uint>(tmpJsonPath, idAnimationGroup));
 }
 
 Animation* ModuleAnimation::getAnimation(uint idAnimationGroup, uint idAnimation) const
@@ -246,10 +246,10 @@ AnimationContainer* ModuleAnimation::getAnimationContainer(uint idAnimationGroup
 	return animationContainer;
 }
 
-bool ModuleAnimation::isAlreadyLoaded(const char* jsonPath, uint& idAnimationGroup) const
+bool ModuleAnimation::isAlreadyLoaded(const string& jsonPath, uint& idAnimationGroup) const
 {
-	for(list<pair<const char*, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
-		if(strcmp(it->first, jsonPath) == 0)
+	for(list<pair<string, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
+		if(it->first == jsonPath)
 		{
 			idAnimationGroup = it->second;
 
@@ -259,9 +259,9 @@ bool ModuleAnimation::isAlreadyLoaded(const char* jsonPath, uint& idAnimationGro
 	return false;
 }
 
-bool ModuleAnimation::isAlreadyUnloaded(uint idAnimationGroup, const char*& jsonPath) const
+bool ModuleAnimation::isAlreadyUnloaded(uint idAnimationGroup, string& jsonPath) const
 {
-	for(list<pair<const char*, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
+	for(list<pair<string, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
 		if(it->second == idAnimationGroup)
 		{
 			jsonPath = it->first;

@@ -5,27 +5,11 @@
 #include "Camera.h"
 #include "Segment.h"
 #include <SDL_rect.h>
-#include "Animation.h"
 #include "ModuleRenderer.h"
-#include "AnimationContainer.h"
 
-GameObject::GameObject(uint id, const AnimationContainer* animationContainer) :
-	id(id), animationContainer(animationContainer)
-{
-	// Revisar Size
-	size.w = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->w * SPRITE_SIZE_RATIO;
-	size.h = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->h * SPRITE_SIZE_RATIO;
-}
-
-/* GameObject::GameObject(const WorldPosition& position, const AnimationContainer* animationContainer, const Road* road) :
-	position(position), animationContainer(animationContainer), road(road)
-{
-	// Revisar Size
-	size.w = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->w * SPRITE_SIZE_RATIO;
-	size.h = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->h * SPRITE_SIZE_RATIO;
-
-	limitZ();
-} */
+GameObject::GameObject(uint id) :
+	id(id)
+{ }
 
 GameObject::~GameObject()
 { }
@@ -33,11 +17,6 @@ GameObject::~GameObject()
 uint GameObject::getId() const
 {
 	return id;
-}
-
-const AnimationContainer* GameObject::getAnimationContainer() const
-{
-	return animationContainer;
 }
 
 const WorldPosition* GameObject::getPosition() const
@@ -75,9 +54,7 @@ void GameObject::moveX(float incX)
 }
 
 void GameObject::update(float deltaTimeS)
-{
-	animationContainer->update(deltaTimeS);
-}
+{ }
 
 void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
@@ -113,7 +90,7 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 
 	if(dst.y >= WINDOW_HEIGHT) return;
 
-	const Texture* texture = animationContainer->getCurrentAnimation()->getCurrentFrame();
+	const Texture* texture = getCurrentTexture();
 
 	SDL_Rect src = *texture->r;
 
@@ -132,9 +109,7 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 }
 
 void GameObject::cleanUp()
-{
-	// ...
-}
+{ }
 
 void GameObject::limitZ()
 {

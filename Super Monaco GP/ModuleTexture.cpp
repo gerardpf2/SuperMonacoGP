@@ -48,14 +48,14 @@ uint ModuleTexture::load(const char* jsonPath)
 
 	textureGroups[textureGroupId] = pair<SDL_Texture*, vector<Texture*>*>(texture, textures);
 
-	loadedTextureGroups.push_back(pair<const char*, uint>(jsonPath, textureGroupId));
+	loadedTextureGroups.push_back(pair<string, uint>(jsonPath, textureGroupId));
 
 	return textureGroupId;
 }
 
 void ModuleTexture::unload(uint idTextureGroup)
 {
-	const char* tmpJsonPath;
+	string tmpJsonPath;
 	if(isAlreadyUnloaded(idTextureGroup, tmpJsonPath)) return;
 
 	pair<SDL_Texture*, vector<Texture*>*>& textureGroup = textureGroups[idTextureGroup];
@@ -80,7 +80,7 @@ void ModuleTexture::unload(uint idTextureGroup)
 
 	textureGroups.erase(idTextureGroup);
 
-	loadedTextureGroups.remove(pair<const char*, uint>(tmpJsonPath, idTextureGroup));
+	loadedTextureGroups.remove(pair<string, uint>(tmpJsonPath, idTextureGroup));
 }
 
 const Texture* ModuleTexture::get(uint idTextureGroup, uint idTexture) const
@@ -112,10 +112,10 @@ void ModuleTexture::unloadTexture(SDL_Texture*& texture) const
 	}
 }
 
-bool ModuleTexture::isAlreadyLoaded(const char* jsonPath, uint& idTextureGroup) const
+bool ModuleTexture::isAlreadyLoaded(const string& jsonPath, uint& idTextureGroup) const
 {
-	for(list<pair<const char*, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
-		if(strcmp(it->first, jsonPath) == 0)
+	for(list<pair<string, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
+		if(it->first == jsonPath)
 		{
 			idTextureGroup = it->second;
 
@@ -125,9 +125,9 @@ bool ModuleTexture::isAlreadyLoaded(const char* jsonPath, uint& idTextureGroup) 
 	return false;
 }
 
-bool ModuleTexture::isAlreadyUnloaded(uint idTextureGroup, const char*& jsonPath) const
+bool ModuleTexture::isAlreadyUnloaded(uint idTextureGroup, string& jsonPath) const
 {
-	for(list<pair<const char*, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
+	for(list<pair<string, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
 		if(it->second == idTextureGroup)
 		{
 			jsonPath = it->first;

@@ -9,7 +9,7 @@
 using namespace std;
 
 Car::Car(uint id, const AnimationContainer* animationContainer) :
-	GameObject(id, animationContainer)
+	Animated(id, animationContainer)
 { }
 
 Car::~Car()
@@ -27,7 +27,7 @@ float Car::getVelocity() const
 
 void Car::update(float deltaTimeS)
 {
-	GameObject::update(deltaTimeS);
+	Animated::update(deltaTimeS);
 
 	float maxVelocity = CAR_MAX_VELOCITY;
 	float acceleration = CAR_ACCELERATION_ROAD;

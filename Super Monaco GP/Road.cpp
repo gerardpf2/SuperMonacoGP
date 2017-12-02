@@ -19,7 +19,7 @@ void Road::load(const char* jsonPath, const ModuleJson* moduleJson)
 	unload();
 
 	Document jsonDocument;
-	moduleJson->read("Resources/Configurations/Roads/Test1.json", jsonDocument);
+	moduleJson->read(jsonPath, jsonDocument);
 
 	// Length
 	setLength(jsonDocument["length"].GetFloat());
@@ -32,6 +32,9 @@ void Road::load(const char* jsonPath, const ModuleJson* moduleJson)
 
 	// RumbleColors
 	setRumbleColors(jsonDocument["rumbleColors"]);
+
+	// GameObjectDefinitions
+	addGameObjectDefinitions(jsonDocument["gameObjectDefinitions"]);
 }
 
 void Road::unload()
@@ -51,6 +54,14 @@ void Road::unload()
 	}
 
 	rumbleColors.clear();
+
+	for(int i = (int)gameObjectDefinitions.size() - 1; i >= 0; --i)
+	{
+		delete gameObjectDefinitions[i];
+		gameObjectDefinitions[i] = nullptr;
+	}
+
+	gameObjectDefinitions.clear();
 }
 
 float Road::getLength() const
@@ -61,6 +72,11 @@ float Road::getLength() const
 Segment* Road::getSegmentAtZ(float z) const
 {
 	return getSegment((int)(z / SEGMENT_LENGTH));
+}
+
+const std::vector<RoadGameObjectDefinition*>* Road::getGameObjectDefinitions() const
+{
+	return &gameObjectDefinitions;
 }
 
 void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
@@ -362,5 +378,27 @@ void Road::setRumbleColors(const Value& value)
 			++rumbleColorsIndex;
 			currentSegmentPerRumble = 0;
 		}
+	}
+}
+
+void Road::addGameObjectDefinitions(const rapidjson::Value& value)
+{
+	gameObjectDefinitions.reserve(value.Size());
+
+	for(SizeType i = 0; i < value.Size(); ++i)
+	{
+		// id, offsetX, position
+
+		uint id = value[i]["id"].GetUint();
+		float offsetX = value[i]["offsetX"].GetFloat();
+		const Value& positionJson = value[i]["position"];
+
+		// x, y, z
+
+		float x = positionJson["x"].GetFloat();
+		float y = positionJson["y"].GetFloat();
+		float z = positionJson["z"].GetFloat();
+
+		gameObjectDefinitions.push_back(new RoadGameObjectDefinition{ id, offsetX, WorldPosition{ x, y, z } });
 	}
 }

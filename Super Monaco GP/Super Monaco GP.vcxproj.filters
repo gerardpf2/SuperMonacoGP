@@ -81,6 +81,12 @@
     <ClCompile Include="ModuleGameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Static.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Animated.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -156,6 +162,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ModuleGameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Static.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Animated.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -30,15 +30,15 @@ class ModuleTexture : public Module
 
 		void unloadTexture(SDL_Texture*& texture) const;
 
-		bool isAlreadyLoaded(const char* jsonPath, uint& idTextureGroup) const;
+		bool isAlreadyLoaded(const std::string& jsonPath, uint& idTextureGroup) const;
 
-		bool isAlreadyUnloaded(uint idTextureGroup, const char*& jsonPath) const;
+		bool isAlreadyUnloaded(uint idTextureGroup, std::string& jsonPath) const;
 
 	private:
 
 		std::map<uint, std::pair<SDL_Texture*, std::vector<Texture*>*>> textureGroups;
 
-		std::list<std::pair<const char*, uint>> loadedTextureGroups;
+		std::list<std::pair<std::string, uint>> loadedTextureGroups;
 };
 
 #endif

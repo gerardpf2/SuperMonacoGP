@@ -9,6 +9,8 @@
 
 class Car;
 class Player;
+class Static;
+class Animated;
 class GameObject;
 
 class ModuleGameObject : public Module
@@ -21,8 +23,10 @@ class ModuleGameObject : public Module
 
 		GameObject* getGameObject(uint idGameObject);
 
+		// load + path
 		virtual bool setUp() override;
 
+		// unload
 		virtual void cleanUp() override;
 
 	private:
@@ -31,7 +35,9 @@ class ModuleGameObject : public Module
 
 		Player* getPlayer(uint idGameObject) const;
 
-		// ...
+		Static* getStatic(uint idGameObject) const;
+
+		Animated* getAnimated(uint idGameObject) const;
 
 		GameObject* createGameObject(const rapidjson::Value& gameObjectJson) const;
 
@@ -39,9 +45,9 @@ class ModuleGameObject : public Module
 
 		Player* createPlayer(const rapidjson::Value& gameObjectJson) const;
 
-		GameObject* createEnvironment(const rapidjson::Value& gameObjectJson) const;
+		Static* createStatic(const rapidjson::Value& gameObjectJson) const;
 
-		GameObject* createEnvironmentAnimated(const rapidjson::Value& gameObjectJson) const;
+		Animated* createAnimated(const rapidjson::Value& gameObjectJson) const;
 
 	private:
 

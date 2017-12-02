@@ -1,9 +1,9 @@
 #ifndef _CAR_
 #define _CAR_
 
-#include "GameObject.h"
+#include "Animated.h"
 
-class Car : public GameObject
+class Car : public Animated
 {
 	public:
 

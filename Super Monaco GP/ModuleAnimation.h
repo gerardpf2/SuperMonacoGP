@@ -30,9 +30,9 @@ class ModuleAnimation : public Module
 
 	private:
 
-		bool isAlreadyLoaded(const char* jsonPath, uint& idAnimationGroup) const;
+		bool isAlreadyLoaded(const std::string&, uint& idAnimationGroup) const;
 
-		bool isAlreadyUnloaded(uint idAnimationGroup, const char*& jsonPath) const;
+		bool isAlreadyUnloaded(uint idAnimationGroup, std::string& jsonPath) const;
 
 	private:
 
@@ -46,7 +46,7 @@ class ModuleAnimation : public Module
 
 		std::map<uint, std::list<AnimationContainer*>*> usedAnimationContainers;
 
-		std::list<std::pair<const char*, uint>> loadedAnimationGroups;
+		std::list<std::pair<std::string, uint>> loadedAnimationGroups;
 };
 
 #endif

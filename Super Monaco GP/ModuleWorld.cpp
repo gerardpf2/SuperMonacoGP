@@ -4,7 +4,9 @@
 #include <vector>
 #include "Utils.h"
 #include "Player.h"
+#include "Static.h"
 #include "Segment.h"
+#include "Animated.h"
 #include <SDL_rect.h>
 #include "Animation.h"
 #include "GameObject.h"
@@ -27,63 +29,33 @@ bool ModuleWorld::setUp()
 {
 	road = new Road();
 
-	road->load("Resources/Configurations/Roads/Test1.json", getGameEngine()->getModuleJson());
+	road->load("Resources/Configurations/Roads/Test0.json", getGameEngine()->getModuleJson());
 
 	// GameObjects ---
 
-	gameObjects.reserve(1);
+	const vector<RoadGameObjectDefinition*>* gameObjectDefinitions = road->getGameObjectDefinitions();
 
-	// getGameEngine()->getModuleAnimation()->load("Resources/Configurations/Animations/AnimationsTest.json");
+	gameObjects.reserve(gameObjectDefinitions->size() + 2);
 
-	// AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(0, 0);
-	// AnimationContainer* animationContainer2 = getGameEngine()->getModuleAnimation()->getAnimationContainer(0, 0);
-	// AnimationContainer* animationContainer3 = getGameEngine()->getModuleAnimation()->getAnimationContainer(0, 0);
+	// Player
 
-	// player = new Player(0, animationContainer, getGameEngine()->getModuleInput());
-	player = (Player*)getGameEngine()->getModuleGameObject()->getGameObject(0);
-	player->setRoad(road);
-	player->setPosition(WorldPosition{ 0.0f, 0.0f, 0.0f });
+	player = addGameObject(0, WorldPosition{ 0.0f, 0.0f, 0.0f });
 
-	addGameObject(player);
+	// Cars
 
-	Car* car = (Car*)getGameEngine()->getModuleGameObject()->getGameObject(1);
-	car->setRoad(road);
-	car->setPosition(WorldPosition{ 7.5f, 0.0f, 10.0f });
+	addGameObject(1, WorldPosition{ 7.5f, 0.0f, 10.0f });
 
-	addGameObject(car);
+	// Environment
 
-	/* Car* car = new Car(1, animationContainer2);
-	car->setRoad(road);
-	car->setPosition(WorldPosition{ 0.0f, 0.0f, 10.0f }); */
-
-	/* GameObject* gameObject0 = new GameObject(animationContainer3);
-	gameObject0->setRoad(road);
-	gameObject0->setPosition(WorldPosition{ 0.0f, 0.0f, 20.0f });
-
-	GameObject* gameObject1 = new GameObject(animationContainer3);
-	gameObject1->setRoad(road);
-	gameObject1->setPosition(WorldPosition{ 4.0f, 10.0f, 10.0f });
-
-	GameObject* gameObject2 = new GameObject(animationContainer3);
-	gameObject2->setRoad(road);
-	gameObject2->setPosition(WorldPosition{ 0.0f, 10.0f, 10.0f });
-
-	GameObject* gameObject3 = new GameObject(animationContainer3);
-	gameObject3->setRoad(road);
-	gameObject3->setPosition(WorldPosition{ -4.0f, 10.0f, 10.0f }); */
-
-	// addGameObject(car);
-	/* addGameObject(gameObject0, 1.0);
-	addGameObject(gameObject1);
-	addGameObject(gameObject2);
-	addGameObject(gameObject3); */
+	for(uint i = 0; i < (uint)gameObjectDefinitions->size(); ++i)
+	{
+		RoadGameObjectDefinition* gameObjectDefinition = (*gameObjectDefinitions)[i];
+		addGameObject(gameObjectDefinition->id, gameObjectDefinition->wp, gameObjectDefinition->offsetX);
+	}
 	
 	// --- GameObjects
 
 	camera = new CameraFollow(road, player->getPosition());
-
-	for(GameObject* gameObject : gameObjects)
-		gameObject->elevate();
 
 	return true;
 }
@@ -129,10 +101,18 @@ void ModuleWorld::cleanUp()
 	gameObjects.clear();
 }
 
-void ModuleWorld::addGameObject(GameObject* gameObject, float xOffsetRoad)
+GameObject* ModuleWorld::addGameObject(uint id, const WorldPosition& worldPosition, float xOffsetRoad)
 {
+	GameObject* gameObject = getGameEngine()->getModuleGameObject()->getGameObject(id);
+
+	gameObject->setRoad(road);
+	gameObject->setPosition(worldPosition);
+	
+	gameObject->elevate();
 	gameObject->moveX(xOffsetRoad * (ROAD_WIDTH / 2.0f));
 
 	gameObjects.push_back(gameObject);
 	road->getSegmentAtZ(gameObject->getPosition()->z)->addGameObject(gameObject);
+
+	return gameObject;
 }

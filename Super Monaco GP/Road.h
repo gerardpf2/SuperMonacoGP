@@ -26,6 +26,8 @@ class Road
 
 		Segment* getSegmentAtZ(float z) const;
 
+		const std::vector<RoadGameObjectDefinition*>* getGameObjectDefinitions() const;
+
 		void render(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
 	private:
@@ -60,6 +62,8 @@ class Road
 
 		void setRumbleColors(const rapidjson::Value& value);
 
+		void addGameObjectDefinitions(const rapidjson::Value& value);
+
 	private:
 
 		float length;
@@ -67,6 +71,8 @@ class Road
 		std::vector<Segment*> segments;
 
 		std::vector<RumbleColors*> rumbleColors;
+
+		std::vector<RoadGameObjectDefinition*> gameObjectDefinitions;
 };
 
 #endif

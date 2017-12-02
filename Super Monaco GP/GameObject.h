@@ -7,14 +7,13 @@ enum class GameObjectType
 {
 	PLAYER,
 	CAR,
-	ENVIRONMENT,
-	ENVIRONMENT_ANIMATED,
+	STATIC,
+	ANIMATED,
 };
 
 class Road;
 class Camera;
 class ModuleRenderer;
-class AnimationContainer;
 
 class GameObject
 {
@@ -25,8 +24,6 @@ class GameObject
 		uint getId() const;
 
 		virtual GameObjectType getType() const = 0;
-
-		const AnimationContainer* getAnimationContainer() const;
 
 		const WorldPosition* getPosition() const;
 
@@ -48,23 +45,21 @@ class GameObject
 
 	protected:
 
-		GameObject(uint id, const AnimationContainer* animationContainer);
+		GameObject(uint id);
 
 		void limitZ();
 
+		virtual const Texture* getCurrentTexture() const = 0;
+
 	protected:
+
+		Size size;
 
 		WorldPosition position;
-
-	protected:
-
-		const AnimationContainer* animationContainer = nullptr;
 
 	private:
 
 		uint id;
-
-		Size size;
 
 		const Road* road = nullptr;
 };

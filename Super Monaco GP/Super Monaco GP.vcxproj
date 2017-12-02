@@ -119,6 +119,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animated.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationContainer.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -140,9 +141,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Road.cpp" />
     <ClCompile Include="Segment.cpp" />
+    <ClCompile Include="Static.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animated.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationContainer.h" />
     <ClInclude Include="Camera.h" />
@@ -165,6 +168,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Road.h" />
     <ClInclude Include="Segment.h" />
+    <ClInclude Include="Static.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Utils.h" />
