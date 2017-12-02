@@ -10,13 +10,13 @@ static float degToRad(float d)
 	return d * PI / 180.0f;
 }
 
-static int modI0ToL(int v, int l)
+static int mod0L(int v, int l)
 {
 	if((v %= l) < 0) v += l;
 	return v;
 }
 
-static float modF0ToL(float v, float l)
+static float mod0L(float v, float l)
 {
 	if((v = fmodf(v, l)) < 0.0f) v += l;
 	return v;
@@ -27,6 +27,11 @@ static float clamp(float v, float min, float max)
 	return fminf(fmaxf(v, min), max);
 }
 
+static float clamp01(float v)
+{
+	return fminf(fmaxf(v, 0.0f), 1.0f);
+}
+
 static float ease(float a, float b, float p)
 {
 	return a + (b - a) * ((-cosf(p * PI) / 2.0f) + 0.5f);
@@ -35,6 +40,11 @@ static float ease(float a, float b, float p)
 static float interpolate(float x, float x0, float x1, float y0, float y1)
 {
 	return y0 + ((x - x0) / (x1 - x0)) * (y1 - y0);
+}
+
+static float interpolate01(float x, float x0, float x1)
+{
+	return interpolate(x, x0, x1, 0.0f, 1.0f);
 }
 
 static uint RGBAToUint(uint r, uint g, uint b, uint a)

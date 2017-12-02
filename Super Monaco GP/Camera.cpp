@@ -45,7 +45,8 @@ float Camera::getBasePositionZ() const
 
 bool Camera::isBehind(float z) const
 {
-	return z + depth <= getBasePositionZ();
+	return z - position.z <= depth;
+	// return z + depth <= getBasePositionZ();
 }
 
 void Camera::project(const WorldPosition& worldPosition, WindowPosition& windowPosition) const
@@ -69,5 +70,6 @@ void Camera::update(float deltaTimeS)
 
 void Camera::limitZ()
 {
-	position.z = modF0ToL(getBasePositionZ(), road->getLength()) - getOffsetZ();
+	position.z = mod0L(position.z, road->getLength());
+	// position.z = mod0L(getBasePositionZ(), road->getLength()) - getOffsetZ();
 }

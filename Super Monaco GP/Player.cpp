@@ -27,6 +27,7 @@ GameObjectType Player::getType() const
 
 void Player::updateDirection(float deltaTimeS)
 {
+	// cout << position.z << endl;
 	// cout << getVelocity() << endl;
 
 	direction.x = 0.0f;

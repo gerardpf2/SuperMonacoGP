@@ -124,7 +124,7 @@ void Segment::eraseGameObject(const GameObject* gameObject)
 	gameObjects.erase(gameObject);
 }
 
-void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY) const
+void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY, bool enableClip) const
 {
 	// Check if this segment is behind the camera
 
@@ -142,7 +142,7 @@ void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer,
 
 	// Check if the projected points are outside the window rect (y)
 
-	if(windowPositionFar.y >= maxWindowY) return;
+	if(enableClip && windowPositionFar.y >= maxWindowY) return;
 	maxWindowY = windowPositionFar.y;
 
 	if(windowPositionNear.y <= windowPositionFar.y) return;

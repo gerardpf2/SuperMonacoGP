@@ -113,5 +113,5 @@ void GameObject::cleanUp()
 
 void GameObject::limitZ()
 {
-	position.z = modF0ToL(position.z, road->getLength());
+	position.z = mod0L(position.z, road->getLength());
 }

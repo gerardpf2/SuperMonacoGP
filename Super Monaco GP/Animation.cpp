@@ -101,7 +101,7 @@ void Animation::update(float deltaTimeS)
 
 	if((ended = ended || newTime >= endTime) && !loop) return;
 
-	currentTime = modF0ToL(newTime, endTime);
+	currentTime = mod0L(newTime, endTime);
 }
 
 void Animation::cleanUp()

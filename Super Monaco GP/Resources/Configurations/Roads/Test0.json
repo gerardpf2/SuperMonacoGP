@@ -4,9 +4,9 @@
 	[
 		{
 			"defAngle" : true,
-			"zStart" : 50.0,
-			"length" : 200.0,
-			"angle" : 15.0
+			"zStart" : 150.0,
+			"length" : 250.0,
+			"angle" : 20.0
 		}
 	],
 	"curves" :
@@ -17,7 +17,7 @@
 			"enterLength" : 35.0,
 			"holdLength" : 30.0,
 			"leaveLength" : 35.0,
-			"value" : 0.005
+			"value" : -0.005
 		},
 		{
 			"defAngle" : false,
@@ -25,7 +25,7 @@
 			"enterLength" : 70.0,
 			"holdLength" : 60.0,
 			"leaveLength" : 70.0,
-			"value" : -0.015
+			"value" : 0.015
 		}
 	],
 	"rumbleColors" :
@@ -87,6 +87,36 @@
 			"id" : 2,
 			"offsetX" : 0.0,
 			"position" : { "x" : 4.0, "y" : 10.0, "z" : 7.5 }
+		},
+		{
+			"id" : 2,
+			"offsetX" : 1.0,
+			"position" : { "x" : -3.5, "y" : 0.0, "z" : 300.0 }
+		},
+		{
+			"id" : 2,
+			"offsetX" : 0.0,
+			"position" : { "x" : -4.0, "y" : 10.0, "z" : 300.0 }
+		},
+		{
+			"id" : 3,
+			"offsetX" : 0.0,
+			"position" : { "x" : -2.0, "y" : 10.0, "z" : 300.0 }
+		},
+		{
+			"id" : 3,
+			"offsetX" : 0.0,
+			"position" : { "x" : 0.0, "y" : 10.0, "z" : 300.0 }
+		},
+		{
+			"id" : 3,
+			"offsetX" : 0.0,
+			"position" : { "x" : 2.0, "y" : 10.0, "z" : 300.0 }
+		},
+		{
+			"id" : 2,
+			"offsetX" : 0.0,
+			"position" : { "x" : 4.0, "y" : 10.0, "z" : 300.0 }
 		}
 	]
 }

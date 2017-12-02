@@ -60,7 +60,7 @@ class Segment
 
 		void eraseGameObject(const GameObject* gameObject);
 
-		void render(const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY) const;
+		void render(const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY, bool enableClip = false) const;
 
 	private:
 

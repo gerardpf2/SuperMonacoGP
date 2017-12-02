@@ -32,6 +32,8 @@ class Road
 
 	private:
 
+		void render(float z, Segment* first, const Segment* last, const Segment* limit, int multiplier, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+
 		Segment* getSegment(int index) const;
 
 		void setLength(float length);
