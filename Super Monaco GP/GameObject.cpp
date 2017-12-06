@@ -66,8 +66,8 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 
 	if(camera->isBehind(zOffset + position.z)) return;
 
-	WorldPosition worldPositionBottomLeft{ position.x - size.w / 2.0f - xOffset, position.y, position.z + zOffset };
-	WorldPosition worldPositionBottomRight{ position.x + size.w / 2.0f - xOffset, position.y, position.z + zOffset };
+	WorldPosition worldPositionBottomLeft{ position.x - size.w / 2.0f + xOffset, position.y, position.z + zOffset };
+	WorldPosition worldPositionBottomRight{ position.x + size.w / 2.0f + xOffset, position.y, position.z + zOffset };
 
 	WindowPosition windowPositionBottomLeft;
 	WindowPosition windowPositionBottomRight;

@@ -33,6 +33,8 @@ class ModuleWorld : public Module
 
 		Camera* camera = nullptr;
 
+		Camera* cameraMirror = nullptr;
+
 		GameObject* player = nullptr;
 
 		std::vector<GameObject*> gameObjects;

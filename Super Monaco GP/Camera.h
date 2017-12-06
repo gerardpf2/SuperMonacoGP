@@ -11,6 +11,8 @@ class Camera
 
 		virtual ~Camera();
 
+		bool getForward() const;
+
 		const Road* getRoad() const;
 
 		float getDepth() const;
@@ -31,7 +33,7 @@ class Camera
 
 	protected:
 
-		Camera(const Road* road);
+		Camera(bool forward, const Road* road);
 
 		void limitZ();
 
@@ -41,9 +43,11 @@ class Camera
 
 	private:
 
-		float depth;
+		bool forward;
 
 		const Road* road = nullptr;
+
+		float depth;
 };
 
 #endif

@@ -81,55 +81,33 @@ const std::vector<RoadGameObjectDefinition*>* Road::getGameObjectDefinitions() c
 
 void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	float zFirst = camera->getPosition()->z;
-	float zBase0 = camera->getBasePositionZ();
-	float zBase1 = camera->getBasePositionZ() - SEGMENT_LENGTH;
-	float zLast = zFirst + DRAW_DISTANCE;
+	float zFirst = mod0L(camera->getPosition()->z, length);
+	float zBase0 = mod0L(camera->getBasePositionZ(), length);
+	float zBase1 = mod0L(camera->getBasePositionZ() - SEGMENT_LENGTH, length);
+	float zLast = mod0L(zFirst + DRAW_DISTANCE, length);
 
-	Segment* first = getSegmentAtZ(zFirst);
-	Segment* base0 = getSegmentAtZ(zBase0);
-	Segment* base1 = getSegmentAtZ(zBase1);
-	Segment* last = getSegmentAtZ(zLast);
+	const Segment* first = getSegmentAtZ(zFirst);
+	const Segment* base0 = getSegmentAtZ(zBase0);
+	const Segment* base1 = getSegmentAtZ(zBase1);
+	const Segment* last = getSegmentAtZ(zLast);
+
+	float renderZ0 = camera->getBasePositionZ();
+	float renderZ1 = camera->getBasePositionZ() - SEGMENT_LENGTH;
+	
+	// Render from player segment (included) to last segment (excluded)
+	renderForward(zBase0, base0, last, renderZ0, camera, moduleRenderer);
+	// Render from player segment (excluded) to first segment (excluded)
+	renderBackward(zBase1, base1, first, renderZ1, camera, moduleRenderer);
 
 	// Render from player segment (included) to last segment (excluded)
-	render(zBase0, base0, last, first, 1, camera, moduleRenderer);
+	// render(zBase0, base0, last, first, 1, renderZ0, camera, moduleRenderer);
 	// Render from player segment (excluded) to first segment (excluded)
-	render(zBase1, base1, first, first, -1, camera, moduleRenderer);
-
-	/* Segment* baseSegment = getSegmentAtZ(zBase);
-	Segment* playerSegment = getSegmentAtZ(camera->getBasePositionZ());
-
-	bool lala = false;
-
-	float x = 0.0f;
-	float dX = playerSegment->getCurve() - playerSegment->getCurve() * interpolate01(camera->getBasePositionZ(), playerSegment->getZNear(), playerSegment->getZFar());
-
-	for(uint i = 0; i < N_SEGMENTS_DRAW; ++i)
-	{
-		Segment* segment = getSegment(baseSegment->getIndex() + i);
-
-		if(segment == playerSegment) lala = true;
-
-		if(lala)
-		{
-			segment->setXOffsetNear(-x);
-			segment->setXOffsetFar(-x - dX);
-			segment->setZOffset(zOffset);
-			segment->setClipY(maxWindowY);
-
-			x += dX;
-			dX += segment->getCurve();
-
-			segment->render(camera, moduleRenderer, maxWindowY);
-		}
-
-		if(segment->getIndex() == (uint)(segments.size() - 1)) zOffset += length;
-	} */
-
-	// GameObjects
+	// render(zBase1, base1, first, first, -1, renderZ1, camera, moduleRenderer);
 
 	// The first segment and the last one are excluded from the rendering process
 	// Their game objects need to be excluded too
+
+	// return;
 
 	for(int i = N_SEGMENTS_DRAW - 1; i > 0; --i)
 	{
@@ -140,33 +118,285 @@ void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) co
 	}
 }
 
-void Road::render(float z, Segment* first, const Segment* last, const Segment* limit, int multiplier, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+void Road::renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
+	float zFirst = mod0L(camera->getPosition()->z, length);
+	float zBase0 = mod0L(camera->getBasePositionZ() + SEGMENT_LENGTH, length);
+	float zBase1 = mod0L(camera->getBasePositionZ(), length);
+	float zLast = mod0L(zFirst - DRAW_DISTANCE, length);
+
+	const Segment* first = getSegmentAtZ(zFirst);
+	const Segment* base0 = getSegmentAtZ(zBase0);
+	const Segment* base1 = getSegmentAtZ(zBase1);
+	const Segment* last = getSegmentAtZ(zLast);
+
+	float renderZ0 = camera->getBasePositionZ() + SEGMENT_LENGTH;
+	float renderZ1 = camera->getBasePositionZ();
+
+	// Render from player segment (excluded) to last segment (excluded)
+	renderBackwardMirror(zBase1, base1, last, renderZ1, camera, moduleRenderer);
+	// Render from player segment (included) to first segment (excluded)
+	renderForwardMirror(zBase0, base0, first, renderZ0, camera, moduleRenderer);
+
+	// return;
+
+	for(int i = 1; i < N_SEGMENTS_DRAW; ++i)
+	{
+		Segment* segment = getSegment(last->getIndex() + i);
+
+		for(const GameObject* gameObject : *segment->getGameObjects())
+			if(gameObject->getType() != GameObjectType::PLAYER)
+				gameObject->render(camera, moduleRenderer);
+	}
+}
+
+/* void Road::render(float z, const Segment* first, const Segment* last, int multiplier, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	render(z, first, last, camera, moduleRenderer, multiplier, 1.0f, multiplier *-1.0f, multiplier *-1.0f);
+
+	int incrementIndex = multiplier;
 	short maxWindowY = WINDOW_HEIGHT;
-
-	Segment* current = first;
-
-	float x = 0.0f;
-	float dX = current->getCurve() - multiplier * current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
+	float accZOffset = -z + first->getZNear();
+	Segment* current = getSegment(first->getIndex());
 
 	while(current != last)
 	{
-		float zOffset = current->getIndex() < limit->getIndex() ? length : 0.0f;
+		float currentZOffset = -current->getZNear() + accZOffset;
+		accZOffset += multiplier * SEGMENT_LENGTH;
 
-		current->setXOffsetNear(-x);
-		current->setXOffsetFar(-x - multiplier * dX);
-		current->setZOffset(zOffset);
+		current->setZOffset(renderZ + currentZOffset);
 		current->setClipY(maxWindowY);
+
+		current->render(camera, moduleRenderer, maxWindowY, multiplier > 0, false);
+
+		current = getSegment(current->getIndex() + incrementIndex);
+	}
+} */
+
+void Road::renderForward(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	Segment* current = getSegment(first->getIndex());
+
+	float x = 0.0f;
+	float dX = current->getCurve() - current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
+
+	while(current != last)
+	{
+		current->setXOffsetNear(x);
+		current->setXOffsetFar(x + dX);
 
 		x += dX;
 		dX += current->getCurve();
 
-		// If rendering backwards, disable the segment clip feature
-		current->render(camera, moduleRenderer, maxWindowY, multiplier > 0);
+		current = getSegment(current->getIndex() + 1);
+	}
 
-		current = getSegment(current->getIndex() + multiplier);
+	short maxWindowY = WINDOW_HEIGHT;
+	float accZOffset = -z + first->getZNear();
+	current = getSegment(first->getIndex());
+
+	while(current != last)
+	{
+		float currentZOffset = -current->getZNear() + accZOffset;
+		accZOffset += SEGMENT_LENGTH;
+
+		current->setZOffset(renderZ + currentZOffset);
+		current->setClipY(maxWindowY);
+
+		current->render(camera, moduleRenderer, maxWindowY);
+
+		current = getSegment(current->getIndex() + 1);
 	}
 }
+
+void Road::renderBackward(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	Segment* current = getSegment(first->getIndex());
+
+	float x = 0.0f;
+	float dX = current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
+
+	while(current != last)
+	{
+		current->setXOffsetFar(x);
+		current->setXOffsetNear(x + dX);
+
+		x += dX;
+		dX += current->getCurve();
+
+		current = getSegment(current->getIndex() - 1);
+	}
+
+	short maxWindowY = WINDOW_HEIGHT;
+	float accZOffset = -z + first->getZNear();
+	current = getSegment(first->getIndex());
+
+	while(current != last)
+	{
+		float currentZOffset = -current->getZNear() + accZOffset;
+		accZOffset -= SEGMENT_LENGTH;
+
+		current->setZOffset(renderZ + currentZOffset);
+		current->setClipY(maxWindowY);
+
+		current->render(camera, moduleRenderer, maxWindowY, false);
+
+		current = getSegment(current->getIndex() - 1);
+	}
+}
+
+void Road::renderBackwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	Segment* current = getSegment(first->getIndex());
+
+	float x = 0.0f;
+	float dX = current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
+
+	while(current != last)
+	{
+		current->setXOffsetNear(x);
+		current->setXOffsetFar(x + dX);
+
+		x += dX;
+		dX += current->getCurve();
+
+		current = getSegment(current->getIndex() - 1);
+	}
+
+	short maxWindowY = WINDOW_HEIGHT;
+	float accZOffset = -z + first->getZNear();
+	current = getSegment(first->getIndex());
+
+	while(current != last)
+	{
+		float currentZOffset = -current->getZNear() + accZOffset;
+		accZOffset -= SEGMENT_LENGTH;
+
+		current->setZOffset(renderZ + currentZOffset);
+		current->setClipY(maxWindowY);
+
+		current->render(camera, moduleRenderer, maxWindowY, true, true);
+
+		current = getSegment(current->getIndex() - 1);
+	}
+}
+
+void Road::renderForwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	Segment* current = getSegment(first->getIndex());
+
+	float x = 0.0f;
+	float dX = current->getCurve() - current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
+
+	while(current != last)
+	{
+		current->setXOffsetFar(x);
+		current->setXOffsetNear(x + dX);
+
+		x += dX;
+		dX += current->getCurve();
+
+		current = getSegment(current->getIndex() + 1);
+	}
+
+	short maxWindowY = WINDOW_HEIGHT;
+	float accZOffset = -z + first->getZNear();
+	current = getSegment(first->getIndex());
+
+	while(current != last)
+	{
+		float currentZOffset = -current->getZNear() + accZOffset;
+		accZOffset += SEGMENT_LENGTH;
+
+		current->setZOffset(renderZ + currentZOffset);
+		current->setClipY(maxWindowY);
+
+		current->render(camera, moduleRenderer, maxWindowY, false, true);
+
+		current = getSegment(current->getIndex() + 1);
+	}
+}
+
+/* void Road::render(float z, const Segment* first, const Segment* last, const Camera* camera, const ModuleRenderer* moduleRenderer, int segmentIncrementIndex, float initialCurveMultiplier, float multiplierDX, float xOffsetMultiplier) const
+{
+	Segment* current = getSegment(first->getIndex());
+
+	float x = 0.0f;
+	float dX = initialCurveMultiplier * current->getCurve() + multiplierDX * current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
+
+	while(current != last)
+	{
+		current->setXOffsetNear(-x);
+		current->setXOffsetFar(-x + xOffsetMultiplier * dX);
+
+		x += dX;
+		dX += current->getCurve();
+
+		current = getSegment(current->getIndex() + segmentIncrementIndex);
+	}
+} */
+
+/* void Road::renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	float zOffset = 2.0f;
+
+	float zFirst = camera->getBasePositionZ() + zOffset;
+	float zBase0 = camera->getBasePositionZ() - zOffset;
+	float zBase1 = zBase0 - SEGMENT_LENGTH;
+	float zLast = zFirst - DRAW_DISTANCE;
+
+	zFirst = mod0L(zFirst, length);
+	zBase0 = mod0L(zBase0, length);
+	zBase1 = mod0L(zBase1, length);
+	zLast = mod0L(zLast, length);
+
+	const Segment* first = getSegmentAtZ(zFirst);
+	const Segment* base0 = getSegmentAtZ(zBase0);
+	const Segment* base1 = getSegmentAtZ(zBase1);
+	const Segment* last = getSegmentAtZ(zLast);
+
+	// Render from player position - offset (excluded) to last position (excluded)
+	renderMirror(zBase1, base1, last, camera, moduleRenderer);
+
+	// Only the segments from last (excluded) to base1 (excluded) are considered
+	// Then, only their game objects are rendered
+
+	for(int i = N_SEGMENTS_DRAW - 1; i > 0; --i)
+	{
+		Segment* segment = getSegment(first->getIndex() - i);
+
+		if(segment == base0) break; //
+
+		for(const GameObject* gameObject : *segment->getGameObjects())
+			gameObject->render(camera, moduleRenderer);
+	}
+} */
+
+/* void Road::renderMirror(float z, const Segment* first, const Segment* last, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	render(z, first, last, camera, moduleRenderer, -1, 0.0f, 1.0f, -1.0f);
+
+	int incrementIndex = -1;
+	short maxWindowY = WINDOW_HEIGHT;
+	float accZOffset = z - first->getZNear();
+	Segment* current = getSegment(first->getIndex());
+
+	float renderZ = camera->getPosition()->z;
+	// float renderZ = camera->getBasePositionZ();
+
+	while(current != last)
+	{
+		accZOffset += SEGMENT_LENGTH;
+		float currentZOffset = -current->getZNear() + accZOffset;
+
+		current->setZOffset(renderZ + currentZOffset);
+		current->setClipY(maxWindowY);
+
+		current->render(camera, moduleRenderer, maxWindowY, true, true);
+
+		current = getSegment(current->getIndex() + incrementIndex);
+	}
+} */
 
 Segment* Road::getSegment(int index) const
 {

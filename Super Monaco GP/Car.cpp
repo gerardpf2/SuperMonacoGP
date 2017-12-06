@@ -61,7 +61,7 @@ void Car::update(float deltaTimeS)
 	float dX = 0.5f * ROAD_WIDTH * speedPercent * deltaTimeS;
 
 	position.x += direction.x * dX;
-	position.x += 4.0f * ROAD_WIDTH * dX * speedPercent * -newSegment->getCurve();
+	// position.x += 4.0f * ROAD_WIDTH * dX * speedPercent * -newSegment->getCurve();
 
 	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
 

@@ -124,7 +124,7 @@ void Segment::eraseGameObject(const GameObject* gameObject)
 	gameObjects.erase(gameObject);
 }
 
-void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY, bool enableClip) const
+void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY, bool enableClip, bool mirror) const
 {
 	// Check if this segment is behind the camera
 
@@ -132,8 +132,10 @@ void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer,
 
 	// Project near and far points of this segment
 
-	WorldPosition worldPositionNear{ -xOffsetNear, yNear, zOffset + zNear };
-	WorldPosition worldPositionFar{ -xOffsetFar, yFar, zOffset + zFar };
+	// WorldPosition worldPositionNear{ xOffsetNear, mirror ? yFar : yNear , zOffset + zNear };
+	// WorldPosition worldPositionFar{ xOffsetFar, mirror ? yNear : yFar , zOffset + zFar };
+	WorldPosition worldPositionNear{ xOffsetNear, mirror ? yFar : yNear , zOffset + (mirror ? zFar : zNear) };
+	WorldPosition worldPositionFar{ xOffsetFar, mirror ? yNear : yFar , zOffset + (mirror ? zNear : zFar) };
 
 	WindowPosition windowPositionNear, windowPositionFar;
 
@@ -142,8 +144,11 @@ void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer,
 
 	// Check if the projected points are outside the window rect (y)
 
-	if(enableClip && windowPositionFar.y >= maxWindowY) return;
-	maxWindowY = windowPositionFar.y;
+	if(enableClip)
+	{
+		if(windowPositionFar.y >= maxWindowY) return;
+		maxWindowY = windowPositionFar.y;
+	}
 
 	if(windowPositionNear.y <= windowPositionFar.y) return;
 	if(windowPositionNear.y <= 0 || windowPositionFar.y >= WINDOW_HEIGHT) return;

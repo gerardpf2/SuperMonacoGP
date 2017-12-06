@@ -7,7 +7,7 @@ class CameraFollow : public Camera
 {
 	public:
 
-		CameraFollow(const Road* road, const WorldPosition* followPosition);
+		CameraFollow(bool forward, const Road* road, const WorldPosition* followPosition, const WorldPosition& offsetPosition = WorldPosition{ 0.0f, 0.0f, 0.0f });
 
 		virtual ~CameraFollow();
 
@@ -18,6 +18,8 @@ class CameraFollow : public Camera
 	private:
 
 		const WorldPosition* followPosition = nullptr;
+
+		WorldPosition offsetPosition;
 };
 
 #endif

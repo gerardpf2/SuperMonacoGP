@@ -6,7 +6,7 @@
 			"defAngle" : true,
 			"zStart" : 150.0,
 			"length" : 250.0,
-			"angle" : 20.0
+			"angle" : 15.0
 		}
 	],
 	"curves" :
@@ -25,7 +25,7 @@
 			"enterLength" : 70.0,
 			"holdLength" : 60.0,
 			"leaveLength" : 70.0,
-			"value" : 0.015
+			"value" : 0.15
 		}
 	],
 	"rumbleColors" :

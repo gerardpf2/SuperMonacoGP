@@ -30,9 +30,25 @@ class Road
 
 		void render(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
+		void renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+
+		// void renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+
 	private:
 
-		void render(float z, Segment* first, const Segment* last, const Segment* limit, int multiplier, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+		void renderForward(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+		
+		void renderBackward(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+
+		void renderBackwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+
+		void renderForwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+
+		// void render(float z, const Segment* first, const Segment* last, int multiplier, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+
+		// void renderMirror(float z, const Segment* first, const Segment* last, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+
+		// void render(float z, const Segment* first, const Segment* last, const Camera* camera, const ModuleRenderer* moduleRenderer, int segmentIncrementIndex, float initialCurveMultiplier, float multiplierDX, float xOffsetMultiplier) const;
 
 		Segment* getSegment(int index) const;
 

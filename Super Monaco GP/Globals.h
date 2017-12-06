@@ -5,7 +5,7 @@
 
 #define WINDOW_TITLE "Super Monaco GP"
 #define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
+#define WINDOW_HEIGHT 448
 
 #define CAMERA_Y 5.0f
 #define CAMERA_FOV 90.0f
