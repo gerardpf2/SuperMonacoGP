@@ -2,8 +2,8 @@
 
 #include "Globals.h"
 
-CameraFollow::CameraFollow(bool forward, const Road* road, const WorldPosition* followPosition, const WorldPosition& offsetPosition) :
-	Camera(forward, road), followPosition(followPosition), offsetPosition(offsetPosition)
+CameraFollow::CameraFollow(bool forward, const Road* road, const WorldPosition* followPosition, float projectionY0, float projectionY1, const WorldPosition& offsetPosition) :
+	Camera(forward, road, projectionY0, projectionY1), followPosition(followPosition), offsetPosition(offsetPosition)
 { }
 
 CameraFollow::~CameraFollow()

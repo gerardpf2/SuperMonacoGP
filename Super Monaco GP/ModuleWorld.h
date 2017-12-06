@@ -38,6 +38,10 @@ class ModuleWorld : public Module
 		GameObject* player = nullptr;
 
 		std::vector<GameObject*> gameObjects;
+
+		// Rendering layers
+
+		uint layerRoad, layerRoadMirror;
 };
 
 #endif

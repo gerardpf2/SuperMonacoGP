@@ -29,12 +29,12 @@ void ModuleRenderer::setLayer(uint id) const
 		}
 }
 
-uint ModuleRenderer::addLayer(const SDL_Rect* viewport)
+uint ModuleRenderer::addLayer(const SDL_Rect* textureRect, const SDL_Rect* viewport)
 {
 	uint id = layers.size();
 	SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	layers.push_back(new Layer{ id, texture, viewport });
+	layers.push_back(new Layer{ id, texture, textureRect, viewport });
 
 	return id;
 }
@@ -47,6 +47,9 @@ void ModuleRenderer::removeLayer(uint id)
 			SDL_DestroyTexture(layer->t);
 			layer->t = nullptr;
 
+			layer->v = nullptr;
+			layer->tr = nullptr;
+
 			delete layer;
 
 			layers.remove(layer);
@@ -55,9 +58,9 @@ void ModuleRenderer::removeLayer(uint id)
 		}
 }
 
-void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect& srcRect, const SDL_Rect& dstRect) const
+void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect) const
 {
-	SDL_RenderCopy(renderer, texture, &srcRect, &dstRect);
+	SDL_RenderCopy(renderer, texture, srcRect, dstRect);
 }
 
 void ModuleRenderer::renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const
@@ -102,7 +105,7 @@ bool ModuleRenderer::postUpdate(float deltaTimeS)
 	SDL_SetRenderTarget(renderer, nullptr);
 
 	for(Layer* layer : layers)
-		SDL_RenderCopy(renderer, layer->t, nullptr, layer->v);
+		SDL_RenderCopy(renderer, layer->t, layer->tr, layer->v);
 
 	SDL_RenderPresent(renderer);
 

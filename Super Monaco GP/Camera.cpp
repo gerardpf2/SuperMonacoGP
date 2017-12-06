@@ -3,9 +3,11 @@
 #include "Road.h"
 #include "Utils.h"
 
-Camera::Camera(bool forward, const Road* road) :
-	forward(forward), road(road)
+Camera::Camera(bool forward, const Road* road, float projectionY0, float projectionY1) :
+	forward(forward), road(road), projectionY0(projectionY0), projectionY1(projectionY1)
 {
+	// This should happen: 1 / projectionY0 + 1 / projectionY1 = 1
+
 	depth = 1.0f / tanf(degToRad(CAMERA_FOV / 2.0f));
 
 	position.x = 0.0f;
@@ -58,7 +60,7 @@ void Camera::project(const WorldPosition& worldPosition, WindowPosition& windowP
 	float scale = depth / ((forward ? 1.0f : -1.0f) * (worldPosition.z - position.z));
 
 	windowPosition.x = (short)roundf((WINDOW_WIDTH / 2.0f) + (WINDOW_WIDTH / 2.0f) * scale * (worldPosition.x - position.x));
-	windowPosition.y = (short)roundf((WINDOW_HEIGHT / 1.5f) - (WINDOW_HEIGHT / 3.0f) * scale * (worldPosition.y - position.y));
+	windowPosition.y = (short)roundf((WINDOW_HEIGHT / projectionY0) - (WINDOW_HEIGHT / projectionY1) * scale * (worldPosition.y - position.y));
 }
 
 void Camera::project(const WorldTrapezoid& worldTrapezoid, WindowTrapezoid& windowTrapezoid) const

@@ -26,10 +26,9 @@ ModuleWorld::ModuleWorld(GameEngine* gameEngine) :
 ModuleWorld::~ModuleWorld()
 { }
 
-uint layerRoad = -1;
-uint layerRoadMirror = -1;
-
-SDL_Rect viewportRoadMirror{ WINDOW_WIDTH / 2 - WINDOW_WIDTH / 4, 0, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 };
+// Revisar
+SDL_Rect textureRectRoadMirror{ 0, (int)((1.0f - 0.24f) * WINDOW_HEIGHT), WINDOW_WIDTH, (int)(0.24f * WINDOW_HEIGHT) };
+SDL_Rect viewportRoadMirror{ (int)(0.15f * WINDOW_WIDTH), (int)(0.12f * WINDOW_HEIGHT), (int)(0.7f * WINDOW_WIDTH), (int)(0.17f * WINDOW_HEIGHT) };
 
 bool ModuleWorld::setUp()
 {
@@ -45,11 +44,11 @@ bool ModuleWorld::setUp()
 
 	// Player
 
-	player = addGameObject(0, WorldPosition{ 12.5f, 0.0f, 0.0f });
+	player = addGameObject(0, WorldPosition{ 0.0f, 0.0f, 0.0f });
 
 	// Cars
 
-	addGameObject(1, WorldPosition{ 7.5f, 0.0f, 10.0f });
+	addGameObject(1, WorldPosition{ 7.0f, 0.0f, 10.0f });
 
 	// Environment
 
@@ -62,10 +61,10 @@ bool ModuleWorld::setUp()
 	// --- GameObjects
 
 	camera = new CameraFollow(true, road, player->getPosition());
-	cameraMirror = new CameraFollow(false, road, player->getPosition(), WorldPosition{ 0.0f, 0.0f, -CAMERA_Y });
+	cameraMirror = new CameraFollow(false, road, player->getPosition(), 1.1f, 11.0f, WorldPosition{ 0.0f, 0.0f, -CAMERA_Y });
 
-	layerRoad = getGameEngine()->getModuleRenderer()->addLayer(nullptr);
-	layerRoadMirror = getGameEngine()->getModuleRenderer()->addLayer(&viewportRoadMirror);
+	layerRoad = getGameEngine()->getModuleRenderer()->addLayer();
+	layerRoadMirror = getGameEngine()->getModuleRenderer()->addLayer(&textureRectRoadMirror, &viewportRoadMirror);
 
 	return true;
 }
@@ -78,19 +77,11 @@ bool ModuleWorld::update(float deltaTimeS)
 	camera->update(deltaTimeS);
 	cameraMirror->update(deltaTimeS);
 
-	/* getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
-	road->render(camera, getGameEngine()->getModuleRenderer());
-
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoad);
-	road->renderMirror(camera, getGameEngine()->getModuleRenderer()); */
-
+	road->render(camera, getGameEngine()->getModuleRenderer());
+	
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
-	road->render(camera, getGameEngine()->getModuleRenderer());
-	getGameEngine()->getModuleRenderer()->setLayer(layerRoad);
-	road->renderMirror(cameraMirror, getGameEngine()->getModuleRenderer());
-
-	// getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
-	// road->renderMirror(camera, getGameEngine()->getModuleRenderer());
+	road->render(cameraMirror, getGameEngine()->getModuleRenderer());
 
 	return true;
 }

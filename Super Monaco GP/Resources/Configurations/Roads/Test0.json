@@ -1,5 +1,11 @@
 {
 	"length" : 405.0,
+	"background" :
+	{
+		"textureGroupId" : 0,
+		"textureId" : 0,
+		"textureSkyId" : 0
+	},
 	"hills" :
 	[
 		{
@@ -25,7 +31,7 @@
 			"enterLength" : 70.0,
 			"holdLength" : 60.0,
 			"leaveLength" : 70.0,
-			"value" : 0.15
+			"value" : 0.01
 		}
 	],
 	"rumbleColors" :

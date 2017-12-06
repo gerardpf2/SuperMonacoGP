@@ -21,11 +21,11 @@ class ModuleRenderer : public Module
 
 		void setLayer(uint id) const;
 		
-		uint addLayer(const SDL_Rect* viewport);
+		uint addLayer(const SDL_Rect* textureRect = nullptr, const SDL_Rect* viewport = nullptr);
 
 		void removeLayer(uint id);
 
-		void renderTexture(SDL_Texture* texture, const SDL_Rect& srcRect, const SDL_Rect& dstRect) const;
+		void renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect) const;
 
 		void renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const;
 

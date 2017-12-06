@@ -105,7 +105,7 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 		src.h = (int)(src.h * ratio);
 	}
 
-	moduleRenderer->renderTexture(texture->t, src, dst);
+	moduleRenderer->renderTexture(texture->t, &src, &dst);
 }
 
 void GameObject::cleanUp()

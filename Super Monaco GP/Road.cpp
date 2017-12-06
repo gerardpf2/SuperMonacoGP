@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include "Camera.h"
 #include "Segment.h"
+#include "Background.h"
 #include "GameObject.h"
 #include "ModuleJson.h"
 
@@ -35,6 +36,9 @@ void Road::load(const char* jsonPath, const ModuleJson* moduleJson)
 
 	// GameObjectDefinitions
 	addGameObjectDefinitions(jsonDocument["gameObjectDefinitions"]);
+
+	// Background
+	setBackground(jsonDocument["background"]);
 }
 
 void Road::unload()
@@ -62,6 +66,12 @@ void Road::unload()
 	}
 
 	gameObjectDefinitions.clear();
+
+	if(background)
+	{
+		delete background;
+		background = nullptr;
+	}
 }
 
 float Road::getLength() const
@@ -81,48 +91,45 @@ const std::vector<RoadGameObjectDefinition*>* Road::getGameObjectDefinitions() c
 
 void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	float zFirst = mod0L(camera->getPosition()->z, length);
-	float zBase0 = mod0L(camera->getBasePositionZ(), length);
-	float zBase1 = mod0L(camera->getBasePositionZ() - SEGMENT_LENGTH, length);
-	float zLast = mod0L(zFirst + DRAW_DISTANCE, length);
-
-	const Segment* first = getSegmentAtZ(zFirst);
-	const Segment* base0 = getSegmentAtZ(zBase0);
-	const Segment* base1 = getSegmentAtZ(zBase1);
-	const Segment* last = getSegmentAtZ(zLast);
-
-	float renderZ0 = camera->getBasePositionZ();
-	float renderZ1 = camera->getBasePositionZ() - SEGMENT_LENGTH;
-	
-	// Render from player segment (included) to last segment (excluded)
-	renderForward(zBase0, base0, last, renderZ0, camera, moduleRenderer);
-	// Render from player segment (excluded) to first segment (excluded)
-	renderBackward(zBase1, base1, first, renderZ1, camera, moduleRenderer);
-
-	// Render from player segment (included) to last segment (excluded)
-	// render(zBase0, base0, last, first, 1, renderZ0, camera, moduleRenderer);
-	// Render from player segment (excluded) to first segment (excluded)
-	// render(zBase1, base1, first, first, -1, renderZ1, camera, moduleRenderer);
-
-	// The first segment and the last one are excluded from the rendering process
-	// Their game objects need to be excluded too
-
-	// return;
-
-	for(int i = N_SEGMENTS_DRAW - 1; i > 0; --i)
+	if(!camera->getForward()) renderMirror(camera, moduleRenderer);
+	else
 	{
-		Segment* segment = getSegment(first->getIndex() + i);
+		float zRender0 = camera->getBasePositionZ();
+		float zRender1 = camera->getBasePositionZ() - SEGMENT_LENGTH;
 
-		for(const GameObject* gameObject : *segment->getGameObjects())
-			gameObject->render(camera, moduleRenderer);
+		float zFirst = mod0L(camera->getPosition()->z, length);
+		float zBase0 = mod0L(zRender0, length);
+		float zBase1 = mod0L(zRender1, length);
+		float zLast = mod0L(zFirst + DRAW_DISTANCE, length);
+
+		const Segment* first = getSegmentAtZ(zFirst);
+		const Segment* base0 = getSegmentAtZ(zBase0);
+		const Segment* base1 = getSegmentAtZ(zBase1);
+		const Segment* last = getSegmentAtZ(zLast);
+
+		// Render from player segment (included) to last segment (excluded)
+		renderForward(zBase0, base0, last, zRender0, camera, moduleRenderer);
+		// Render from player segment (excluded) to first segment (excluded)
+		renderBackward(zBase1, base1, first, zRender1, camera, moduleRenderer);
+
+		for(int i = N_SEGMENTS_DRAW - 1; i > 0; --i)
+		{
+			Segment* segment = getSegment(first->getIndex() + i);
+
+			for(const GameObject* gameObject : *segment->getGameObjects())
+				gameObject->render(camera, moduleRenderer);
+		}
 	}
 }
 
 void Road::renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
+	float zRender0 = camera->getBasePositionZ() + SEGMENT_LENGTH;
+	float zRender1 = camera->getBasePositionZ();
+
 	float zFirst = mod0L(camera->getPosition()->z, length);
-	float zBase0 = mod0L(camera->getBasePositionZ() + SEGMENT_LENGTH, length);
-	float zBase1 = mod0L(camera->getBasePositionZ(), length);
+	float zBase0 = mod0L(zRender0, length);
+	float zBase1 = mod0L(zRender1, length);
 	float zLast = mod0L(zFirst - DRAW_DISTANCE, length);
 
 	const Segment* first = getSegmentAtZ(zFirst);
@@ -130,273 +137,68 @@ void Road::renderMirror(const Camera* camera, const ModuleRenderer* moduleRender
 	const Segment* base1 = getSegmentAtZ(zBase1);
 	const Segment* last = getSegmentAtZ(zLast);
 
-	float renderZ0 = camera->getBasePositionZ() + SEGMENT_LENGTH;
-	float renderZ1 = camera->getBasePositionZ();
-
 	// Render from player segment (excluded) to last segment (excluded)
-	renderBackwardMirror(zBase1, base1, last, renderZ1, camera, moduleRenderer);
+	renderBackwardMirror(zBase1, base1, last, zRender1, camera, moduleRenderer);
 	// Render from player segment (included) to first segment (excluded)
-	renderForwardMirror(zBase0, base0, first, renderZ0, camera, moduleRenderer);
-
-	// return;
+	renderForwardMirror(zBase0, base0, first, zRender0, camera, moduleRenderer);
 
 	for(int i = 1; i < N_SEGMENTS_DRAW; ++i)
 	{
 		Segment* segment = getSegment(last->getIndex() + i);
 
 		for(const GameObject* gameObject : *segment->getGameObjects())
-			if(gameObject->getType() != GameObjectType::PLAYER)
-				gameObject->render(camera, moduleRenderer);
+			gameObject->render(camera, moduleRenderer);
 	}
 }
 
-/* void Road::render(float z, const Segment* first, const Segment* last, int multiplier, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
-{
-	render(z, first, last, camera, moduleRenderer, multiplier, 1.0f, multiplier *-1.0f, multiplier *-1.0f);
-
-	int incrementIndex = multiplier;
-	short maxWindowY = WINDOW_HEIGHT;
-	float accZOffset = -z + first->getZNear();
-	Segment* current = getSegment(first->getIndex());
-
-	while(current != last)
-	{
-		float currentZOffset = -current->getZNear() + accZOffset;
-		accZOffset += multiplier * SEGMENT_LENGTH;
-
-		current->setZOffset(renderZ + currentZOffset);
-		current->setClipY(maxWindowY);
-
-		current->render(camera, moduleRenderer, maxWindowY, multiplier > 0, false);
-
-		current = getSegment(current->getIndex() + incrementIndex);
-	}
-} */
-
 void Road::renderForward(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	Segment* current = getSegment(first->getIndex());
-
-	float x = 0.0f;
-	float dX = current->getCurve() - current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
-
-	while(current != last)
-	{
-		current->setXOffsetNear(x);
-		current->setXOffsetFar(x + dX);
-
-		x += dX;
-		dX += current->getCurve();
-
-		current = getSegment(current->getIndex() + 1);
-	}
-
-	short maxWindowY = WINDOW_HEIGHT;
-	float accZOffset = -z + first->getZNear();
-	current = getSegment(first->getIndex());
-
-	while(current != last)
-	{
-		float currentZOffset = -current->getZNear() + accZOffset;
-		accZOffset += SEGMENT_LENGTH;
-
-		current->setZOffset(renderZ + currentZOffset);
-		current->setClipY(maxWindowY);
-
-		current->render(camera, moduleRenderer, maxWindowY);
-
-		current = getSegment(current->getIndex() + 1);
-	}
+	render(z, first, last, renderZ, 1.0f, -1.0f, false, 1, true, false, camera, moduleRenderer);
 }
 
 void Road::renderBackward(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	Segment* current = getSegment(first->getIndex());
-
-	float x = 0.0f;
-	float dX = current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
-
-	while(current != last)
-	{
-		current->setXOffsetFar(x);
-		current->setXOffsetNear(x + dX);
-
-		x += dX;
-		dX += current->getCurve();
-
-		current = getSegment(current->getIndex() - 1);
-	}
-
-	short maxWindowY = WINDOW_HEIGHT;
-	float accZOffset = -z + first->getZNear();
-	current = getSegment(first->getIndex());
-
-	while(current != last)
-	{
-		float currentZOffset = -current->getZNear() + accZOffset;
-		accZOffset -= SEGMENT_LENGTH;
-
-		current->setZOffset(renderZ + currentZOffset);
-		current->setClipY(maxWindowY);
-
-		current->render(camera, moduleRenderer, maxWindowY, false);
-
-		current = getSegment(current->getIndex() - 1);
-	}
-}
-
-void Road::renderBackwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
-{
-	Segment* current = getSegment(first->getIndex());
-
-	float x = 0.0f;
-	float dX = current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
-
-	while(current != last)
-	{
-		current->setXOffsetNear(x);
-		current->setXOffsetFar(x + dX);
-
-		x += dX;
-		dX += current->getCurve();
-
-		current = getSegment(current->getIndex() - 1);
-	}
-
-	short maxWindowY = WINDOW_HEIGHT;
-	float accZOffset = -z + first->getZNear();
-	current = getSegment(first->getIndex());
-
-	while(current != last)
-	{
-		float currentZOffset = -current->getZNear() + accZOffset;
-		accZOffset -= SEGMENT_LENGTH;
-
-		current->setZOffset(renderZ + currentZOffset);
-		current->setClipY(maxWindowY);
-
-		current->render(camera, moduleRenderer, maxWindowY, true, true);
-
-		current = getSegment(current->getIndex() - 1);
-	}
+	render(z, first, last, renderZ, 0.0f, 1.0f, true, -1, false, false, camera, moduleRenderer);
 }
 
 void Road::renderForwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	Segment* current = getSegment(first->getIndex());
-
-	float x = 0.0f;
-	float dX = current->getCurve() - current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
-
-	while(current != last)
-	{
-		current->setXOffsetFar(x);
-		current->setXOffsetNear(x + dX);
-
-		x += dX;
-		dX += current->getCurve();
-
-		current = getSegment(current->getIndex() + 1);
-	}
-
-	short maxWindowY = WINDOW_HEIGHT;
-	float accZOffset = -z + first->getZNear();
-	current = getSegment(first->getIndex());
-
-	while(current != last)
-	{
-		float currentZOffset = -current->getZNear() + accZOffset;
-		accZOffset += SEGMENT_LENGTH;
-
-		current->setZOffset(renderZ + currentZOffset);
-		current->setClipY(maxWindowY);
-
-		current->render(camera, moduleRenderer, maxWindowY, false, true);
-
-		current = getSegment(current->getIndex() + 1);
-	}
+	render(z, first, last, renderZ, 1.0f, -1.0f, true, 1, false, true, camera, moduleRenderer);
 }
 
-/* void Road::render(float z, const Segment* first, const Segment* last, const Camera* camera, const ModuleRenderer* moduleRenderer, int segmentIncrementIndex, float initialCurveMultiplier, float multiplierDX, float xOffsetMultiplier) const
+void Road::renderBackwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
+	render(z, first, last, renderZ, 0.0f, 1.0f, false, -1, true, true, camera, moduleRenderer);
+}
+
+void Road::render(float z, const Segment* first, const Segment* last, float renderZ, float initialCurveMultiplier, float initialCurveDXMultiplier, bool invertZNearZFar, int increment, bool clip, bool mirror, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+{
+	short maxWindowY = WINDOW_HEIGHT;
+	float accZOffset = -z + first->getZNear();
 	Segment* current = getSegment(first->getIndex());
 
 	float x = 0.0f;
-	float dX = initialCurveMultiplier * current->getCurve() + multiplierDX * current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
+	float dX = initialCurveMultiplier * current->getCurve() + initialCurveDXMultiplier * current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
 
 	while(current != last)
 	{
-		current->setXOffsetNear(-x);
-		current->setXOffsetFar(-x + xOffsetMultiplier * dX);
+		current->setXOffsetNear(invertZNearZFar ? x + dX : x);
+		current->setXOffsetFar(invertZNearZFar ? x : x + dX);
 
 		x += dX;
 		dX += current->getCurve();
 
-		current = getSegment(current->getIndex() + segmentIncrementIndex);
-	}
-} */
-
-/* void Road::renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const
-{
-	float zOffset = 2.0f;
-
-	float zFirst = camera->getBasePositionZ() + zOffset;
-	float zBase0 = camera->getBasePositionZ() - zOffset;
-	float zBase1 = zBase0 - SEGMENT_LENGTH;
-	float zLast = zFirst - DRAW_DISTANCE;
-
-	zFirst = mod0L(zFirst, length);
-	zBase0 = mod0L(zBase0, length);
-	zBase1 = mod0L(zBase1, length);
-	zLast = mod0L(zLast, length);
-
-	const Segment* first = getSegmentAtZ(zFirst);
-	const Segment* base0 = getSegmentAtZ(zBase0);
-	const Segment* base1 = getSegmentAtZ(zBase1);
-	const Segment* last = getSegmentAtZ(zLast);
-
-	// Render from player position - offset (excluded) to last position (excluded)
-	renderMirror(zBase1, base1, last, camera, moduleRenderer);
-
-	// Only the segments from last (excluded) to base1 (excluded) are considered
-	// Then, only their game objects are rendered
-
-	for(int i = N_SEGMENTS_DRAW - 1; i > 0; --i)
-	{
-		Segment* segment = getSegment(first->getIndex() - i);
-
-		if(segment == base0) break; //
-
-		for(const GameObject* gameObject : *segment->getGameObjects())
-			gameObject->render(camera, moduleRenderer);
-	}
-} */
-
-/* void Road::renderMirror(float z, const Segment* first, const Segment* last, const Camera* camera, const ModuleRenderer* moduleRenderer) const
-{
-	render(z, first, last, camera, moduleRenderer, -1, 0.0f, 1.0f, -1.0f);
-
-	int incrementIndex = -1;
-	short maxWindowY = WINDOW_HEIGHT;
-	float accZOffset = z - first->getZNear();
-	Segment* current = getSegment(first->getIndex());
-
-	float renderZ = camera->getPosition()->z;
-	// float renderZ = camera->getBasePositionZ();
-
-	while(current != last)
-	{
-		accZOffset += SEGMENT_LENGTH;
 		float currentZOffset = -current->getZNear() + accZOffset;
+		accZOffset += increment * SEGMENT_LENGTH;
 
 		current->setZOffset(renderZ + currentZOffset);
 		current->setClipY(maxWindowY);
 
-		current->render(camera, moduleRenderer, maxWindowY, true, true);
+		current->render(camera, moduleRenderer, maxWindowY, clip, mirror);
 
-		current = getSegment(current->getIndex() + incrementIndex);
+		current = getSegment(current->getIndex() + increment);
 	}
-} */
+}
 
 Segment* Road::getSegment(int index) const
 {
@@ -658,6 +460,11 @@ void Road::setRumbleColors(const Value& value)
 			currentSegmentPerRumble = 0;
 		}
 	}
+}
+
+void Road::setBackground(const rapidjson::Value& value)
+{
+	background = new Background(nullptr, nullptr);
 }
 
 void Road::addGameObjectDefinitions(const rapidjson::Value& value)

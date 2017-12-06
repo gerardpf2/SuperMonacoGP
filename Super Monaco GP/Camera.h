@@ -33,7 +33,7 @@ class Camera
 
 	protected:
 
-		Camera(bool forward, const Road* road);
+		Camera(bool forward, const Road* road, float projectionY0 = 1.5f, float projectionY1 = 3.0f);
 
 		void limitZ();
 
@@ -46,6 +46,8 @@ class Camera
 		bool forward;
 
 		const Road* road = nullptr;
+
+		float projectionY0, projectionY1;
 
 		float depth;
 };

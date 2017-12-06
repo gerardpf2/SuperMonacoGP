@@ -7,6 +7,7 @@
 
 class Camera;
 class Segment;
+class Background;
 class ModuleJson;
 class ModuleRenderer;
 
@@ -30,25 +31,19 @@ class Road
 
 		void render(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
-		void renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
-
-		// void renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
-
 	private:
+
+		void renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
 		void renderForward(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 		
 		void renderBackward(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
-		void renderBackwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
-
 		void renderForwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
-		// void render(float z, const Segment* first, const Segment* last, int multiplier, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+		void renderBackwardMirror(float z, const Segment* first, const Segment* last, float renderZ, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
-		// void renderMirror(float z, const Segment* first, const Segment* last, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
-
-		// void render(float z, const Segment* first, const Segment* last, const Camera* camera, const ModuleRenderer* moduleRenderer, int segmentIncrementIndex, float initialCurveMultiplier, float multiplierDX, float xOffsetMultiplier) const;
+		void render(float z, const Segment* first, const Segment* last, float renderZ, float initialCurveMultiplier, float initialCurveDXMultiplier, bool invertZNearZFar, int increment, bool clip, bool mirror, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
 		Segment* getSegment(int index) const;
 
@@ -80,6 +75,8 @@ class Road
 
 		void setRumbleColors(const rapidjson::Value& value);
 
+		void setBackground(const rapidjson::Value& value);
+
 		void addGameObjectDefinitions(const rapidjson::Value& value);
 
 	private:
@@ -91,6 +88,8 @@ class Road
 		std::vector<RumbleColors*> rumbleColors;
 
 		std::vector<RoadGameObjectDefinition*> gameObjectDefinitions;
+
+		Background* background = nullptr;
 };
 
 #endif
