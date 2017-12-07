@@ -9,6 +9,7 @@ class Camera;
 class Segment;
 class Background;
 class ModuleJson;
+class ModuleTexture;
 class ModuleRenderer;
 
 class Road
@@ -19,15 +20,17 @@ class Road
 
 		virtual ~Road();
 
-		void load(const char* jsonPath, const ModuleJson* moduleJson);
+		void load(const char* jsonPath, const ModuleJson* moduleJson, ModuleTexture* moduleTexture);
 
-		void unload();
+		void unload(ModuleTexture* moduleTexture);
 
 		float getLength() const;
 
 		Segment* getSegmentAtZ(float z) const;
 
 		const std::vector<RoadGameObjectDefinition*>* getGameObjectDefinitions() const;
+
+		void update(const Camera* camera, float deltaTimeS) const;
 
 		void render(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
@@ -75,7 +78,7 @@ class Road
 
 		void setRumbleColors(const rapidjson::Value& value);
 
-		void setBackground(const rapidjson::Value& value);
+		void setBackground(const rapidjson::Value& value, ModuleTexture* moduleTexture);
 
 		void addGameObjectDefinitions(const rapidjson::Value& value);
 
@@ -88,6 +91,8 @@ class Road
 		std::vector<RumbleColors*> rumbleColors;
 
 		std::vector<RoadGameObjectDefinition*> gameObjectDefinitions;
+
+		uint backroundTextureGroupId = -1;
 
 		Background* background = nullptr;
 };

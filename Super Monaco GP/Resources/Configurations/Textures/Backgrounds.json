@@ -1,0 +1,20 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 30,
+	"bmpPath" : "Resources/Images/Backgrounds.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "Texture",
+			
+			"x" : 0, "y" : 0, "w" : 1024, "h" : 72
+		},
+		{
+			"_info" : "TextureSky",
+			
+			"x" : 0, "y" : 0, "w" : 1, "h" : 1
+		}
+	]
+}

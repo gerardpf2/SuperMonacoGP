@@ -15,6 +15,10 @@ class Camera
 
 		const Road* getRoad() const;
 
+		float getProjectionY0() const;
+		
+		float getProjectionY1() const;
+
 		float getDepth() const;
 
 		const WorldPosition* getPosition() const;

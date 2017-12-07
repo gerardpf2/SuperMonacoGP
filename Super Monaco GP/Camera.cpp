@@ -30,6 +30,16 @@ const Road* Camera::getRoad() const
 	return road;
 }
 
+float Camera::getProjectionY0() const
+{
+	return projectionY0;
+}
+
+float Camera::getProjectionY1() const
+{
+	return projectionY1;
+}
+
 float Camera::getDepth() const
 {
 	return depth;

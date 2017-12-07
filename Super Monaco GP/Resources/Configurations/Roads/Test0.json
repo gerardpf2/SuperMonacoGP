@@ -2,9 +2,9 @@
 	"length" : 405.0,
 	"background" :
 	{
-		"textureGroupId" : 0,
+		"textureGroupPath" : "Resources/Configurations/Textures/Backgrounds.json",
 		"textureId" : 0,
-		"textureSkyId" : 0
+		"textureSkyId" : 1
 	},
 	"hills" :
 	[
@@ -12,7 +12,7 @@
 			"defAngle" : true,
 			"zStart" : 150.0,
 			"length" : 250.0,
-			"angle" : 15.0
+			"angle" : -30.0
 		}
 	],
 	"curves" :

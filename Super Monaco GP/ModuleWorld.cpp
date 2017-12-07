@@ -34,7 +34,7 @@ bool ModuleWorld::setUp()
 {
 	road = new Road();
 
-	road->load("Resources/Configurations/Roads/Test0.json", getGameEngine()->getModuleJson());
+	road->load("Resources/Configurations/Roads/Test0.json", getGameEngine()->getModuleJson(), getGameEngine()->getModuleTexture());
 
 	// GameObjects ---
 
@@ -95,7 +95,7 @@ void ModuleWorld::cleanUp()
 
 	if(road)
 	{
-		road->unload();
+		road->unload(getGameEngine()->getModuleTexture());
 
 		delete road;
 		road = nullptr;
