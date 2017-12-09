@@ -4,7 +4,8 @@
 	{
 		"textureGroupPath" : "Resources/Configurations/Textures/Backgrounds.json",
 		"textureId" : 0,
-		"textureSkyId" : 1
+		"textureSkyId" : 1,
+		"textureGroundId" : 2
 	},
 	"hills" :
 	[
@@ -12,7 +13,7 @@
 			"defAngle" : true,
 			"zStart" : 150.0,
 			"length" : 250.0,
-			"angle" : -30.0
+			"angle" : 20.0
 		}
 	],
 	"curves" :

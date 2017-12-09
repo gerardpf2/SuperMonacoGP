@@ -24,6 +24,8 @@ struct WorldTrapezoid { WorldPosition nl, nr, fr, fl; };
 
 struct RoadGameObjectDefinition { uint id; float offsetX; WorldPosition wp; };
 
+struct RoadBackgroundDefinition { uint textureGroupId, textureId, textureSkyId, textureGroundId; };
+
 struct Layer { uint id; SDL_Texture* t; const SDL_Rect* tr; const SDL_Rect* v; };
 
 #endif

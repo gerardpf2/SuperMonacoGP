@@ -7,7 +7,6 @@
 
 class Camera;
 class Segment;
-class Background;
 class ModuleJson;
 class ModuleTexture;
 class ModuleRenderer;
@@ -30,7 +29,7 @@ class Road
 
 		const std::vector<RoadGameObjectDefinition*>* getGameObjectDefinitions() const;
 
-		void update(const Camera* camera, float deltaTimeS) const;
+		const RoadBackgroundDefinition* getRoadBackgroundDefinition() const;
 
 		void render(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
@@ -78,9 +77,9 @@ class Road
 
 		void setRumbleColors(const rapidjson::Value& value);
 
-		void setBackground(const rapidjson::Value& value, ModuleTexture* moduleTexture);
-
 		void addGameObjectDefinitions(const rapidjson::Value& value);
+
+		void setBackgroundDefinition(const rapidjson::Value& value, ModuleTexture* moduleTexture);
 
 	private:
 
@@ -92,9 +91,7 @@ class Road
 
 		std::vector<RoadGameObjectDefinition*> gameObjectDefinitions;
 
-		uint backroundTextureGroupId = -1;
-
-		Background* background = nullptr;
+		RoadBackgroundDefinition* roadBackgroundDefinition = nullptr;
 };
 
 #endif

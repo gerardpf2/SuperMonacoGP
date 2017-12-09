@@ -15,6 +15,8 @@ class Car : public Animated
 
 		float getVelocity() const;
 
+		float getVelocityPercent() const;
+
 		virtual void update(float deltaTimeS) override;
 
 	protected:

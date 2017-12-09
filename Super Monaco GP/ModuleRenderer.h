@@ -25,7 +25,7 @@ class ModuleRenderer : public Module
 
 		void removeLayer(uint id);
 
-		void renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect) const;
+		void renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect, bool hFlipped = false) const;
 
 		void renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const;
 

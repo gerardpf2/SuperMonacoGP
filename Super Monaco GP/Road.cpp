@@ -3,7 +3,6 @@
 #include "Utils.h"
 #include "Camera.h"
 #include "Segment.h"
-#include "Background.h"
 #include "GameObject.h"
 #include "ModuleJson.h"
 #include "ModuleTexture.h"
@@ -27,7 +26,7 @@ void Road::load(const char* jsonPath, const ModuleJson* moduleJson, ModuleTextur
 	setLength(jsonDocument["length"].GetFloat());
 
 	// Hills
-	// addHills(jsonDocument["hills"]);
+	addHills(jsonDocument["hills"]);
 
 	// Curves
 	addCurves(jsonDocument["curves"]);
@@ -39,7 +38,7 @@ void Road::load(const char* jsonPath, const ModuleJson* moduleJson, ModuleTextur
 	addGameObjectDefinitions(jsonDocument["gameObjectDefinitions"]);
 
 	// Background
-	setBackground(jsonDocument["background"], moduleTexture);
+	setBackgroundDefinition(jsonDocument["background"], moduleTexture);
 }
 
 void Road::unload(ModuleTexture* moduleTexture)
@@ -68,12 +67,12 @@ void Road::unload(ModuleTexture* moduleTexture)
 
 	gameObjectDefinitions.clear();
 
-	moduleTexture->unload(backroundTextureGroupId);
-
-	if(background)
+	if(roadBackgroundDefinition)
 	{
-		delete background;
-		background = nullptr;
+		moduleTexture->unload(roadBackgroundDefinition->textureGroupId);
+
+		delete roadBackgroundDefinition;
+		roadBackgroundDefinition = nullptr;
 	}
 }
 
@@ -92,15 +91,13 @@ const std::vector<RoadGameObjectDefinition*>* Road::getGameObjectDefinitions() c
 	return &gameObjectDefinitions;
 }
 
-void Road::update(const Camera* camera, float deltaTimeS) const
+const RoadBackgroundDefinition* Road::getRoadBackgroundDefinition() const
 {
-	background->update(camera, deltaTimeS);
+	return roadBackgroundDefinition;
 }
 
 void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	background->render(camera, moduleRenderer);
-
 	if(!camera->getForward()) renderMirror(camera, moduleRenderer);
 	else
 	{
@@ -472,17 +469,6 @@ void Road::setRumbleColors(const Value& value)
 	}
 }
 
-void Road::setBackground(const rapidjson::Value& value, ModuleTexture* moduleTexture)
-{
-	const char* textureGroupPath = value["textureGroupPath"].GetString();
-	uint textureId = value["textureId"].GetUint();
-	uint textureSkyId = value["textureSkyId"].GetUint();
-
-	backroundTextureGroupId = moduleTexture->load(textureGroupPath);
-
-	background = new Background(moduleTexture->get(backroundTextureGroupId, textureId), moduleTexture->get(backroundTextureGroupId, textureSkyId), this);
-}
-
 void Road::addGameObjectDefinitions(const rapidjson::Value& value)
 {
 	gameObjectDefinitions.reserve(value.Size());
@@ -503,4 +489,19 @@ void Road::addGameObjectDefinitions(const rapidjson::Value& value)
 
 		gameObjectDefinitions.push_back(new RoadGameObjectDefinition{ id, offsetX, WorldPosition{ x, y, z } });
 	}
+}
+
+void Road::setBackgroundDefinition(const rapidjson::Value& value, ModuleTexture* moduleTexture)
+{
+	const char* textureGroupPath = value["textureGroupPath"].GetString();
+	uint textureId = value["textureId"].GetUint();
+	uint textureSkyId = value["textureSkyId"].GetUint();
+	uint textureGroundId = value["textureGroundId"].GetUint();
+
+	roadBackgroundDefinition = new RoadBackgroundDefinition;
+
+	roadBackgroundDefinition->textureGroupId = moduleTexture->load(textureGroupPath);
+	roadBackgroundDefinition->textureId = textureId;
+	roadBackgroundDefinition->textureSkyId = textureSkyId;
+	roadBackgroundDefinition->textureGroundId = textureGroundId;
 }

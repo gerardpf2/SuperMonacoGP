@@ -7,6 +7,7 @@
 
 class Road;
 class Camera;
+class Background;
 class GameObject;
 
 class ModuleWorld : public Module
@@ -29,6 +30,8 @@ class ModuleWorld : public Module
 
 	private:
 
+		bool paused = false;
+
 		Road* road = nullptr;
 
 		Camera* camera = nullptr;
@@ -38,6 +41,10 @@ class ModuleWorld : public Module
 		GameObject* player = nullptr;
 
 		std::vector<GameObject*> gameObjects;
+
+		Background* background = nullptr;
+
+		Background* backgroundMirror = nullptr;
 
 		// Rendering layers
 

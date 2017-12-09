@@ -58,9 +58,10 @@ void ModuleRenderer::removeLayer(uint id)
 		}
 }
 
-void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect) const
+void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect, bool hFlipped) const
 {
-	SDL_RenderCopy(renderer, texture, srcRect, dstRect);
+	SDL_RendererFlip flip = hFlipped ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+	SDL_RenderCopyEx(renderer, texture, srcRect, dstRect, 0.0, nullptr, flip);
 }
 
 void ModuleRenderer::renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const

@@ -6,14 +6,14 @@
 struct Texture;
 
 class Road;
-class Camera;
+class Player;
 class ModuleRenderer;
 
 class Background
 {
 	public:
 
-		Background(const Texture* texture, const Texture* textureSky, const Road* road);
+		Background(const Texture* texture, const Texture* textureSky, const Texture* textureGround, float projectionY1);
 
 		virtual ~Background();
 
@@ -21,13 +21,15 @@ class Background
 
 		const Texture* getTextureSky() const;
 
-		const Road* getRoad() const;
+		const Texture* getTextureGround() const;
 
 		float getOffsetX() const;
 
-		void update(const Camera* camera, float deltaTimeS);
+		float getOffsetY() const;
 
-		void render(const Camera* camera, const ModuleRenderer* moduleRenderer);
+		void update(const Player* player, const Road* road, float deltaTimeS);
+
+		void render(bool mirror, const ModuleRenderer* moduleRenderer) const;
 
 	private:
 
@@ -35,13 +37,19 @@ class Background
 
 		const Texture* textureSky = nullptr;
 
-		const Road* road = nullptr;
+		const Texture* textureGround = nullptr;
 
 		SDL_Rect textureRect;
 
-		SDL_Rect renderRect;
+		SDL_Rect renderTextureRect;
+		
+		SDL_Rect renderTextureSkyRect;
+
+		SDL_Rect renderTextureGroundRect;
 
 		float offsetX = 0.0f;
+
+		float offsetY = 0.0f;
 };
 
 #endif

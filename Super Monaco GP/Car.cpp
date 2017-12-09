@@ -25,6 +25,11 @@ float Car::getVelocity() const
 	return velocity;
 }
 
+float Car::getVelocityPercent() const
+{
+	return velocity / CAR_MAX_VELOCITY;
+}
+
 void Car::update(float deltaTimeS)
 {
 	Animated::update(deltaTimeS);
