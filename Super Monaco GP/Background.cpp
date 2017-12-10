@@ -65,7 +65,7 @@ void Background::update(const Player* player, const Road* road, float deltaTimeS
 	offsetX = mod0L(offsetX, (float)texture->r->w);
 
 	float incY = playerSegment->getYFar() - playerSegment->getYNear();
-	offsetY += BACKGROUND_VELOCITY_OFFSET_Y * incY * player->getVelocityPercent() * deltaTimeS;
+	offsetY += BACKGROUND_VELOCITY_OFFSET_Y * texture->r->h * incY * player->getVelocityPercent() * deltaTimeS;
 }
 
 void Background::render(bool mirror, const ModuleRenderer* moduleRenderer) const
@@ -81,11 +81,11 @@ void Background::render(bool mirror, const ModuleRenderer* moduleRenderer) const
 	
 	// Render Sky
 
-	moduleRenderer->renderTexture(textureSky->t, textureSky->r, &renderRectSky);
+	moduleRenderer->renderTexture(textureSky->t, textureSky->r, &renderRectSky, textureSky->hFlipped);
 
 	// Render Ground
 
-	moduleRenderer->renderTexture(textureGround->t, textureGround->r, &renderRectGround);
+	moduleRenderer->renderTexture(textureGround->t, textureGround->r, &renderRectGround, textureGround->hFlipped);
 
 	// Render
 
@@ -93,7 +93,7 @@ void Background::render(bool mirror, const ModuleRenderer* moduleRenderer) const
 	rect0.x += (!mirror ? (int)offsetX : (int)mod0L(offsetX + texture->r->w / 2.0f, (float)texture->r->w));
 
 	if(rect0.x + rect0.w <= texture->r->x + texture->r->w)
-		moduleRenderer->renderTexture(texture->t, &rect0, &renderRect, mirror);
+		moduleRenderer->renderTexture(texture->t, &rect0, &renderRect, texture->hFlipped || mirror);
 	else
 	{
 		rect0.w -= rect0.x + rect0.w - (texture->r->x + texture->r->w);
@@ -121,7 +121,7 @@ void Background::render(bool mirror, const ModuleRenderer* moduleRenderer) const
 		renderRect1.x = renderRect0.w;
 		renderRect1.w = renderRect.w - renderRect0.w;
 
-		moduleRenderer->renderTexture(texture->t, &rect0, &renderRect0, mirror);
-		moduleRenderer->renderTexture(texture->t, &rect1, &renderRect1, mirror);
+		moduleRenderer->renderTexture(texture->t, &rect0, &renderRect0, texture->hFlipped || mirror);
+		moduleRenderer->renderTexture(texture->t, &rect1, &renderRect1, texture->hFlipped || mirror);
 	}
 }

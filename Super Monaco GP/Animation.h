@@ -22,6 +22,8 @@ class Animation
 
 		const std::vector<const Texture*>* getTextures() const;
 
+		float getTimePercent() const;
+
 		bool hasEnded() const;
 
 		const Texture* getCurrentFrame() const;
@@ -29,6 +31,12 @@ class Animation
 		float getTimeMultiplier() const;
 
 		void setTimeMultiplier(float timeMultiplier);
+
+		void synchronize(const Animation& animation);
+
+		void synchronizeInverse(const Animation& animation);
+
+		// void advancePercent(float percent);
 
 		void reset();
 

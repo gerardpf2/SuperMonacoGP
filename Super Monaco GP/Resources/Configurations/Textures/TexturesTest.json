@@ -2,29 +2,33 @@
 	"_WARNING" : "",
 	"_info" : "",
 	
-	"textureGroupId" : 0,
+	"textureGroupId" : 1,
 	"bmpPath" : "Resources/Images/Test.bmp",
 	"textures" :
 	[
 		{
 			"_info" : "",
 			
-			"x" : 184, "y" : 11, "w" : 80, "h" : 45
+			"rect" : { "x" : 184, "y" : 11, "w" : 80, "h" : 45 },
+			"hFlipped" : false
 		},
 		{
 			"_info" : "",
 			
-			"x" : 96, "y" : 67, "w" : 80, "h" : 45
+			"rect" : { "x" : 96, "y" : 67, "w" : 80, "h" : 45 },
+			"hFlipped" : false
 		},
 		{
 			"_info" : "",
 			
-			"x" : 96, "y" : 67, "w" : 40, "h" : 45
+			"rect" : { "x" : 96, "y" : 67, "w" : 40, "h" : 45 },
+			"hFlipped" : false
 		},
 		{
 			"_info" : "",
 			
-			"x" : 136, "y" : 67, "w" : 40, "h" : 45
+			"rect" : { "x" : 136, "y" : 67, "w" : 40, "h" : 45 },
+			"hFlipped" : false
 		}
 	]
 }

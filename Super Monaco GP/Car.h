@@ -7,7 +7,7 @@ class Car : public Animated
 {
 	public:
 
-		Car(uint id, const AnimationContainer* animationContainer);
+		Car(uint id, AnimationContainer* animationContainer);
 
 		virtual ~Car();
 

@@ -36,6 +36,11 @@ void AnimationContainer::add(Animation* animation)
 	(*animations)[animation->getId()] = animation;
 }
 
+Animation* AnimationContainer::getAnimation(uint animationId) const
+{
+	return (*animations)[animationId];
+}
+
 Animation* AnimationContainer::getCurrentAnimation() const
 {
 	return animations->at(currentAnimationId);

@@ -99,11 +99,11 @@ bool ModuleWorld::update(float deltaTimeS)
 	}
 
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoad);
-	background->render(false, getGameEngine()->getModuleRenderer());
+	background->render(!camera->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(camera, getGameEngine()->getModuleRenderer());
 	
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
-	backgroundMirror->render(true, getGameEngine()->getModuleRenderer());
+	backgroundMirror->render(!cameraMirror->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(cameraMirror, getGameEngine()->getModuleRenderer());
 
 	return true;
@@ -115,6 +115,7 @@ void ModuleWorld::cleanUp()
 	getGameEngine()->getModuleRenderer()->removeLayer(layerRoadMirror);
 
 	getGameEngine()->getModuleAnimation()->unload(0); // ¿?
+	getGameEngine()->getModuleAnimation()->unload(1); // ¿?
 
 	if(road)
 	{

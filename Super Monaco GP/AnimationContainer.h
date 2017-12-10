@@ -24,6 +24,8 @@ class AnimationContainer
 
 		void add(Animation* animation);
 
+		Animation* getAnimation(uint animationId) const;
+
 		Animation* getCurrentAnimation() const;
 		
 		void setCurrentAnimation(uint currentAnimationId);

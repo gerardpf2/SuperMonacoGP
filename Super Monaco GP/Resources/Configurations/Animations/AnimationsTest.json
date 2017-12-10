@@ -2,7 +2,7 @@
 	"_WARNING" : "",
 	"_info" : "",
 	
-	"animationGroupId" : 0,
+	"animationGroupId" : 1,
 	"textureGroupPath" : "Resources/Configurations/Textures/TexturesTest.json",
 	"animations" :
 	[

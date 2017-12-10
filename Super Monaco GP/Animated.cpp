@@ -5,7 +5,7 @@
 #include "Animation.h"
 #include "AnimationContainer.h"
 
-Animated::Animated(uint id, const AnimationContainer* animationContainer) :
+Animated::Animated(uint id, AnimationContainer* animationContainer) :
 	GameObject(id), animationContainer(animationContainer)
 {
 	size.w = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->w * SPRITE_SIZE_RATIO;
@@ -27,12 +27,17 @@ const AnimationContainer* Animated::getAnimationContainer() const
 
 void Animated::update(float deltaTimeS)
 {
-	animationContainer->update(deltaTimeS);
+	updateCurrentAnimation(deltaTimeS);
 }
 
 void Animated::cleanUp()
 {
 	animationContainer = nullptr;
+}
+
+void Animated::updateCurrentAnimation(float deltaTimeS) const
+{
+	animationContainer->update(deltaTimeS);
 }
 
 const Texture* Animated::getCurrentTexture() const

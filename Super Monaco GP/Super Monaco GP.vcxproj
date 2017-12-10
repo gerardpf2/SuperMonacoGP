@@ -122,6 +122,7 @@
     <ClCompile Include="Animated.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AnimationContainer.cpp" />
+    <ClCompile Include="AnimationGrid.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFollow.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="Animated.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AnimationContainer.h" />
+    <ClInclude Include="AnimationGrid.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFollow.h" />

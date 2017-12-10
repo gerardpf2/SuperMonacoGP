@@ -4,12 +4,13 @@
 #include "Car.h"
 
 class ModuleInput;
+class AnimationGrid;
 
 class Player : public Car
 {
 	public:
 
-		Player(uint id, const AnimationContainer* animationContainer, const ModuleInput* moduleInput);
+		Player(uint id, AnimationContainer* animationContainer, const ModuleInput* moduleInput);
 
 		virtual ~Player();
 
@@ -17,13 +18,19 @@ class Player : public Car
 
 		const ModuleInput* getModuleInput() const;
 
+		virtual void cleanUp() override;
+
 	protected:
 
 		virtual void updateDirection(float deltaTimeS) override;
 
+		virtual void updateCurrentAnimation(float deltaTimeS) const override;
+
 	private:
 
 		const ModuleInput* moduleInput = nullptr;
+
+		AnimationGrid* animationGrid = nullptr;
 };
 
 #endif

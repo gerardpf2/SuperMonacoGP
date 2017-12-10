@@ -9,7 +9,7 @@ class Animated : public GameObject
 {
 	public:
 
-		Animated(uint id, const AnimationContainer* animationContainer);
+		Animated(uint id, AnimationContainer* animationContainer);
 
 		virtual ~Animated();
 
@@ -21,13 +21,17 @@ class Animated : public GameObject
 
 		virtual void cleanUp() override;
 
+	protected:
+
+		virtual void updateCurrentAnimation(float deltaTimeS) const;
+
 	private:
 
 		virtual const Texture* getCurrentTexture() const override;
 
 	protected:
 
-		const AnimationContainer* animationContainer = nullptr;
+		AnimationContainer* animationContainer = nullptr;
 };
 
 #endif

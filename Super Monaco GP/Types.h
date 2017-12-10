@@ -12,7 +12,7 @@ struct Direction { float x, z; };
 
 struct RumbleColors { uint a, b, c, d, e; };
 
-struct Texture { SDL_Texture* t; const SDL_Rect* r; };
+struct Texture { SDL_Texture* t; const SDL_Rect* r; bool hFlipped; };
 
 struct WindowPosition { short x, y; };
 

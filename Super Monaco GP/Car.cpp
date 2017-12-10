@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Car::Car(uint id, const AnimationContainer* animationContainer) :
+Car::Car(uint id, AnimationContainer* animationContainer) :
 	Animated(id, animationContainer)
 { }
 
@@ -49,6 +49,7 @@ void Car::update(float deltaTimeS)
 	}
 
 	updateDirection(deltaTimeS);
+	// updateCurrentAnimation(deltaTimeS);
 
 	Segment* segment = getRoad()->getSegmentAtZ(position.z);
 
@@ -58,21 +59,24 @@ void Car::update(float deltaTimeS)
 
 	Segment* newSegment = getRoad()->getSegmentAtZ(position.z);
 
-	float speedPercent = velocity / maxVelocity;
+	float velocityPercent = getVelocityPercent();
 
-	animationContainer->getCurrentAnimation()->setTimeMultiplier(0.0f);
+	// animationContainer->getCurrentAnimation()->setTimeMultiplier(0.0f);
+	// animationContainer->getCurrentAnimation()->advancePercent(2.0f * speedPercent);
+
+	// animationContainer->getCurrentAnimation()->setTimeMultiplier(0.0f);
 	// animationContainer->getCurrentAnimation()->setTimeMultiplier(speedPercent);
-	
-	float dX = 0.5f * ROAD_WIDTH * speedPercent * deltaTimeS;
+
+	float dX = 0.5f * ROAD_WIDTH * velocityPercent * deltaTimeS;
 
 	position.x += direction.x * dX;
-	position.x += 4.0f * ROAD_WIDTH * dX * speedPercent * -newSegment->getCurve();
+	position.x += 4.0f * ROAD_WIDTH * dX * velocityPercent * -newSegment->getCurve();
 
 	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
 
 	position.y = interpolate(position.z, newSegment->getZNear(), newSegment->getZFar(), newSegment->getYNear(), newSegment->getYFar());
 
-	acceleration *= (1.0f - powf(speedPercent, 2.0f));
+	acceleration *= (1.0f - powf(velocityPercent, 2.0f));
 
 	velocity -= deaccelerationFriction * deltaTimeS;
 

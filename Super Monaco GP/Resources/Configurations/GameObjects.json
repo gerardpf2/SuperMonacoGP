@@ -8,7 +8,7 @@
 			"_info" : "Player(id 0, type 0). Do not move.",
 			
 			"type" : 0,
-			"animationGroupPath" : "Resources/Configurations/Animations/AnimationsTest.json",
+			"animationGroupPath" : "Resources/Configurations/Animations/Player.json",
 			"animationContainerId" : 0
 		},
 		{

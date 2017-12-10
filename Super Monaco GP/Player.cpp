@@ -2,25 +2,54 @@
 
 #include "Camera.h"
 #include "Globals.h"
+#include "Animation.h"
 #include "ModuleInput.h"
+#include "AnimationGrid.h"
+#include "AnimationContainer.h"
 
 using namespace std;
 
-Player::Player(uint id, const AnimationContainer* animationContainer, const ModuleInput* moduleInput) :
+Player::Player(uint id, AnimationContainer* animationContainer, const ModuleInput* moduleInput) :
 	Car(id, animationContainer), moduleInput(moduleInput)
-{ }
+{
+	animationGrid = new AnimationGrid(animationContainer->getAnimation(0));
+
+	animationGrid->addRightV(animationContainer->getAnimation(1));
+	animationGrid->addRightV(animationContainer->getAnimation(3));
+	animationGrid->addRightV(animationContainer->getAnimation(5));
+
+	animationGrid->addLeftV(animationContainer->getAnimation(2));
+	animationGrid->addLeftV(animationContainer->getAnimation(4));
+	animationGrid->addLeftV(animationContainer->getAnimation(6));
+
+	animationGrid->addRightH(animationContainer->getAnimation(7), animationContainer->getAnimation(8));
+	animationGrid->addRightH(animationContainer->getAnimation(11), animationContainer->getAnimation(12));
+	animationGrid->addRightH(animationContainer->getAnimation(15), animationContainer->getAnimation(16));
+
+	animationGrid->addLeftH(animationContainer->getAnimation(9), animationContainer->getAnimation(10));
+	animationGrid->addLeftH(animationContainer->getAnimation(13), animationContainer->getAnimation(14));
+	animationGrid->addLeftH(animationContainer->getAnimation(17), animationContainer->getAnimation(18));
+}
 
 Player::~Player()
 { }
+
+GameObjectType Player::getType() const
+{
+	return GameObjectType::PLAYER;
+}
 
 const ModuleInput* Player::getModuleInput() const
 {
 	return moduleInput;
 }
 
-GameObjectType Player::getType() const
+void Player::cleanUp()
 {
-	return GameObjectType::PLAYER;
+	animationGrid->cleanUp();
+
+	delete animationGrid;
+	animationGrid = nullptr;
 }
 
 void Player::updateDirection(float deltaTimeS)
@@ -33,4 +62,45 @@ void Player::updateDirection(float deltaTimeS)
 
 	if(moduleInput->isKeyPressed(SDL_SCANCODE_W)) direction.z += 1.0f;
 	if(moduleInput->isKeyPressed(SDL_SCANCODE_S)) direction.z -= 1.0f;
+}
+
+// #include <iostream>
+// using namespace std;
+
+void Player::updateCurrentAnimation(float deltaTimeS) const
+{
+	animationGrid->advance(getVelocityPercent(), direction.x, deltaTimeS);
+	animationContainer->setCurrentAnimation(animationGrid->getCurrentAnimation()->getId());
+
+	/* Animation* currentAnimation = animationContainer->getCurrentAnimation();
+
+	uint currentAnimationId = currentAnimation->getId();
+	uint nextAnimationId = currentAnimationId;
+
+	float inc0 = getVelocityPercent();
+	float inc1 = direction.x;
+
+	if(direction.x == 1.0f)
+	{
+		if(currentAnimationId == 0)
+			nextAnimationId = 7;
+	}
+
+	Animation* nextAnimation = animationContainer->getAnimation(nextAnimationId);
+
+	if(currentAnimation != nextAnimation)
+	{
+		nextAnimation->synchronize(*currentAnimation);
+		currentAnimation->reset();
+	}
+
+	animationContainer->setCurrentAnimation(nextAnimationId); */
+
+	/* cout << animationContainer->getCurrentAnimationId() << endl;
+
+	if(animationContainer->getCurrentAnimation()->hasEnded())
+	{
+		animationContainer->getCurrentAnimation()->reset();
+		animationContainer->setCurrentAnimation((animationContainer->getCurrentAnimation()->getId() + 1) % 19);
+	} */
 }

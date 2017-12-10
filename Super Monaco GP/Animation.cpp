@@ -39,11 +39,6 @@ uint Animation::getId() const
 	return id;
 }
 
-const vector<const Texture*>* Animation::getTextures() const
-{
-	return textures;
-}
-
 float Animation::getEndTime() const
 {
 	return endTime;
@@ -52,6 +47,16 @@ float Animation::getEndTime() const
 bool Animation::getLoop() const
 {
 	return loop;
+}
+
+const vector<const Texture*>* Animation::getTextures() const
+{
+	return textures;
+}
+
+float Animation::getTimePercent() const
+{
+	return currentTime / endTime;
 }
 
 bool Animation::hasEnded() const
@@ -82,6 +87,24 @@ void Animation::setTimeMultiplier(float timeMultiplier)
 
 	this->timeMultiplier = timeMultiplier;
 }
+
+void Animation::synchronize(const Animation& animation)
+{
+	float percent = animation.currentTime / animation.endTime;
+	currentTime = percent * endTime;
+}
+
+void Animation::synchronizeInverse(const Animation& animation)
+{
+	float percent = mod0L((1.0f - animation.currentTime / animation.endTime), 1.0f);
+	currentTime = percent * endTime;
+}
+
+/* void Animation::advancePercent(float percent)
+{
+	currentTime += percent * endTime;
+	currentTime = mod0L(currentTime, endTime);
+} */
 
 void Animation::reset()
 {

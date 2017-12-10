@@ -1,0 +1,28 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 30,
+	"bmpPath" : "Resources/Images/Background.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "Texture",
+			
+			"rect" : { "x" : 0, "y" : 1, "w" : 1024, "h" : 72 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "TextureSky",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 1, "h" : 1 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "TextureGround",
+			
+			"rect" : { "x" : 1, "y" : 0, "w" : 1, "h" : 1 },
+			"hFlipped" : false
+		}
+	]
+}

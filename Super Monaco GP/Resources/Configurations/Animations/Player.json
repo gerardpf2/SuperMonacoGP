@@ -1,0 +1,151 @@
+{
+	"_WARNING" : "",
+	"_info" : "Player animations",
+	
+	"animationGroupId" : 0,
+	"textureGroupPath" : "Resources/Configurations/Textures/Player.json",
+	"animations" :
+	[
+		{
+			"_info" : "0: Center",
+			
+			"loop" : true,
+			"endTime" : 0.15,
+			"textureIds" : [ 0, 1, 2 ]
+		},
+		{
+			"_info" : "1: Right_0",
+			
+			"loop" : true,
+			"endTime" : 0.15,
+			"textureIds" : [ 3, 4, 5 ]
+		},
+		{
+			"_info" : "2: Left_0",
+			
+			"loop" : true,
+			"endTime" : 0.15,
+			"textureIds" : [ 6, 7, 8 ]
+		},
+		{
+			"_info" : "3: Right_1",
+			
+			"loop" : true,
+			"endTime" : 0.15,
+			"textureIds" : [ 9, 10, 11 ]
+		},
+		{
+			"_info" : "4: Left_1",
+			
+			"loop" : true,
+			"endTime" : 0.15,
+			"textureIds" : [ 12, 13, 14 ]
+		},
+		{
+			"_info" : "5: Right_2",
+			
+			"loop" : true,
+			"endTime" : 0.15,
+			"textureIds" : [ 15, 16, 17 ]
+		},
+		{
+			"_info" : "6: Left_2",
+			
+			"loop" : true,
+			"endTime" : 0.15,
+			"textureIds" : [ 18, 19, 20 ]
+		},
+		{
+			"_info" : "7: Center_Right_0",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 3, 9, 15 ]
+		},
+		{
+			"_info" : "8: Right_Center_0",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 15, 9, 3 ]
+		},
+		{
+			"_info" : "9: Center_Left_0",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 6, 12, 18 ]
+		},
+		{
+			"_info" : "10: Left_Center_0",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 18, 12, 6 ]
+		},
+		{
+			"_info" : "11: Center_Right_1",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 4, 10, 16 ]
+		},
+		{
+			"_info" : "12: Right_Center_1",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 16, 10, 4 ]
+		},
+		{
+			"_info" : "13: Center_Left_1",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 7, 13, 19 ]
+		},
+		{
+			"_info" : "14: Left_Center_1",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 19, 13, 7 ]
+		},
+		{
+			"_info" : "15: Center_Right_2",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 5, 11, 17 ]
+		},
+		{
+			"_info" : "16: Right_Center_2",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 17, 11, 5 ]
+		},
+		{
+			"_info" : "17: Center_Left_2",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 8, 14, 20 ]
+		},
+		{
+			"_info" : "18: Left_Center_2",
+			
+			"loop" : false,
+			"endTime" : 0.25,
+			"textureIds" : [ 20, 14, 8 ]
+		}
+	],
+	"animationContainers" :
+	[
+		{
+			"_info" : "",
+			
+			"animationIds" : [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ]
+		}
+	]
+}

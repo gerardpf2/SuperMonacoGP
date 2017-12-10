@@ -36,14 +36,15 @@ uint ModuleTexture::load(const char* jsonPath)
 
 	for(SizeType i = 0; i < texturesJson.Size(); ++i)
 	{
-		// textureId, rect
+		// textureId, rect, hFlipped
 
 		uint textureId = i;
-		const Value& rectJson = texturesJson[i];
+		const Value& rectJson = texturesJson[i]["rect"];
+		bool hFlipped = texturesJson[i]["hFlipped"].GetBool();
 
 		SDL_Rect* rect = new SDL_Rect{ rectJson["x"].GetInt(), rectJson["y"].GetInt(), rectJson["w"].GetInt(), rectJson["h"].GetInt() };
 
-		textures->push_back(new Texture{ texture, rect });
+		textures->push_back(new Texture{ texture, rect, hFlipped });
 	}
 
 	textureGroups[textureGroupId] = pair<SDL_Texture*, vector<Texture*>*>(texture, textures);
