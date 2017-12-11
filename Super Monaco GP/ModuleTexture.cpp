@@ -18,7 +18,11 @@ ModuleTexture::~ModuleTexture()
 uint ModuleTexture::load(const char* jsonPath)
 {
 	uint tmpTextureGroupId;
-	if(isAlreadyLoaded(jsonPath, tmpTextureGroupId)) return tmpTextureGroupId;
+	if(isAlreadyLoaded(jsonPath, tmpTextureGroupId))
+	{
+		incrementLoadedCounter(tmpTextureGroupId, 1);
+		return tmpTextureGroupId;
+	}
 
 	Document jsonDocument;
 	getGameEngine()->getModuleJson()->read(jsonPath, jsonDocument);
@@ -49,7 +53,7 @@ uint ModuleTexture::load(const char* jsonPath)
 
 	textureGroups[textureGroupId] = pair<SDL_Texture*, vector<Texture*>*>(texture, textures);
 
-	loadedTextureGroups.push_back(pair<string, uint>(jsonPath, textureGroupId));
+	loadedTextureGroups.push_back(pair<pair<string, uint>, uint>(pair<string, uint>(jsonPath, textureGroupId), 1));
 
 	return textureGroupId;
 }
@@ -58,6 +62,9 @@ void ModuleTexture::unload(uint idTextureGroup)
 {
 	string tmpJsonPath;
 	if(isAlreadyUnloaded(idTextureGroup, tmpJsonPath)) return;
+
+	incrementLoadedCounter(idTextureGroup, -1);
+	if(getLoadedCounter(idTextureGroup) > 0) return;
 
 	pair<SDL_Texture*, vector<Texture*>*>& textureGroup = textureGroups[idTextureGroup];
 
@@ -81,7 +88,7 @@ void ModuleTexture::unload(uint idTextureGroup)
 
 	textureGroups.erase(idTextureGroup);
 
-	loadedTextureGroups.remove(pair<string, uint>(tmpJsonPath, idTextureGroup));
+	loadedTextureGroups.remove(pair<pair<string, uint>, uint>(pair<string, uint>(tmpJsonPath, idTextureGroup), 0));
 }
 
 const Texture* ModuleTexture::get(uint idTextureGroup, uint idTexture) const
@@ -115,10 +122,10 @@ void ModuleTexture::unloadTexture(SDL_Texture*& texture) const
 
 bool ModuleTexture::isAlreadyLoaded(const string& jsonPath, uint& idTextureGroup) const
 {
-	for(list<pair<string, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
-		if(it->first == jsonPath)
+	for(list<pair<pair<string, uint>, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
+		if(it->first.first == jsonPath)
 		{
-			idTextureGroup = it->second;
+			idTextureGroup = it->first.second;
 
 			return true;
 		}
@@ -128,13 +135,32 @@ bool ModuleTexture::isAlreadyLoaded(const string& jsonPath, uint& idTextureGroup
 
 bool ModuleTexture::isAlreadyUnloaded(uint idTextureGroup, string& jsonPath) const
 {
-	for(list<pair<string, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
-		if(it->second == idTextureGroup)
+	for(list<pair<pair<string, uint>, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
+		if(it->first.second == idTextureGroup)
 		{
-			jsonPath = it->first;
+			jsonPath = it->first.first;
 
 			return false;
 		}
 
 	return true;
+}
+
+uint ModuleTexture::getLoadedCounter(uint idTextureGroup) const
+{
+	for(list<pair<pair<string, uint>, uint>>::const_iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
+		if(it->first.second == idTextureGroup) return it->second;
+
+	return 0;
+}
+
+void ModuleTexture::incrementLoadedCounter(uint idTextureGroup, int increment)
+{
+	for(list<pair<pair<string, uint>, uint>>::iterator it = loadedTextureGroups.begin(); it != loadedTextureGroups.end(); ++it)
+		if(it->first.second == idTextureGroup)
+		{
+			it->second += increment;
+
+			break;
+		}
 }

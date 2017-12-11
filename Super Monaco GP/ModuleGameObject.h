@@ -39,19 +39,19 @@ class ModuleGameObject : public Module
 
 		Animated* getAnimated(uint idGameObject) const;
 
-		GameObject* createGameObject(const rapidjson::Value& gameObjectJson) const;
+		GameObject* createGameObject(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const;
 
-		Car* createCar(const rapidjson::Value& gameObjectJson) const;
+		Car* createCar(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const;
 
-		Player* createPlayer(const rapidjson::Value& gameObjectJson) const;
+		Player* createPlayer(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const;
 
-		Static* createStatic(const rapidjson::Value& gameObjectJson) const;
+		Static* createStatic(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const;
 
-		Animated* createAnimated(const rapidjson::Value& gameObjectJson) const;
+		Animated* createAnimated(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const;
 
 	private:
 
-		std::vector<GameObject*> gameObjects;
+		std::vector<std::pair<GameObject*, uint>> gameObjects;
 
 		std::list<GameObject*> usedGameObjects;
 };

@@ -10,49 +10,49 @@
 			"_info" : "0: Center",
 			
 			"loop" : true,
-			"endTime" : 0.15,
+			"endTime" : 0.135,
 			"textureIds" : [ 0, 1, 2 ]
 		},
 		{
 			"_info" : "1: Right_0",
 			
 			"loop" : true,
-			"endTime" : 0.15,
+			"endTime" : 0.135,
 			"textureIds" : [ 3, 4, 5 ]
 		},
 		{
 			"_info" : "2: Left_0",
 			
 			"loop" : true,
-			"endTime" : 0.15,
+			"endTime" : 0.135,
 			"textureIds" : [ 6, 7, 8 ]
 		},
 		{
 			"_info" : "3: Right_1",
 			
 			"loop" : true,
-			"endTime" : 0.15,
+			"endTime" : 0.135,
 			"textureIds" : [ 9, 10, 11 ]
 		},
 		{
 			"_info" : "4: Left_1",
 			
 			"loop" : true,
-			"endTime" : 0.15,
+			"endTime" : 0.135,
 			"textureIds" : [ 12, 13, 14 ]
 		},
 		{
 			"_info" : "5: Right_2",
 			
 			"loop" : true,
-			"endTime" : 0.15,
+			"endTime" : 0.135,
 			"textureIds" : [ 15, 16, 17 ]
 		},
 		{
 			"_info" : "6: Left_2",
 			
 			"loop" : true,
-			"endTime" : 0.15,
+			"endTime" : 0.135,
 			"textureIds" : [ 18, 19, 20 ]
 		},
 		{

@@ -222,15 +222,8 @@ void Road::setLength(float length)
 	uint nSegments = (uint)ceilf(this->length / SEGMENT_LENGTH);
 	segments.reserve(nSegments);
 
-	float currentZNear = 0.0f;
-
 	for(uint i = 0; i < nSegments; ++i)
-	{
-		Segment* segment = new Segment(i, currentZNear);
-
-		segments.push_back(segment);
-		currentZNear = segment->getZFar();
-	}
+		segments.push_back(new Segment(i));
 }
 
 void Road::addHills(const Value& value) const

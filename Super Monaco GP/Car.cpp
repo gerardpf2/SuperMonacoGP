@@ -67,10 +67,11 @@ void Car::update(float deltaTimeS)
 	// animationContainer->getCurrentAnimation()->setTimeMultiplier(0.0f);
 	// animationContainer->getCurrentAnimation()->setTimeMultiplier(speedPercent);
 
-	float dX = 0.5f * ROAD_WIDTH * velocityPercent * deltaTimeS;
+	float dX = 0.75f * ROAD_WIDTH * velocityPercent * deltaTimeS;
 
 	position.x += direction.x * dX;
-	position.x += 4.0f * ROAD_WIDTH * dX * velocityPercent * -newSegment->getCurve();
+
+	updateOffsetX(dX, velocityPercent, newSegment->getCurve());
 
 	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
 
@@ -102,3 +103,6 @@ void Car::updateDirection(float deltaTimeS)
 	direction.x = 0.0f;
 	direction.z = 1.0f;
 }
+
+void Car::updateOffsetX(float dX, float velocityPercent, float curve)
+{ }

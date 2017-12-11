@@ -3,13 +3,17 @@
 #include "Utils.h"
 #include "Camera.h"
 #include "Globals.h"
+#include "GameObject.h"
 #include "ModuleRenderer.h"
 
 using namespace std;
 
-Segment::Segment(uint index, float zNear) :
-	index(index), zNear(zNear), zFar(zNear + SEGMENT_LENGTH)
-{ }
+Segment::Segment(uint index) :
+	index(index)
+{
+	zNear = index * SEGMENT_LENGTH;
+	zFar = zNear + SEGMENT_LENGTH;
+}
 
 Segment::~Segment()
 { }
@@ -109,7 +113,7 @@ void Segment::setRumbleColors(const RumbleColors* rumbleColors)
 	this->rumbleColors = rumbleColors;
 }
 
-const set<const GameObject*>* Segment::getGameObjects() const
+const set<const GameObject* /* , GameObjectPositionZComparer */ >* Segment::getGameObjects() const
 {
 	return &gameObjects;
 }
@@ -132,8 +136,6 @@ void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer,
 
 	// Project near and far points of this segment
 
-	// WorldPosition worldPositionNear{ xOffsetNear, mirror ? yFar : yNear , zOffset + zNear };
-	// WorldPosition worldPositionFar{ xOffsetFar, mirror ? yNear : yFar , zOffset + zFar };
 	WorldPosition worldPositionNear{ xOffsetNear, mirror ? yFar : yNear , zOffset + (mirror ? zFar : zNear) };
 	WorldPosition worldPositionFar{ xOffsetFar, mirror ? yNear : yFar , zOffset + (mirror ? zNear : zFar) };
 

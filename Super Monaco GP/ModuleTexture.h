@@ -34,11 +34,15 @@ class ModuleTexture : public Module
 
 		bool isAlreadyUnloaded(uint idTextureGroup, std::string& jsonPath) const;
 
+		uint getLoadedCounter(uint idTextureGroup) const;
+
+		void incrementLoadedCounter(uint idTextureGroup, int increment);
+
 	private:
 
 		std::map<uint, std::pair<SDL_Texture*, std::vector<Texture*>*>> textureGroups;
 
-		std::list<std::pair<std::string, uint>> loadedTextureGroups;
+		std::list<std::pair<std::pair<std::string, uint>, uint>> loadedTextureGroups;
 };
 
 #endif

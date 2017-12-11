@@ -19,7 +19,11 @@ ModuleAnimation::~ModuleAnimation()
 uint ModuleAnimation::load(const char* jsonPath)
 {
 	uint tmpAnimationGroupId;
-	if(isAlreadyLoaded(jsonPath, tmpAnimationGroupId)) return tmpAnimationGroupId;
+	if(isAlreadyLoaded(jsonPath, tmpAnimationGroupId))
+	{
+		incrementLoadedCounter(tmpAnimationGroupId, 1);
+		return tmpAnimationGroupId;
+	}
 
 	Document jsonDocument;
 	getGameEngine()->getModuleJson()->read(jsonPath, jsonDocument);
@@ -117,7 +121,7 @@ uint ModuleAnimation::load(const char* jsonPath)
 
 	animationGroupsTextureGroupId[animationGroupId] = textureGroupId;
 
-	loadedAnimationGroups.push_back(pair<string, uint>(jsonPath, animationGroupId));
+	loadedAnimationGroups.push_back(pair<pair<string, uint>, uint>(pair<string, uint>(jsonPath, animationGroupId), 1));
 
 	return animationGroupId;
 }
@@ -126,6 +130,9 @@ void ModuleAnimation::unload(uint idAnimationGroup)
 {
 	string tmpJsonPath;
 	if(isAlreadyUnloaded(idAnimationGroup, tmpJsonPath)) return;
+
+	incrementLoadedCounter(idAnimationGroup, -1);
+	if(getLoadedCounter(idAnimationGroup) > 0) return;
 
 	pair<vector<vector<const Texture*>*>*, vector<Animation*>*>& animationGroup = animationGroups[idAnimationGroup];
 
@@ -216,7 +223,7 @@ void ModuleAnimation::unload(uint idAnimationGroup)
 
 	animationGroupsTextureGroupId.erase(idAnimationGroup);
 
-	loadedAnimationGroups.remove(pair<string, uint>(tmpJsonPath, idAnimationGroup));
+	loadedAnimationGroups.remove(pair<pair<string, uint>, uint>(pair<string, uint>(tmpJsonPath, idAnimationGroup), 0));
 }
 
 Animation* ModuleAnimation::getAnimation(uint idAnimationGroup, uint idAnimation) const
@@ -248,10 +255,10 @@ AnimationContainer* ModuleAnimation::getAnimationContainer(uint idAnimationGroup
 
 bool ModuleAnimation::isAlreadyLoaded(const string& jsonPath, uint& idAnimationGroup) const
 {
-	for(list<pair<string, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
-		if(it->first == jsonPath)
+	for(list<pair<pair<string, uint>, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
+		if(it->first.first == jsonPath)
 		{
-			idAnimationGroup = it->second;
+			idAnimationGroup = it->first.second;
 
 			return true;
 		}
@@ -261,13 +268,32 @@ bool ModuleAnimation::isAlreadyLoaded(const string& jsonPath, uint& idAnimationG
 
 bool ModuleAnimation::isAlreadyUnloaded(uint idAnimationGroup, string& jsonPath) const
 {
-	for(list<pair<string, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
-		if(it->second == idAnimationGroup)
+	for(list<pair<pair<string, uint>, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
+		if(it->first.second == idAnimationGroup)
 		{
-			jsonPath = it->first;
+			jsonPath = it->first.first;
 
 			return false;
 		}
 
 	return true;
+}
+
+uint ModuleAnimation::getLoadedCounter(uint idAnimationGroup) const
+{
+	for(list<pair<pair<string, uint>, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
+		if(it->first.second == idAnimationGroup) return it->second;
+
+	return 0;
+}
+
+void ModuleAnimation::incrementLoadedCounter(uint idAnimationGroup, int increment)
+{
+	for(list<pair<pair<string, uint>, uint>>::iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)
+		if(it->first.second == idAnimationGroup)
+		{
+			it->second += increment;
+
+			break;
+		}
 }

@@ -160,22 +160,13 @@ void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 			currentAnimationH->update(deltaTimeS);
 
 			// Find v animation
-			if(isRight)
-			{
-				uint index = (uint)(currentAnimationH->getTimePercent() * animationsRightV.size());
-				if(!toSide) index = animationsRightV.size() - index - 1;
+			vector<Animation*>& animationsV = isRight ? animationsRightV : animationsLeftV;
 
-				animationsRightV[index]->synchronize(*currentAnimationV);
-				currentAnimationV = animationsRightV[index];
-			}
-			else
-			{
-				uint index = (uint)(currentAnimationH->getTimePercent() * animationsLeftV.size());
-				if(!toSide) index = animationsLeftV.size() - index - 1;
+			uint index = (uint)(currentAnimationH->getTimePercent() * animationsV.size());
+			if(!toSide) index = animationsV.size() - index - 1;
 
-				animationsLeftV[index]->synchronize(*currentAnimationV);
-				currentAnimationV = animationsLeftV[index];
-			}
+			animationsV[index]->synchronize(*currentAnimationV);
+			currentAnimationV = animationsV[index];
 		}
 	}
 

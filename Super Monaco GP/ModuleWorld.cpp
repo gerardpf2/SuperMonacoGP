@@ -114,9 +114,6 @@ void ModuleWorld::cleanUp()
 	getGameEngine()->getModuleRenderer()->removeLayer(layerRoad);
 	getGameEngine()->getModuleRenderer()->removeLayer(layerRoadMirror);
 
-	getGameEngine()->getModuleAnimation()->unload(0); // ¿?
-	getGameEngine()->getModuleAnimation()->unload(1); // ¿?
-
 	if(road)
 	{
 		road->unload(getGameEngine()->getModuleTexture());
@@ -153,10 +150,18 @@ GameObject* ModuleWorld::addGameObject(uint id, const WorldPosition& worldPositi
 	GameObject* gameObject = getGameEngine()->getModuleGameObject()->getGameObject(id);
 
 	gameObject->setRoad(road);
-	gameObject->setPosition(worldPosition);
-	
+	// gameObject->setPosition(worldPosition);
+
+	// gameObject->moveX(xOffsetRoad * (ROAD_WIDTH / 2.0f));
+
+	// Adjust game object's position
+	WorldPosition wP = worldPosition;
+
+	wP.x += xOffsetRoad * (ROAD_WIDTH / 2.0f);
+	wP.z = road->getSegmentAtZ(wP.z)->getZNear() + SEGMENT_LENGTH / 2.0f;
+
+	gameObject->setPosition(wP);
 	gameObject->elevate();
-	gameObject->moveX(xOffsetRoad * (ROAD_WIDTH / 2.0f));
 
 	gameObjects.push_back(gameObject);
 	road->getSegmentAtZ(gameObject->getPosition()->z)->addGameObject(gameObject);

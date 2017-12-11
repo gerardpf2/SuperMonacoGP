@@ -34,6 +34,10 @@ class ModuleAnimation : public Module
 
 		bool isAlreadyUnloaded(uint idAnimationGroup, std::string& jsonPath) const;
 
+		uint getLoadedCounter(uint idAnimationGroup) const;
+
+		void incrementLoadedCounter(uint idAnimationGroup, int increment);
+
 	private:
 
 		std::map<uint, std::pair<std::vector<std::vector<const Texture*>*>*, std::vector<Animation*>*>> animationGroups;
@@ -46,7 +50,7 @@ class ModuleAnimation : public Module
 
 		std::map<uint, std::list<AnimationContainer*>*> usedAnimationContainers;
 
-		std::list<std::pair<std::string, uint>> loadedAnimationGroups;
+		std::list<std::pair<std::pair<std::string, uint>, uint>> loadedAnimationGroups;
 };
 
 #endif

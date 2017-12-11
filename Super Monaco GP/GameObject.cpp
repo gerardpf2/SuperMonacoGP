@@ -48,9 +48,16 @@ void GameObject::elevate()
 	position.y += interpolate(position.z, segment->getZNear(), segment->getZFar(), segment->getYNear(), segment->getYFar());
 }
 
-void GameObject::moveX(float incX)
+/* void GameObject::moveX(float incX)
 {
 	position.x += incX;
+} */
+
+void GameObject::move(const WorldPosition& offset)
+{
+	position.x += offset.x;
+	position.y += offset.y;
+	position.z += offset.z;
 }
 
 void GameObject::update(float deltaTimeS)

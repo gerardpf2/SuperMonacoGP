@@ -1,13 +1,10 @@
 #include "Player.h"
 
-#include "Camera.h"
 #include "Globals.h"
 #include "Animation.h"
 #include "ModuleInput.h"
 #include "AnimationGrid.h"
 #include "AnimationContainer.h"
-
-using namespace std;
 
 Player::Player(uint id, AnimationContainer* animationContainer, const ModuleInput* moduleInput) :
 	Car(id, animationContainer), moduleInput(moduleInput)
@@ -64,43 +61,13 @@ void Player::updateDirection(float deltaTimeS)
 	if(moduleInput->isKeyPressed(SDL_SCANCODE_S)) direction.z -= 1.0f;
 }
 
-// #include <iostream>
-// using namespace std;
-
 void Player::updateCurrentAnimation(float deltaTimeS) const
 {
 	animationGrid->advance(getVelocityPercent(), direction.x, deltaTimeS);
 	animationContainer->setCurrentAnimation(animationGrid->getCurrentAnimation()->getId());
+}
 
-	/* Animation* currentAnimation = animationContainer->getCurrentAnimation();
-
-	uint currentAnimationId = currentAnimation->getId();
-	uint nextAnimationId = currentAnimationId;
-
-	float inc0 = getVelocityPercent();
-	float inc1 = direction.x;
-
-	if(direction.x == 1.0f)
-	{
-		if(currentAnimationId == 0)
-			nextAnimationId = 7;
-	}
-
-	Animation* nextAnimation = animationContainer->getAnimation(nextAnimationId);
-
-	if(currentAnimation != nextAnimation)
-	{
-		nextAnimation->synchronize(*currentAnimation);
-		currentAnimation->reset();
-	}
-
-	animationContainer->setCurrentAnimation(nextAnimationId); */
-
-	/* cout << animationContainer->getCurrentAnimationId() << endl;
-
-	if(animationContainer->getCurrentAnimation()->hasEnded())
-	{
-		animationContainer->getCurrentAnimation()->reset();
-		animationContainer->setCurrentAnimation((animationContainer->getCurrentAnimation()->getId() + 1) % 19);
-	} */
+void Player::updateOffsetX(float dX, float velocityPercent, float curve)
+{
+	position.x += 4.0f * ROAD_WIDTH * dX * velocityPercent * -curve;
 }

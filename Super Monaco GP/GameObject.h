@@ -35,7 +35,9 @@ class GameObject
 
 		void elevate();
 
-		void moveX(float incX);
+		// void moveX(float incX);
+
+		void move(const WorldPosition& offset);
 
 		virtual void update(float deltaTimeS);
 

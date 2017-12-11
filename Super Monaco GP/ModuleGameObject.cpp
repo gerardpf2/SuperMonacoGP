@@ -23,7 +23,7 @@ ModuleGameObject::~ModuleGameObject()
 
 GameObject* ModuleGameObject::getGameObject(uint idGameObject)
 {
-	const GameObject* baseGameObject = gameObjects[idGameObject];
+	const GameObject* baseGameObject = gameObjects[idGameObject].first;
 
 	GameObject* gameObject = nullptr;
 
@@ -66,7 +66,12 @@ bool ModuleGameObject::setUp()
 	gameObjects.reserve(gameObjectsJson.Size());
 
 	for(SizeType i = 0; i < gameObjectsJson.Size(); ++i)
-		gameObjects.push_back(createGameObject(gameObjectsJson[i]));
+	{
+		uint resourceGroupId;
+
+		GameObject* gameObject = createGameObject(gameObjectsJson[i], resourceGroupId);
+		gameObjects.push_back(pair<GameObject*, uint>(gameObject, resourceGroupId));
+	}
 
 	return true;
 }
@@ -75,9 +80,16 @@ void ModuleGameObject::cleanUp()
 {
 	for(int i = (int)gameObjects.size() - 1; i >= 0; --i)
 	{
-		gameObjects[i]->cleanUp();
+		GameObject*& gameObject = gameObjects[i].first;
 
-		delete gameObjects[i]; gameObjects[i] = nullptr;
+		gameObject->cleanUp();
+
+		if(gameObject->getType() == GameObjectType::STATIC)
+			getGameEngine()->getModuleTexture()->unload(gameObjects[i].second);
+		else
+			getGameEngine()->getModuleAnimation()->unload(gameObjects[i].second);
+
+		delete gameObject; gameObject = nullptr;
 	}
 
 	gameObjects.clear();
@@ -94,7 +106,7 @@ void ModuleGameObject::cleanUp()
 
 Car* ModuleGameObject::getCar(uint idGameObject) const
 {
-	const Car* baseCar = (Car*)gameObjects[idGameObject];
+	const Car* baseCar = (Car*)gameObjects[idGameObject].first;
 
 	const AnimationContainer* baseAnimationContainer = baseCar->getAnimationContainer();
 
@@ -105,7 +117,7 @@ Car* ModuleGameObject::getCar(uint idGameObject) const
 
 Player* ModuleGameObject::getPlayer(uint idGameObject) const
 {
-	const Player* basePlayer = (Player*)gameObjects[idGameObject];
+	const Player* basePlayer = (Player*)gameObjects[idGameObject].first;
 
 	const AnimationContainer* baseAnimationContainer = basePlayer->getAnimationContainer();
 
@@ -116,12 +128,12 @@ Player* ModuleGameObject::getPlayer(uint idGameObject) const
 
 Static* ModuleGameObject::getStatic(uint idGameObject) const
 {
-	return new Static(*(Static*)gameObjects[idGameObject]);
+	return new Static(*(Static*)gameObjects[idGameObject].first);
 }
 
 Animated* ModuleGameObject::getAnimated(uint idGameObject) const
 {
-	const Animated* baseAnimated = (Animated*)gameObjects[idGameObject];
+	const Animated* baseAnimated = (Animated*)gameObjects[idGameObject].first;
 
 	const AnimationContainer* baseAnimationContainer = baseAnimated->getAnimationContainer();
 
@@ -130,7 +142,7 @@ Animated* ModuleGameObject::getAnimated(uint idGameObject) const
 	return new Animated(baseAnimated->getId(), animationContainer);
 }
 
-GameObject* ModuleGameObject::createGameObject(const Value& gameObjectJson) const
+GameObject* ModuleGameObject::createGameObject(const Value& gameObjectJson, uint &resourceGroupId) const
 {
 	// type
 
@@ -139,19 +151,19 @@ GameObject* ModuleGameObject::createGameObject(const Value& gameObjectJson) cons
 	switch(type)
 	{
 		case GameObjectType::PLAYER:
-			return createPlayer(gameObjectJson);
+			return createPlayer(gameObjectJson, resourceGroupId);
 		case GameObjectType::CAR:
-			return createCar(gameObjectJson);
+			return createCar(gameObjectJson, resourceGroupId);
 		case GameObjectType::STATIC:
-			return createStatic(gameObjectJson);
+			return createStatic(gameObjectJson, resourceGroupId);
 		case GameObjectType::ANIMATED:
-			return createAnimated(gameObjectJson);
+			return createAnimated(gameObjectJson, resourceGroupId);
 	}
 
 	return nullptr;
 }
 
-Car* ModuleGameObject::createCar(const rapidjson::Value& gameObjectJson) const
+Car* ModuleGameObject::createCar(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
 {
 	// gameObjectId, animationGroupPath, animationContainerId
 
@@ -159,14 +171,14 @@ Car* ModuleGameObject::createCar(const rapidjson::Value& gameObjectJson) const
 	const char* animationGroupPath = gameObjectJson["animationGroupPath"].GetString();
 	uint animationContainerId = gameObjectJson["animationContainerId"].GetInt();
 
-	uint animationGroupId = getGameEngine()->getModuleAnimation()->load(animationGroupPath);
+	resourceGroupId = getGameEngine()->getModuleAnimation()->load(animationGroupPath);
 
-	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(animationGroupId, animationContainerId);
+	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
 	return new Car(gameObjectId, animationContainer);
 }
 
-Player* ModuleGameObject::createPlayer(const rapidjson::Value& gameObjectJson) const
+Player* ModuleGameObject::createPlayer(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
 {
 	// gameObjectId, animationGroupPath, animationContainerId
 
@@ -174,14 +186,14 @@ Player* ModuleGameObject::createPlayer(const rapidjson::Value& gameObjectJson) c
 	const char* animationGroupPath = gameObjectJson["animationGroupPath"].GetString();
 	uint animationContainerId = gameObjectJson["animationContainerId"].GetInt();
 
-	uint animationGroupId = getGameEngine()->getModuleAnimation()->load(animationGroupPath);
+	resourceGroupId = getGameEngine()->getModuleAnimation()->load(animationGroupPath);
 
-	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(animationGroupId, animationContainerId);
+	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
 	return new Player(gameObjectId, animationContainer, getGameEngine()->getModuleInput());
 }
 
-Static* ModuleGameObject::createStatic(const rapidjson::Value& gameObjectJson) const
+Static* ModuleGameObject::createStatic(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
 {
 	// gameObjectId, textureGroupPath, textureId
 
@@ -189,14 +201,14 @@ Static* ModuleGameObject::createStatic(const rapidjson::Value& gameObjectJson) c
 	const char* textureGroupPath = gameObjectJson["textureGroupPath"].GetString();
 	uint textureId = gameObjectJson["textureId"].GetInt();
 
-	uint textureGroupId = getGameEngine()->getModuleTexture()->load(textureGroupPath);
+	resourceGroupId = getGameEngine()->getModuleTexture()->load(textureGroupPath);
 
-	const Texture* texture = getGameEngine()->getModuleTexture()->get(textureGroupId, textureId);
+	const Texture* texture = getGameEngine()->getModuleTexture()->get(resourceGroupId, textureId);
 
 	return new Static(gameObjectId, texture);
 }
 
-Animated* ModuleGameObject::createAnimated(const rapidjson::Value& gameObjectJson) const
+Animated* ModuleGameObject::createAnimated(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
 {
 	// gameObjectId, animationGroupPath, animationContainerId
 
@@ -204,9 +216,9 @@ Animated* ModuleGameObject::createAnimated(const rapidjson::Value& gameObjectJso
 	const char* animationGroupPath = gameObjectJson["animationGroupPath"].GetString();
 	uint animationContainerId = gameObjectJson["animationContainerId"].GetInt();
 
-	uint animationGroupId = getGameEngine()->getModuleAnimation()->load(animationGroupPath);
+	resourceGroupId = getGameEngine()->getModuleAnimation()->load(animationGroupPath);
 
-	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(animationGroupId, animationContainerId);
+	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
 	return new Animated(gameObjectId, animationContainer);
 }
