@@ -102,12 +102,16 @@ bool ModuleWorld::update(float deltaTimeS)
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoad);
 	background->render(!camera->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(camera, getGameEngine()->getModuleRenderer());
-	
-	getGameEngine()->getModuleFont()->renderText("123 LALA 1'2''3", WindowPosition{ 100, 400 }); //
+
+	getGameEngine()->getModuleFont()->renderText("LEFT", WindowPosition{ 320, 200 }, Alignment::LEFT); //
+	getGameEngine()->getModuleFont()->renderText("RIGHT", WindowPosition{ 320, 300 }, Alignment::RIGHT, 2.0f, 255, 255, 0); //
+	getGameEngine()->getModuleFont()->renderText("CENTER", WindowPosition{ 320, 400 }, Alignment::CENTER, 0.5f, 0, 255, 0); //
 
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
 	backgroundMirror->render(!cameraMirror->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(cameraMirror, getGameEngine()->getModuleRenderer());
+
+	getGameEngine()->getModuleFont()->renderText("CENTER", WindowPosition{ 320, 360 }, Alignment::CENTER, 2.0f, 0, 0, 255); //
 
 	return true;
 }

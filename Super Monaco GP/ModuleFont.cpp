@@ -1,6 +1,5 @@
 #include "ModuleFont.h"
 
-#include <SDL_rect.h>
 #include "ModuleJson.h"
 #include "GameEngine.h"
 #include "ModuleTexture.h"
@@ -16,21 +15,33 @@ ModuleFont::ModuleFont(GameEngine* gameEngine) :
 ModuleFont::~ModuleFont()
 { }
 
-void ModuleFont::renderText(const string& text, const WindowPosition& position, float scale, bool leftToRight) const
+void ModuleFont::renderText(const std::string& text, const WindowPosition& position, Alignment alignment, float scale, Uint8 modR, Uint8 modG, Uint8 modB) const
 {
+	vector<const Texture*> characterTextures;
+	getCharacterTextures(text, characterTextures);
+
+	float offsetX = 0.0f;
+
+	if(alignment != Alignment::LEFT)
+	{
+		offsetX = -getTextWidth(characterTextures, scale);
+		if(alignment == Alignment::CENTER) offsetX *= 0.5f;
+	}
+
 	ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
 
-	SDL_Rect dstRect{ position.x, position.y };
+	SDL_Rect dstRect{ (int)(position.x + offsetX), position.y };
 
-	for(uint i = 0; i < (uint)text.size(); ++i)
+	for(const Texture* characterTexture : characterTextures)
 	{
-		const Texture* texture = characters[text[i]];
-		if(!texture) texture = characters[' '];
+		dstRect.w = (int)(scale * characterTexture->r->w);
+		dstRect.h = (int)(scale * characterTexture->r->h);
 
-		dstRect.w = (int)(scale * texture->r->w);
-		dstRect.h = (int)(scale * texture->r->h);
+		SDL_SetTextureColorMod(characterTexture->t, modR, modG, modB);
 
-		moduleRenderer->renderTexture(texture->t, texture->r, &dstRect, texture->hFlipped);
+		moduleRenderer->renderTexture(characterTexture->t, characterTexture->r, &dstRect, characterTexture->hFlipped);
+		
+		SDL_SetTextureColorMod(characterTexture->t, 255, 255, 255);
 
 		dstRect.x += dstRect.w;
 	}
@@ -71,4 +82,27 @@ void ModuleFont::cleanUp()
 	getGameEngine()->getModuleTexture()->unload(textureGroupId);
 
 	characters.clear();
+}
+
+float ModuleFont::getTextWidth(const vector<const Texture*>& characterTextures, float scale) const
+{
+	float offsetX = 0.0f;
+
+	for(const Texture* characterTexture : characterTextures)
+		if(characterTexture) offsetX += characterTexture->r->w;
+
+	return scale * offsetX;
+}
+
+void ModuleFont::getCharacterTextures(const string& text, vector<const Texture*>& characterTextures) const
+{
+	characterTextures.reserve(text.size());
+
+	for(char character : text)
+	{
+		const Texture* texture = characters[character];
+		if(!texture) texture = characters[' '];
+
+		characterTextures.push_back(texture);
+	}
 }
