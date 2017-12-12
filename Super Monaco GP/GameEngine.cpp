@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 
 #include "ModuleJson.h"
+#include "ModuleFont.h"
 #include "ModuleInput.h"
 #include "ModuleWorld.h"
 #include "ModuleWindow.h"
@@ -19,6 +20,11 @@ GameEngine::~GameEngine()
 ModuleJson* GameEngine::getModuleJson() const
 {
 	return moduleJson;
+}
+
+ModuleFont* GameEngine::getModuleFont() const
+{
+	return moduleFont;
 }
 
 ModuleInput* GameEngine::getModuleInput() const
@@ -71,13 +77,14 @@ void GameEngine::run()
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(8);
+	modules.reserve(9);
 
 	modules.push_back(moduleJson = new ModuleJson(this));
 	modules.push_back(moduleInput = new ModuleInput(this));
 	modules.push_back(moduleWindow = new ModuleWindow(this));
 	modules.push_back(moduleRenderer = new ModuleRenderer(this));
 	modules.push_back(moduleTexture = new ModuleTexture(this));
+	modules.push_back(moduleFont = new ModuleFont(this));
 	modules.push_back(moduleAnimation = new ModuleAnimation(this));
 	modules.push_back(moduleGameObject = new ModuleGameObject(this)); //
 	// modules.push_back(modulePerformance = new ModulePerformance(this));
@@ -132,6 +139,7 @@ void GameEngine::cleanUp()
 	modules.clear();
 
 	moduleJson = nullptr;
+	moduleFont = nullptr;
 	moduleInput = nullptr;
 	moduleWorld = nullptr;
 	moduleWindow = nullptr;

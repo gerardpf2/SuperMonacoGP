@@ -1,0 +1,49 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupPath" : "Resources/Configurations/Textures/Font.json",
+	"characters" :
+	[
+		{ "id" : "0", "textureId" : 0 },
+		{ "id" : "1", "textureId" : 1 },
+		{ "id" : "2", "textureId" : 2 },
+		{ "id" : "3", "textureId" : 3 },
+		{ "id" : "4", "textureId" : 4 },
+		{ "id" : "5", "textureId" : 5 },
+		{ "id" : "6", "textureId" : 6 },
+		{ "id" : "7", "textureId" : 7 },
+		{ "id" : "8", "textureId" : 8 },
+		{ "id" : "9", "textureId" : 9 },
+		
+		{ "id" : "'", "textureId" : 10 },
+		{ "id" : " ", "textureId" : 11 },
+		
+		{ "id" : "A", "textureId" : 12 },
+		{ "id" : "B", "textureId" : 13 },
+		{ "id" : "C", "textureId" : 14 },
+		{ "id" : "D", "textureId" : 15 },
+		{ "id" : "E", "textureId" : 16 },
+		{ "id" : "F", "textureId" : 17 },
+		{ "id" : "G", "textureId" : 18 },
+		{ "id" : "H", "textureId" : 19 },
+		{ "id" : "I", "textureId" : 20 },
+		{ "id" : "J", "textureId" : 21 },
+		{ "id" : "K", "textureId" : 22 },
+		{ "id" : "L", "textureId" : 23 },
+		{ "id" : "M", "textureId" : 24 },
+		{ "id" : "N", "textureId" : 25 },
+		{ "id" : "O", "textureId" : 26 },
+		{ "id" : "P", "textureId" : 27 },
+		{ "id" : "Q", "textureId" : 28 },
+		{ "id" : "R", "textureId" : 29 },
+		{ "id" : "S", "textureId" : 30 },
+		{ "id" : "T", "textureId" : 31 },
+		{ "id" : "U", "textureId" : 32 },
+		{ "id" : "V", "textureId" : 33 },
+		{ "id" : "W", "textureId" : 34 },
+		{ "id" : "X", "textureId" : 35 },
+		{ "id" : "Y", "textureId" : 36 },
+		{ "id" : "Z", "textureId" : 37 }
+	]
+}

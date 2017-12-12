@@ -12,6 +12,7 @@
 #include "Background.h"
 #include "GameObject.h"
 #include "GameEngine.h"
+#include "ModuleFont.h"
 #include "ModuleInput.h"
 #include "CameraFollow.h"
 #include "ModuleTexture.h"
@@ -102,6 +103,8 @@ bool ModuleWorld::update(float deltaTimeS)
 	background->render(!camera->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(camera, getGameEngine()->getModuleRenderer());
 	
+	getGameEngine()->getModuleFont()->renderText("123 LALA 1'2''3", WindowPosition{ 100, 400 }); //
+
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
 	backgroundMirror->render(!cameraMirror->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(cameraMirror, getGameEngine()->getModuleRenderer());

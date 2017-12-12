@@ -6,6 +6,7 @@
 
 class Module;
 class ModuleJson;
+class ModuleFont;
 class ModuleInput;
 class ModuleWorld;
 class ModuleWindow;
@@ -24,6 +25,8 @@ class GameEngine
 		virtual ~GameEngine();
 
 		ModuleJson* getModuleJson() const;
+
+		ModuleFont* getModuleFont() const;
 
 		ModuleInput* getModuleInput() const;
 
@@ -60,6 +63,8 @@ class GameEngine
 		std::vector<Module*> modules;
 
 		ModuleJson* moduleJson = nullptr;
+
+		ModuleFont* moduleFont = nullptr;
 
 		ModuleInput* moduleInput = nullptr;
 
