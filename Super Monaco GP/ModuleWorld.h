@@ -18,6 +18,12 @@ class ModuleWorld : public Module
 
 		virtual ~ModuleWorld();
 
+		const Road* getRoad() const;
+
+		const Camera* getCamera() const;
+
+		const Camera* getCameraMirror() const;
+
 		virtual bool setUp() override;
 
 		virtual bool update(float deltaTimeS) override;

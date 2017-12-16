@@ -21,7 +21,7 @@ class ModuleFont : public Module
 
 		virtual ~ModuleFont();
 
-		void renderText(const std::string& text, const WindowPosition& position, Alignment alignment, float scale = 1.0f, Uint8 modR = 255, Uint8 modG = 255, Uint8 modB = 255) const;
+		void renderText(const std::string& text, const WindowPosition& position, Alignment alignment, float scale = 1.0f, Uint8 modR = 255, Uint8 modG = 255, Uint8 modB = 255, Uint8 modA = 255) const;
 
 		virtual bool setUp() override;
 

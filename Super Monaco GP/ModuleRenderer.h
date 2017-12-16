@@ -2,12 +2,9 @@
 #define _MODULE_RENDERER_
 
 #include <list>
+#include <SDL.h>
 #include "Types.h"
 #include "Module.h"
-
-struct SDL_Rect;
-struct SDL_Texture;
-struct SDL_Renderer;
 
 class ModuleRenderer : public Module
 {
@@ -25,7 +22,7 @@ class ModuleRenderer : public Module
 
 		void removeLayer(uint id);
 
-		void renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect, bool hFlipped = false) const;
+		void renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect, bool hFlipped = false, Uint8 modR = 255, Uint8 modG = 255, Uint8 modB = 255, Uint8 modA = 255) const;
 
 		void renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const;
 

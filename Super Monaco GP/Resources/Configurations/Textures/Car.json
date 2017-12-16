@@ -1,0 +1,106 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 1,
+	"bmpPath" : "Resources/Images/Car.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "0: Center_0",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "1: Center_1",
+			
+			"rect" : { "x" : 0, "y" : 104, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "2: Right_0_0",
+			
+			"rect" : { "x" : 384, "y" : 0, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "3: Right_1_0",
+			
+			"rect" : { "x" : 384, "y" : 104, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "4: Left_0_0",
+			
+			"rect" : { "x" : 384, "y" : 0, "w" : 384, "h" : 104 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "5: Left_1_0",
+			
+			"rect" : { "x" : 384, "y" : 104, "w" : 384, "h" : 104 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "6: Right_0_1",
+			
+			"rect" : { "x" : 768, "y" : 0, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "7: Right_1_1",
+			
+			"rect" : { "x" : 768, "y" : 104, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "8: Left_0_1",
+			
+			"rect" : { "x" : 768, "y" : 0, "w" : 384, "h" : 104 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "9: Left_1_1",
+			
+			"rect" : { "x" : 768, "y" : 104, "w" : 384, "h" : 104 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "10: Center_0 m",
+			
+			"rect" : { "x" : 0, "y" : 208, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "11: Center_1 m",
+			
+			"rect" : { "x" : 0, "y" : 312, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "12: Right_0 m",
+			
+			"rect" : { "x" : 384, "y" : 208, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "13: Right_1 m",
+			
+			"rect" : { "x" : 384, "y" : 312, "w" : 384, "h" : 104 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "14: Left_0 m",
+			
+			"rect" : { "x" : 384, "y" : 208, "w" : 384, "h" : 104 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "15: Left_1 m",
+			
+			"rect" : { "x" : 384, "y" : 312, "w" : 384, "h" : 104 },
+			"hFlipped" : true
+		}
+	]
+}

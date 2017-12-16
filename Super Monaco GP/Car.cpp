@@ -2,8 +2,10 @@
 
 #include "Road.h"
 #include "Utils.h"
+#include "Camera.h"
 #include "Segment.h"
 #include "Animation.h"
+#include "ModuleWorld.h"
 #include "AnimationContainer.h"
 
 using namespace std;
@@ -51,13 +53,13 @@ void Car::update(float deltaTimeS)
 	updateDirection(deltaTimeS);
 	// updateCurrentAnimation(deltaTimeS);
 
-	Segment* segment = getRoad()->getSegmentAtZ(position.z);
+	Segment* segment = getModuleWorld()->getRoad()->getSegmentAtZ(position.z);
 
 	position.z += velocity * deltaTimeS;
 	
 	limitZ();
 
-	Segment* newSegment = getRoad()->getSegmentAtZ(position.z);
+	Segment* newSegment = getModuleWorld()->getRoad()->getSegmentAtZ(position.z);
 
 	float velocityPercent = getVelocityPercent();
 
@@ -102,6 +104,55 @@ void Car::updateDirection(float deltaTimeS)
 {
 	direction.x = 0.0f;
 	direction.z = 1.0f;
+}
+
+void Car::updateCurrentAnimation(float deltaTimeS) const
+{
+	animationContainer->getCurrentAnimation()->setTimeMultiplier(getVelocityPercent());
+
+	Animated::updateCurrentAnimation(deltaTimeS);
+
+	/*
+	
+	AnimationId 0 -> Center
+	AnimationId 1 -> Camera right side
+	AnimationId 2 -> Camera left side
+	AnimationId 3 -> Camera right side +
+	AnimationId 4 -> Camera left side +
+	AnimationId 5 -> Center m
+	AnimationId 6 -> Camera right side m
+	AnimationId 7 -> Camera left side m
+	
+	*/
+
+	Animation* currentAnimation = animationContainer->getCurrentAnimation();
+	Animation* nextAnimation = currentAnimation;
+
+	float x = position.x;
+	float cameraX = getModuleWorld()->getCamera()->getPosition()->x;
+
+	x -= getModuleWorld()->getRoad()->getSegmentAtZ(position.z)->getXOffsetNear();
+	cameraX -= getModuleWorld()->getRoad()->getSegmentAtZ(getModuleWorld()->getCamera()->getBasePositionZ())->getXOffsetNear();
+
+	float threshold0 = 5.0f;
+	float threshold1 = 20.0f;
+	float cameraDistance = cameraX - x;
+	float cameraDistanceAbs = fabsf(cameraDistance);
+
+	// Check z
+
+	if(cameraDistanceAbs <= threshold0)
+		nextAnimation = animationContainer->getAnimation(0);
+	else if(cameraDistanceAbs <= threshold1)
+		nextAnimation = animationContainer->getAnimation(cameraDistance > 0.0f ? 1 : 2);
+	else
+		nextAnimation = animationContainer->getAnimation(cameraDistance > 0.0f ? 3 : 4);
+
+	if(nextAnimation != currentAnimation)
+	{
+		nextAnimation->synchronize(*animationContainer->getCurrentAnimation());
+		animationContainer->setCurrentAnimation(nextAnimation->getId());
+	}
 }
 
 void Car::updateOffsetX(float dX, float velocityPercent, float curve)

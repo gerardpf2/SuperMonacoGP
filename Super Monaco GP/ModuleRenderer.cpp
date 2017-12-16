@@ -58,8 +58,11 @@ void ModuleRenderer::removeLayer(uint id)
 		}
 }
 
-void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect, bool hFlipped) const
+void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect, bool hFlipped, Uint8 modR, Uint8 modG, Uint8 modB, Uint8 modA) const
 {
+	SDL_SetTextureColorMod(texture, modR, modG, modB);
+	SDL_SetTextureAlphaMod(texture, modA);
+
 	SDL_RendererFlip flip = hFlipped ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
 	SDL_RenderCopyEx(renderer, texture, srcRect, dstRect, 0.0, nullptr, flip);
 }

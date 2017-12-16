@@ -23,6 +23,8 @@ class Car : public Animated
 
 		virtual void updateDirection(float deltaTimeS);
 
+		virtual void updateCurrentAnimation(float deltaTimeS) const override;
+
 		virtual void updateOffsetX(float dX, float velocityPercent, float curve);
 
 	protected:

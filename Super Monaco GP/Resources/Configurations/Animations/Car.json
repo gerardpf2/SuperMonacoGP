@@ -1,0 +1,74 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"animationGroupId" : 1,
+	"textureGroupPath" : "Resources/Configurations/Textures/Car.json",
+	"animations" :
+	[
+		{
+			"_info" : "0: Center",
+			
+			"loop" : true,
+			"endTime" : 0.135,
+			"textureIds" : [ 0, 1 ]
+		},
+		{
+			"_info" : "1: Right_0",
+			
+			"loop" : true,
+			"endTime" : 0.135,
+			"textureIds" : [ 2, 3 ]
+		},
+		{
+			"_info" : "2: Left_0",
+			
+			"loop" : true,
+			"endTime" : 0.135,
+			"textureIds" : [ 4, 5 ]
+		},
+		{
+			"_info" : "3: Right_1",
+			
+			"loop" : true,
+			"endTime" : 0.135,
+			"textureIds" : [ 6, 7 ]
+		},
+		{
+			"_info" : "4: Left_1",
+			
+			"loop" : true,
+			"endTime" : 0.135,
+			"textureIds" : [ 8, 9 ]
+		},
+		{
+			"_info" : "5: Center m",
+			
+			"loop" : true,
+			"endTime" : 0.135,
+			"textureIds" : [ 10, 11 ]
+		},
+		{
+			"_info" : "6: Right m",
+			
+			"loop" : true,
+			"endTime" : 0.135,
+			"textureIds" : [ 12, 13 ]
+		},
+		{
+			"_info" : "7: Left m",
+			
+			"loop" : true,
+			"endTime" : 0.135,
+			"textureIds" : [ 14, 15 ]
+		}
+	],
+	"animationContainers" :
+	[
+		{
+			"_info" : "",
+			
+			"animationIds" : [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+		}
+	]
+}

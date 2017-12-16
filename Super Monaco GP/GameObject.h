@@ -13,6 +13,7 @@ enum class GameObjectType
 
 class Road;
 class Camera;
+class ModuleWorld;
 class ModuleRenderer;
 
 class GameObject
@@ -29,10 +30,14 @@ class GameObject
 
 		void setPosition(const WorldPosition& position);
 
-		const Road* getRoad() const;
+		// const Road* getRoad() const;
 
-		void setRoad(const Road* road);
+		// void setRoad(const Road* road);
 
+		const ModuleWorld* getModuleWorld() const;
+
+		void setModuleWorld(const ModuleWorld* moduleWorld);
+		
 		void elevate();
 
 		// void moveX(float incX);
@@ -63,7 +68,9 @@ class GameObject
 
 		uint id;
 
-		const Road* road = nullptr;
+		// const Road* road = nullptr;
+
+		const ModuleWorld* moduleWorld = nullptr;
 };
 
 #endif

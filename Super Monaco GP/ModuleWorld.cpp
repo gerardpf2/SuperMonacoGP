@@ -30,6 +30,21 @@ ModuleWorld::ModuleWorld(GameEngine* gameEngine) :
 ModuleWorld::~ModuleWorld()
 { }
 
+const Road* ModuleWorld::getRoad() const
+{
+	return road;
+}
+
+const Camera* ModuleWorld::getCamera() const
+{
+	return camera;
+}
+
+const Camera* ModuleWorld::getCameraMirror() const
+{
+	return cameraMirror;
+}
+
 // Revisar
 SDL_Rect textureRectRoadMirror{ 0, (int)((1.0f - 0.24f) * WINDOW_HEIGHT), WINDOW_WIDTH, (int)(0.24f * WINDOW_HEIGHT) };
 SDL_Rect viewportRoadMirror{ (int)(0.15f * WINDOW_WIDTH), (int)(0.12f * WINDOW_HEIGHT), (int)(0.7f * WINDOW_WIDTH), (int)(0.17f * WINDOW_HEIGHT) };
@@ -52,7 +67,10 @@ bool ModuleWorld::setUp()
 
 	// Cars
 
-	addGameObject(1, WorldPosition{ 7.0f, 0.0f, 10.0f });
+	addGameObject(1, WorldPosition{ 5.0f, 0.0f, 2.5f });
+	addGameObject(1, WorldPosition{ -5.0f, 0.0f, 2.5f });
+	addGameObject(1, WorldPosition{ 0.0f, 0.0f, 30.0f });
+	addGameObject(1, WorldPosition{ 0.0f, 0.0f, -5.0f });
 
 	// Environment
 
@@ -103,15 +121,15 @@ bool ModuleWorld::update(float deltaTimeS)
 	background->render(!camera->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(camera, getGameEngine()->getModuleRenderer());
 
-	getGameEngine()->getModuleFont()->renderText("LEFT", WindowPosition{ 320, 200 }, Alignment::LEFT); //
-	getGameEngine()->getModuleFont()->renderText("RIGHT", WindowPosition{ 320, 300 }, Alignment::RIGHT, 2.0f, 255, 255, 0); //
-	getGameEngine()->getModuleFont()->renderText("CENTER", WindowPosition{ 320, 400 }, Alignment::CENTER, 0.5f, 0, 255, 0); //
+	// getGameEngine()->getModuleFont()->renderText("LEFT", WindowPosition{ 320, 200 }, Alignment::LEFT); //
+	// getGameEngine()->getModuleFont()->renderText("RIGHT", WindowPosition{ 320, 300 }, Alignment::RIGHT, 2.0f, 255, 255, 0); //
+	// getGameEngine()->getModuleFont()->renderText("CENTER", WindowPosition{ 320, 400 }, Alignment::CENTER, 0.5f, 0, 255, 0); //
 
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
 	backgroundMirror->render(!cameraMirror->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(cameraMirror, getGameEngine()->getModuleRenderer());
 
-	getGameEngine()->getModuleFont()->renderText("CENTER", WindowPosition{ 320, 360 }, Alignment::CENTER, 2.0f, 0, 0, 255); //
+	// getGameEngine()->getModuleFont()->renderText("CENTER", WindowPosition{ 320, 360 }, Alignment::CENTER, 2.0f, 0, 0, 255); //
 
 	return true;
 }
@@ -156,12 +174,11 @@ GameObject* ModuleWorld::addGameObject(uint id, const WorldPosition& worldPositi
 {
 	GameObject* gameObject = getGameEngine()->getModuleGameObject()->getGameObject(id);
 
-	gameObject->setRoad(road);
-	// gameObject->setPosition(worldPosition);
-
-	// gameObject->moveX(xOffsetRoad * (ROAD_WIDTH / 2.0f));
+	// gameObject->setRoad(road);
+	gameObject->setModuleWorld(this);
 
 	// Adjust game object's position
+
 	WorldPosition wP = worldPosition;
 
 	wP.x += xOffsetRoad * (ROAD_WIDTH / 2.0f);

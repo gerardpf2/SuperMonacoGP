@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Segment.h"
 #include <SDL_rect.h>
+#include "ModuleWorld.h"
 #include "ModuleRenderer.h"
 
 GameObject::GameObject(uint id) :
@@ -31,7 +32,7 @@ void GameObject::setPosition(const WorldPosition& position)
 	limitZ();
 }
 
-const Road* GameObject::getRoad() const
+/* const Road* GameObject::getRoad() const
 {
 	return road;
 }
@@ -39,11 +40,21 @@ const Road* GameObject::getRoad() const
 void GameObject::setRoad(const Road* road)
 {
 	this->road = road;
+} */
+
+const ModuleWorld* GameObject::getModuleWorld() const
+{
+	return moduleWorld;
+}
+
+void GameObject::setModuleWorld(const ModuleWorld* moduleWorld)
+{
+	this->moduleWorld = moduleWorld;
 }
 
 void GameObject::elevate()
 {
-	Segment* segment = road->getSegmentAtZ(position.z);
+	Segment* segment = moduleWorld->getRoad()->getSegmentAtZ(position.z);
 
 	position.y += interpolate(position.z, segment->getZNear(), segment->getZFar(), segment->getYNear(), segment->getYFar());
 }
@@ -65,7 +76,7 @@ void GameObject::update(float deltaTimeS)
 
 void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	Segment* segment = road->getSegmentAtZ(position.z);
+	Segment* segment = moduleWorld->getRoad()->getSegmentAtZ(position.z);
 
 	float xOffset = interpolate(position.z, segment->getZNear(), segment->getZFar(), segment->getXOffsetNear(), segment->getXOffsetFar());
 	float zOffset = segment->getZOffset();
@@ -120,5 +131,5 @@ void GameObject::cleanUp()
 
 void GameObject::limitZ()
 {
-	position.z = mod0L(position.z, road->getLength());
+	position.z = mod0L(position.z, moduleWorld->getRoad()->getLength());
 }

@@ -15,7 +15,7 @@ ModuleFont::ModuleFont(GameEngine* gameEngine) :
 ModuleFont::~ModuleFont()
 { }
 
-void ModuleFont::renderText(const std::string& text, const WindowPosition& position, Alignment alignment, float scale, Uint8 modR, Uint8 modG, Uint8 modB) const
+void ModuleFont::renderText(const std::string& text, const WindowPosition& position, Alignment alignment, float scale, Uint8 modR, Uint8 modG, Uint8 modB, Uint8 modA) const
 {
 	vector<const Texture*> characterTextures;
 	getCharacterTextures(text, characterTextures);
@@ -37,11 +37,11 @@ void ModuleFont::renderText(const std::string& text, const WindowPosition& posit
 		dstRect.w = (int)(scale * characterTexture->r->w);
 		dstRect.h = (int)(scale * characterTexture->r->h);
 
-		SDL_SetTextureColorMod(characterTexture->t, modR, modG, modB);
+		// SDL_SetTextureColorMod(characterTexture->t, modR, modG, modB);
 
-		moduleRenderer->renderTexture(characterTexture->t, characterTexture->r, &dstRect, characterTexture->hFlipped);
+		moduleRenderer->renderTexture(characterTexture->t, characterTexture->r, &dstRect, characterTexture->hFlipped, modR, modG, modB, modA);
 		
-		SDL_SetTextureColorMod(characterTexture->t, 255, 255, 255);
+		// SDL_SetTextureColorMod(characterTexture->t, 255, 255, 255);
 
 		dstRect.x += dstRect.w;
 	}

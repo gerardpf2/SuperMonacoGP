@@ -5,32 +5,116 @@
 	"gameObjects" :
 	[
 		{
-			"_info" : "Player(id 0, type 0). Do not move.",
+			"_info" : "0: Player",
 			
 			"type" : 0,
 			"animationGroupPath" : "Resources/Configurations/Animations/Player.json",
 			"animationContainerId" : 0
 		},
 		{
-			"_info" : "Car(id 1, type 1). Do not move.",
+			"_info" : "1: Car",
 			
 			"type" : 1,
-			"animationGroupPath" : "Resources/Configurations/Animations/AnimationsTest.json",
+			"animationGroupPath" : "Resources/Configurations/Animations/Car.json",
 			"animationContainerId" : 0
 		},
 		{
-			"_info" : "",
+			"_info" : "2: Yellow arrow",
 			
 			"type" : 2,
-			"textureGroupPath" : "Resources/Configurations/Textures/TexturesTest.json",
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 0
+		},
+		{
+			"_info" : "3: Yellow arrow hF",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 1
+		},
+		{
+			"_info" : "4: Red arrow",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
 			"textureId" : 2
 		},
 		{
-			"_info" : "",
+			"_info" : "5: Red arrow hF",
 			
-			"type" : 3,
-			"animationGroupPath" : "Resources/Configurations/Animations/AnimationsTest.json",
-			"animationContainerId" : 1
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 3
+		},
+		{
+			"_info" : "6: Ster's",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 4
+		},
+		{
+			"_info" : "7: F1 power",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 5
+		},
+		{
+			"_info" : "8: Nobel",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 6
+		},
+		{
+			"_info" : "9: Pot90",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 7
+		},
+		{
+			"_info" : "10: Olf olf",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 8
+		},
+		{
+			"_info" : "11: Shadow dancer",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 9
+		},
+		{
+			"_info" : "12: Nok",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 10
+		},
+		{
+			"_info" : "13: Tree",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 11
+		},
+		{
+			"_info" : "14: Tires",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 12
+		},
+		{
+			"_info" : "15: Crocodile",
+			
+			"type" : 2,
+			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
+			"textureId" : 13
 		}
 	]
 }

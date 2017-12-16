@@ -1,0 +1,94 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 2,
+	"bmpPath" : "Resources/Images/Environment.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "0: Yellow arrow",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 128, "h" : 224 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "1: Yellow arrow hF",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 128, "h" : 224 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "2: Red arrow",
+			
+			"rect" : { "x" : 0, "y" : 224, "w" : 128, "h" : 224 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "3: Red arrow hF",
+			
+			"rect" : { "x" : 0, "y" : 224, "w" : 128, "h" : 224 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "4: Ster's",
+			
+			"rect" : { "x" : 128, "y" : 0, "w" : 208, "h" : 128 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "5: F1 power",
+			
+			"rect" : { "x" : 128, "y" : 128, "w" : 208, "h" : 128 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "6: Nobel",
+			
+			"rect" : { "x" : 128, "y" : 256, "w" : 208, "h" : 126 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "7: Pot90",
+			
+			"rect" : { "x" : 128, "y" : 382, "w" : 208, "h" : 128 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "8: Olf olf",
+			
+			"rect" : { "x" : 128, "y" : 510, "w" : 208, "h" : 128 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "9: Shadow dancer",
+			
+			"rect" : { "x" : 336, "y" : 0, "w" : 126, "h" : 128 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "10: Nok",
+			
+			"rect" : { "x" : 336, "y" : 128, "w" : 128, "h" : 112 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "11: Tree",
+			
+			"rect" : { "x" : 336, "y" : 240, "w" : 96, "h" : 320 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "12: Tires",
+			
+			"rect" : { "x" : 462, "y" : 0, "w" : 190, "h" : 96 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "13: Crocodile",
+			
+			"rect" : { "x" : 464, "y" : 96, "w" : 112, "h" : 158 },
+			"hFlipped" : false
+		}
+	]
+}
