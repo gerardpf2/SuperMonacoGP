@@ -67,13 +67,15 @@ void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect
 	SDL_RenderCopyEx(renderer, texture, srcRect, dstRect, 0.0, nullptr, flip);
 }
 
-void ModuleRenderer::renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const
+void ModuleRenderer::renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color, bool filled) const
 {
 	short positionsX[4]{ windowTrapezoid.nl.x, windowTrapezoid.nr.x, windowTrapezoid.fr.x, windowTrapezoid.fl.x };
 	short positionsY[4]{ windowTrapezoid.nl.y, windowTrapezoid.nr.y, windowTrapezoid.fr.y, windowTrapezoid.fl.y };
 
 	// O.o ReportMemoryLeaks() o.O
-	filledPolygonColor(renderer, positionsX, positionsY, 4, color);
+
+	if(filled) filledPolygonColor(renderer, positionsX, positionsY, 4, color);
+	else polygonColor(renderer, positionsX, positionsY, 4, color);
 }
 
 bool ModuleRenderer::setUp()

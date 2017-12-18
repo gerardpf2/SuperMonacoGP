@@ -51,6 +51,8 @@ SDL_Rect viewportRoadMirror{ (int)(0.15f * WINDOW_WIDTH), (int)(0.12f * WINDOW_H
 
 bool ModuleWorld::setUp()
 {
+	getGameEngine()->getModuleGameObject()->load();
+
 	road = new Road();
 
 	road->load("Resources/Configurations/Roads/Test0.json", getGameEngine()->getModuleJson(), getGameEngine()->getModuleTexture());
@@ -67,10 +69,10 @@ bool ModuleWorld::setUp()
 
 	// Cars
 
-	addGameObject(1, WorldPosition{ 5.0f, 0.0f, 2.5f });
-	addGameObject(1, WorldPosition{ -5.0f, 0.0f, 2.5f });
+	addGameObject(1, WorldPosition{ 5.5f, 0.0f, 2.5f });
+	addGameObject(1, WorldPosition{ -5.5f, 0.0f, 2.5f });
 	addGameObject(1, WorldPosition{ 0.0f, 0.0f, 30.0f });
-	addGameObject(1, WorldPosition{ 0.0f, 0.0f, -5.0f });
+	addGameObject(1, WorldPosition{ 0.0f, 0.0f, -10.0f });
 
 	// Environment
 
@@ -168,6 +170,8 @@ void ModuleWorld::cleanUp()
 
 	delete backgroundMirror;
 	backgroundMirror = nullptr;
+
+	getGameEngine()->getModuleGameObject()->unload();
 }
 
 GameObject* ModuleWorld::addGameObject(uint id, const WorldPosition& worldPosition, float xOffsetRoad)

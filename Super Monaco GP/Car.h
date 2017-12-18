@@ -27,6 +27,8 @@ class Car : public Animated
 
 		virtual void updateOffsetX(float dX, float velocityPercent, float curve);
 
+		virtual const Texture* getCurrentTexture(bool mirror) const override;
+
 	protected:
 
 		Direction direction;

@@ -30,6 +30,8 @@ class GameObject
 
 		void setPosition(const WorldPosition& position);
 
+		const Collider* getCollider() const;
+
 		// const Road* getRoad() const;
 
 		// void setRoad(const Road* road);
@@ -56,11 +58,19 @@ class GameObject
 
 		void limitZ();
 
-		virtual const Texture* getCurrentTexture() const = 0;
+		virtual const Texture* getCurrentTexture(bool mirror) const = 0;
+
+	private:
+
+		void _DEBUG_renderCollider_DEBUG_(float xOffset, float zOffset, short clipY, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+
+		void _DEBUG_renderColliderFace_DEBUG_(const WorldTrapezoid& worldTrapezoid, short clipY, uint color, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
 	protected:
 
 		Size size;
+
+		Collider collider;
 
 		WorldPosition position;
 

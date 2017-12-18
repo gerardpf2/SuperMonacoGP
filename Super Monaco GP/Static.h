@@ -21,7 +21,7 @@ class Static : public GameObject
 
 	private:
 
-		virtual const Texture* getCurrentTexture() const override;
+		virtual const Texture* getCurrentTexture(bool mirror) const override;
 
 	private:
 

@@ -64,6 +64,11 @@ bool Animation::hasEnded() const
 	return ended;
 }
 
+uint Animation::getCurrentFrameIndex() const
+{
+	return (uint)(textures->size() * (currentTime / endTime));
+}
+
 const Texture* Animation::getCurrentFrame() const
 {
 	assert(endTime > 0.0f);
@@ -74,6 +79,11 @@ const Texture* Animation::getCurrentFrame() const
 
 	uint index = (uint)(textures->size() * (currentTime / endTime));
 	return (*textures)[index];
+}
+
+const Texture* Animation::getFrame(uint frameIndex) const
+{
+	return (*textures)[frameIndex];
 }
 
 float Animation::getTimeMultiplier() const

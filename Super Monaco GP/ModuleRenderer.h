@@ -24,7 +24,7 @@ class ModuleRenderer : public Module
 
 		void renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect, bool hFlipped = false, Uint8 modR = 255, Uint8 modG = 255, Uint8 modB = 255, Uint8 modA = 255) const;
 
-		void renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color) const;
+		void renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uint color, bool filled = true) const;
 
 		virtual bool setUp() override;
 

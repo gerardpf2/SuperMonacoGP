@@ -26,7 +26,11 @@ class Animation
 
 		bool hasEnded() const;
 
+		uint getCurrentFrameIndex() const;
+
 		const Texture* getCurrentFrame() const;
+
+		const Texture* getFrame(uint frameIndex) const;
 
 		float getTimeMultiplier() const;
 

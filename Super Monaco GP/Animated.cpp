@@ -40,7 +40,7 @@ void Animated::updateCurrentAnimation(float deltaTimeS) const
 	animationContainer->update(deltaTimeS);
 }
 
-const Texture* Animated::getCurrentTexture() const
+const Texture* Animated::getCurrentTexture(bool mirror) const
 {
 	return animationContainer->getCurrentAnimation()->getCurrentFrame();
 }

@@ -29,7 +29,7 @@ void Road::load(const char* jsonPath, const ModuleJson* moduleJson, ModuleTextur
 	addHills(jsonDocument["hills"]);
 
 	// Curves
-	addCurves(jsonDocument["curves"]);
+addCurves(jsonDocument["curves"]);
 
 	// RumbleColors
 	setRumbleColors(jsonDocument["rumbleColors"]);

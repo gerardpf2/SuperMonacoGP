@@ -5,7 +5,9 @@
 #include "Camera.h"
 #include "Segment.h"
 #include "Animation.h"
+#include "GameEngine.h"
 #include "ModuleWorld.h"
+#include "ModuleCollision.h"
 #include "AnimationContainer.h"
 
 using namespace std;
@@ -98,12 +100,14 @@ void Car::update(float deltaTimeS)
 		segment->eraseGameObject(this);
 		newSegment->addGameObject(this);
 	}
+
+	// getModuleWorld()->getGameEngine()->getModuleCollision()->getColliding()
 }
 
 void Car::updateDirection(float deltaTimeS)
 {
 	direction.x = 0.0f;
-	direction.z = 1.0f;
+	direction.z = 0.0f; //
 }
 
 void Car::updateCurrentAnimation(float deltaTimeS) const
@@ -119,9 +123,6 @@ void Car::updateCurrentAnimation(float deltaTimeS) const
 	AnimationId 2 -> Camera left side
 	AnimationId 3 -> Camera right side +
 	AnimationId 4 -> Camera left side +
-	AnimationId 5 -> Center m
-	AnimationId 6 -> Camera right side m
-	AnimationId 7 -> Camera left side m
 	
 	*/
 
@@ -139,8 +140,6 @@ void Car::updateCurrentAnimation(float deltaTimeS) const
 	float cameraDistance = cameraX - x;
 	float cameraDistanceAbs = fabsf(cameraDistance);
 
-	// Check z
-
 	if(cameraDistanceAbs <= threshold0)
 		nextAnimation = animationContainer->getAnimation(0);
 	else if(cameraDistanceAbs <= threshold1)
@@ -157,3 +156,36 @@ void Car::updateCurrentAnimation(float deltaTimeS) const
 
 void Car::updateOffsetX(float dX, float velocityPercent, float curve)
 { }
+
+const Texture* Car::getCurrentTexture(bool mirror) const
+{
+	Animation* currentAnimation = animationContainer->getCurrentAnimation();
+	const Texture* currentFrame = currentAnimation->getCurrentFrame();
+
+	if(mirror)
+	{
+		Animation* mirrorAnimation = nullptr;
+
+		switch(currentAnimation->getId())
+		{
+			case 0:
+				mirrorAnimation = animationContainer->getAnimation(5);
+
+				break;
+			case 1:
+			case 3:
+				mirrorAnimation = animationContainer->getAnimation(6);
+
+				break;
+			case 2:
+			case 4:
+				mirrorAnimation = animationContainer->getAnimation(7);
+
+				break;
+		}
+
+		if(mirrorAnimation) currentFrame = mirrorAnimation->getFrame(currentAnimation->getCurrentFrameIndex());
+	}
+
+	return currentFrame;
+}

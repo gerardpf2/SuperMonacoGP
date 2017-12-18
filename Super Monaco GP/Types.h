@@ -4,6 +4,8 @@
 struct SDL_Rect;
 struct SDL_Texture;
 
+class GameObject;
+
 typedef unsigned int uint;
 
 struct Size { float w, h; };
@@ -27,5 +29,9 @@ struct RoadGameObjectDefinition { uint id; float offsetX; WorldPosition wp; };
 struct RoadBackgroundDefinition { uint textureGroupId, textureId, textureSkyId, textureGroundId; };
 
 struct Layer { uint id; SDL_Texture* t; const SDL_Rect* tr; const SDL_Rect* v; };
+
+struct Box { float w, h, d; };
+
+struct Collider { const GameObject* g; Box b; };
 
 #endif

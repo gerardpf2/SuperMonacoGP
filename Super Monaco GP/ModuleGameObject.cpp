@@ -52,7 +52,7 @@ GameObject* ModuleGameObject::getGameObject(uint idGameObject)
 	return gameObject;
 }
 
-bool ModuleGameObject::setUp()
+bool ModuleGameObject::load()
 {
 	const char* jsonPath = "Resources/Configurations/GameObjects.json";
 
@@ -76,7 +76,31 @@ bool ModuleGameObject::setUp()
 	return true;
 }
 
-void ModuleGameObject::cleanUp()
+/* bool ModuleGameObject::setUp()
+{
+	const char* jsonPath = "Resources/Configurations/GameObjects.json";
+
+	Document jsonDocument;
+	getGameEngine()->getModuleJson()->read(jsonPath, jsonDocument);
+
+	// gameObjects
+
+	const Value& gameObjectsJson = jsonDocument["gameObjects"];
+
+	gameObjects.reserve(gameObjectsJson.Size());
+
+	for(SizeType i = 0; i < gameObjectsJson.Size(); ++i)
+	{
+		uint resourceGroupId;
+
+		GameObject* gameObject = createGameObject(gameObjectsJson[i], resourceGroupId);
+		gameObjects.push_back(pair<GameObject*, uint>(gameObject, resourceGroupId));
+	}
+
+	return true;
+} */
+
+void ModuleGameObject::unload()
 {
 	for(int i = (int)gameObjects.size() - 1; i >= 0; --i)
 	{
@@ -103,6 +127,34 @@ void ModuleGameObject::cleanUp()
 
 	usedGameObjects.clear();
 }
+
+/* void ModuleGameObject::cleanUp()
+{
+	for(int i = (int)gameObjects.size() - 1; i >= 0; --i)
+	{
+		GameObject*& gameObject = gameObjects[i].first;
+
+		gameObject->cleanUp();
+
+		if(gameObject->getType() == GameObjectType::STATIC)
+			getGameEngine()->getModuleTexture()->unload(gameObjects[i].second);
+		else
+			getGameEngine()->getModuleAnimation()->unload(gameObjects[i].second);
+
+		delete gameObject; gameObject = nullptr;
+	}
+
+	gameObjects.clear();
+
+	for(list<GameObject*>::reverse_iterator it = usedGameObjects.rbegin(); it != usedGameObjects.rend(); ++it)
+	{
+		(*it)->cleanUp();
+
+		delete *it; *it = nullptr;
+	}
+
+	usedGameObjects.clear();
+} */
 
 Car* ModuleGameObject::getCar(uint idGameObject) const
 {

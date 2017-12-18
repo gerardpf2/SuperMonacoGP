@@ -28,7 +28,7 @@ void Static::cleanUp()
 	texture = nullptr;
 }
 
-const Texture* Static::getCurrentTexture() const
+const Texture* Static::getCurrentTexture(bool mirror) const
 {
 	return texture;
 }

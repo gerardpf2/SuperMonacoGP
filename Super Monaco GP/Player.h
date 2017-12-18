@@ -30,6 +30,10 @@ class Player : public Car
 
 	private:
 
+		virtual const Texture* getCurrentTexture(bool mirror) const override;
+
+	private:
+
 		const ModuleInput* moduleInput = nullptr;
 
 		AnimationGrid* animationGrid = nullptr;

@@ -8,7 +8,8 @@
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
 #include "ModuleAnimation.h"
-#include "ModuleGameObject.h" //
+#include "ModuleCollision.h"
+#include "ModuleGameObject.h"
 #include "ModulePerformance.h"
 
 GameEngine::GameEngine()
@@ -57,7 +58,12 @@ ModuleAnimation* GameEngine::getModuleAnimation() const
 	return moduleAnimation;
 }
 
-ModuleGameObject* GameEngine::getModuleGameObject() const //
+ModuleCollision* GameEngine::getModuleCollision() const
+{
+	return moduleCollision;
+}
+
+ModuleGameObject* GameEngine::getModuleGameObject() const
 {
 	return moduleGameObject;
 }
@@ -77,7 +83,7 @@ void GameEngine::run()
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(9);
+	modules.reserve(10);
 
 	modules.push_back(moduleJson = new ModuleJson(this));
 	modules.push_back(moduleInput = new ModuleInput(this));
@@ -86,7 +92,8 @@ void GameEngine::addInitialModules()
 	modules.push_back(moduleTexture = new ModuleTexture(this));
 	modules.push_back(moduleFont = new ModuleFont(this));
 	modules.push_back(moduleAnimation = new ModuleAnimation(this));
-	modules.push_back(moduleGameObject = new ModuleGameObject(this)); //
+	modules.push_back(moduleCollision = new ModuleCollision(this));
+	modules.push_back(moduleGameObject = new ModuleGameObject(this));
 	// modules.push_back(modulePerformance = new ModulePerformance(this));
 
 	modules.push_back(moduleWorld = new ModuleWorld(this));
@@ -146,6 +153,7 @@ void GameEngine::cleanUp()
 	moduleTexture = nullptr;
 	moduleRenderer = nullptr;
 	moduleAnimation = nullptr;
-	moduleGameObject = nullptr; //
+	moduleCollision = nullptr;
+	moduleGameObject = nullptr;
 	modulePerformance = nullptr;
 }

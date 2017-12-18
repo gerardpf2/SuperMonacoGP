@@ -23,11 +23,11 @@ class ModuleGameObject : public Module
 
 		GameObject* getGameObject(uint idGameObject);
 
-		// load + path
-		virtual bool setUp() override;
+		bool load();
+		// virtual bool setUp() override;
 
-		// unload
-		virtual void cleanUp() override;
+		void unload();
+		// virtual void cleanUp() override;
 
 	private:
 

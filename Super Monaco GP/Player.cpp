@@ -59,8 +59,6 @@ void Player::updateDirection(float deltaTimeS)
 
 	if(moduleInput->isKeyPressed(SDL_SCANCODE_W)) direction.z += 1.0f;
 	if(moduleInput->isKeyPressed(SDL_SCANCODE_S)) direction.z -= 1.0f;
-
-	direction.z = 1.0f; //
 }
 
 void Player::updateCurrentAnimation(float deltaTimeS) const
@@ -71,5 +69,10 @@ void Player::updateCurrentAnimation(float deltaTimeS) const
 
 void Player::updateOffsetX(float dX, float velocityPercent, float curve)
 {
-	// position.x += 4.0f * ROAD_WIDTH * dX * velocityPercent * -curve;
+	position.x += 4.0f * ROAD_WIDTH * dX * velocityPercent * -curve;
+}
+
+const Texture* Player::getCurrentTexture(bool mirror) const
+{
+	return Animated::getCurrentTexture(mirror);
 }

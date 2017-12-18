@@ -25,9 +25,7 @@ class Animated : public GameObject
 
 		virtual void updateCurrentAnimation(float deltaTimeS) const;
 
-	private:
-
-		virtual const Texture* getCurrentTexture() const override;
+		virtual const Texture* getCurrentTexture(bool mirror) const override;
 
 	protected:
 
