@@ -164,7 +164,10 @@ Car* ModuleGameObject::getCar(uint idGameObject) const
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getId());
 
-	return new Car(baseCar->getId(), animationContainer);
+	Car* car = new Car(baseCar->getId(), animationContainer);
+	car->setColliderBox(baseCar->getCollider()->b);
+
+	return car;
 }
 
 Player* ModuleGameObject::getPlayer(uint idGameObject) const
@@ -175,7 +178,10 @@ Player* ModuleGameObject::getPlayer(uint idGameObject) const
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getId());
 
-	return new Player(basePlayer->getId(), animationContainer, basePlayer->getModuleInput());
+	Player* player = new Player(basePlayer->getId(), animationContainer, basePlayer->getModuleInput());
+	player->setColliderBox(basePlayer->getCollider()->b);
+
+	return player;
 }
 
 Static* ModuleGameObject::getStatic(uint idGameObject) const
@@ -191,7 +197,10 @@ Animated* ModuleGameObject::getAnimated(uint idGameObject) const
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getId());
 
-	return new Animated(baseAnimated->getId(), animationContainer);
+	Animated* animated = new Animated(baseAnimated->getId(), animationContainer);
+	animated->setColliderBox(baseAnimated->getCollider()->b);
+
+	return animated;
 }
 
 GameObject* ModuleGameObject::createGameObject(const Value& gameObjectJson, uint &resourceGroupId) const
@@ -222,12 +231,19 @@ Car* ModuleGameObject::createCar(const rapidjson::Value& gameObjectJson, uint &r
 	uint gameObjectId = gameObjects.size();
 	const char* animationGroupPath = gameObjectJson["animationGroupPath"].GetString();
 	uint animationContainerId = gameObjectJson["animationContainerId"].GetInt();
+	const Value& colliderJson = gameObjectJson["collider"];
+
+	float mW = colliderJson["mW"].GetFloat();
+	float d = colliderJson["d"].GetFloat();
 
 	resourceGroupId = getGameEngine()->getModuleAnimation()->load(animationGroupPath);
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
-	return new Car(gameObjectId, animationContainer);
+	Car* car = new Car(gameObjectId, animationContainer);
+	car->defineColliderBox(mW, d);
+
+	return car;
 }
 
 Player* ModuleGameObject::createPlayer(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
@@ -237,12 +253,19 @@ Player* ModuleGameObject::createPlayer(const rapidjson::Value& gameObjectJson, u
 	uint gameObjectId = gameObjects.size();
 	const char* animationGroupPath = gameObjectJson["animationGroupPath"].GetString();
 	uint animationContainerId = gameObjectJson["animationContainerId"].GetInt();
+	const Value& colliderJson = gameObjectJson["collider"];
+
+	float mW = colliderJson["mW"].GetFloat();
+	float d = colliderJson["d"].GetFloat();
 
 	resourceGroupId = getGameEngine()->getModuleAnimation()->load(animationGroupPath);
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
-	return new Player(gameObjectId, animationContainer, getGameEngine()->getModuleInput());
+	Player* player = new Player(gameObjectId, animationContainer, getGameEngine()->getModuleInput());
+	player->defineColliderBox(mW, d);
+
+	return player;
 }
 
 Static* ModuleGameObject::createStatic(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
@@ -252,12 +275,19 @@ Static* ModuleGameObject::createStatic(const rapidjson::Value& gameObjectJson, u
 	uint gameObjectId = gameObjects.size();
 	const char* textureGroupPath = gameObjectJson["textureGroupPath"].GetString();
 	uint textureId = gameObjectJson["textureId"].GetInt();
+	const Value& colliderJson = gameObjectJson["collider"];
+
+	float mW = colliderJson["mW"].GetFloat();
+	float d = colliderJson["d"].GetFloat();
 
 	resourceGroupId = getGameEngine()->getModuleTexture()->load(textureGroupPath);
 
 	const Texture* texture = getGameEngine()->getModuleTexture()->get(resourceGroupId, textureId);
 
-	return new Static(gameObjectId, texture);
+	Static* static_ = new Static(gameObjectId, texture);
+	static_->defineColliderBox(mW, d);
+
+	return static_;
 }
 
 Animated* ModuleGameObject::createAnimated(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
@@ -267,10 +297,17 @@ Animated* ModuleGameObject::createAnimated(const rapidjson::Value& gameObjectJso
 	uint gameObjectId = gameObjects.size();
 	const char* animationGroupPath = gameObjectJson["animationGroupPath"].GetString();
 	uint animationContainerId = gameObjectJson["animationContainerId"].GetInt();
+	const Value& colliderJson = gameObjectJson["collider"];
+
+	float mW = colliderJson["mW"].GetFloat();
+	float d = colliderJson["d"].GetFloat();
 
 	resourceGroupId = getGameEngine()->getModuleAnimation()->load(animationGroupPath);
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
-	return new Animated(gameObjectId, animationContainer);
+	Animated* animated = new Animated(gameObjectId, animationContainer);
+	animated->defineColliderBox(mW, d);
+
+	return animated;
 }

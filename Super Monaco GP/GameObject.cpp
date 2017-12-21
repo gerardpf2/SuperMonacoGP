@@ -40,6 +40,22 @@ const Collider* GameObject::getCollider() const
 	return &collider;
 }
 
+void GameObject::setColliderBox(const Box& box)
+{
+	collider.b = box;
+}
+
+void GameObject::defineColliderBox(float mW, float d)
+{
+	collider.b = Box{ mW * size.w, size.h, d };
+}
+
+void GameObject::enableCollider()
+{
+	collider.g = this;
+	getModuleWorld()->getGameEngine()->getModuleCollision()->addCollider(&collider);
+}
+
 /* const Road* GameObject::getRoad() const
 {
 	return road;
@@ -59,13 +75,17 @@ void GameObject::setModuleWorld(const ModuleWorld* moduleWorld)
 {
 	this->moduleWorld = moduleWorld;
 
+	/*
+
 	// Register collider
 
 	collider.g = this;
-	collider.b = Box{ 0.5f * size.w, size.h, 0.5f }; //
+	collider.b = Box{ 0.5f * size.w, size.h, 2.0f }; //
 
 	if(collider.b.d > 0.0f)
 		getModuleWorld()->getGameEngine()->getModuleCollision()->addCollider(&collider);
+
+	*/
 }
 
 void GameObject::elevate()
@@ -160,23 +180,40 @@ void GameObject::limitZ()
 
 void GameObject::_DEBUG_renderCollider_DEBUG_(float xOffset, float zOffset, short clipY, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	float x0 = position.x - collider.b.w / 2.0f + xOffset;
-	float y0 = position.y;
-	float z0 = position.z - collider.b.d / 2.0f + zOffset;
+	float xnl = position.x - collider.b.w / 2.0f + xOffset;
+	float xnr = xnl + collider.b.w;
+	
+	float ynb = position.y;
+	float ynt = ynb + collider.b.h;
 
-	float x1 = x0 + collider.b.w;
-	float y1 = y0 + collider.b.h;
-	float z1 = z0 + collider.b.d;
+	float zn = position.z + zOffset;
+	float zf = zn + collider.b.d;
 
-	WorldTrapezoid face0{ WorldPosition{ x0, y0, z0 }, WorldPosition{ x1, y0, z0 }, WorldPosition{ x1, y1, z0 }, WorldPosition{ x0, y1, z0 } };
-	WorldTrapezoid face1{ WorldPosition{ x1, y0, z0 }, WorldPosition{ x1, y0, z1 }, WorldPosition{ x1, y1, z1 }, WorldPosition{ x1, y1, z0 } };
-	WorldTrapezoid face2{ WorldPosition{ x0, y0, z0 }, WorldPosition{ x0, y0, z1 }, WorldPosition{ x0, y1, z1 }, WorldPosition{ x0, y1, z0 } };
-	WorldTrapezoid face3{ WorldPosition{ x0, y0, z1 }, WorldPosition{ x1, y0, z1 }, WorldPosition{ x1, y1, z1 }, WorldPosition{ x0, y1, z1 } };
+	WorldTrapezoid face0{ WorldPosition{ xnl, ynb, zn }, WorldPosition{ xnr, ynb, zn }, WorldPosition{ xnr, ynt, zn }, WorldPosition{ xnl, ynt, zn } };
+	WorldTrapezoid face1{ WorldPosition{ xnr, ynb, zn }, WorldPosition{ xnr, ynb, zf }, WorldPosition{ xnr, ynt, zf }, WorldPosition{ xnr, ynt, zn } };
+	WorldTrapezoid face2{ WorldPosition{ xnl, ynb, zn }, WorldPosition{ xnl, ynb, zf }, WorldPosition{ xnl, ynt, zf }, WorldPosition{ xnl, ynt, zn } };
+	WorldTrapezoid face3{ WorldPosition{ xnl, ynb, zf }, WorldPosition{ xnr, ynb, zf }, WorldPosition{ xnr, ynt, zf }, WorldPosition{ xnl, ynt, zf } };
+	WorldTrapezoid face4{ WorldPosition{ xnl, ynt, zn }, WorldPosition{ xnr, ynt, zn }, WorldPosition{ xnr, ynt, zf }, WorldPosition{ xnl, ynt, zf } };
+	WorldTrapezoid face5{ WorldPosition{ xnl, ynb, zn }, WorldPosition{ xnr, ynb, zn }, WorldPosition{ xnr, ynb, zf }, WorldPosition{ xnl, ynb, zf } };
 
-	_DEBUG_renderColliderFace_DEBUG_(face3, clipY, 0x330000FF, camera, moduleRenderer);
-	_DEBUG_renderColliderFace_DEBUG_(face2, clipY, 0x3300FF00, camera, moduleRenderer);
-	_DEBUG_renderColliderFace_DEBUG_(face1, clipY, 0x3300FF00, camera, moduleRenderer);
-	_DEBUG_renderColliderFace_DEBUG_(face0, clipY, 0x330000FF, camera, moduleRenderer);
+	if(camera->getForward())
+	{
+		_DEBUG_renderColliderFace_DEBUG_(face5, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face3, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face2, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face1, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face0, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face4, clipY, 0x55FFFFFF, camera, moduleRenderer);
+	}
+	else
+	{
+		_DEBUG_renderColliderFace_DEBUG_(face4, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face0, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face1, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face2, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face3, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		_DEBUG_renderColliderFace_DEBUG_(face5, clipY, 0x55FFFFFF, camera, moduleRenderer);
+	}
 }
 
 void GameObject::_DEBUG_renderColliderFace_DEBUG_(const WorldTrapezoid& worldTrapezoid, short clipY, uint color, const Camera* camera, const ModuleRenderer* moduleRenderer) const
@@ -184,11 +221,14 @@ void GameObject::_DEBUG_renderColliderFace_DEBUG_(const WorldTrapezoid& worldTra
 	WindowTrapezoid windowTrapezoid;
 	camera->project(worldTrapezoid, windowTrapezoid);
 
-	bool toBeRendered = !((windowTrapezoid.fl.y >= clipY) || (windowTrapezoid.nl.y <= windowTrapezoid.fl.y) || (windowTrapezoid.nl.y <= 0 || windowTrapezoid.fl.y >= WINDOW_HEIGHT));
+	bool toBeRendered = !camera->isBehind(worldTrapezoid.fl.z + collider.b.d);
+	toBeRendered &= !(windowTrapezoid.fl.y >= clipY);
+	toBeRendered &= !(windowTrapezoid.nl.y <= windowTrapezoid.fl.y);
+	toBeRendered &= !(windowTrapezoid.nl.y <= 0 || windowTrapezoid.fl.y >= WINDOW_HEIGHT);
 
 	if(toBeRendered && !isOutsideWindowX(windowTrapezoid))
 	{
 		moduleRenderer->renderTrapezoid(windowTrapezoid, color);
-		moduleRenderer->renderTrapezoid(windowTrapezoid, 0xFFFFFFFF, false);
+		moduleRenderer->renderTrapezoid(windowTrapezoid, 0xFF000000, false);
 	}
 }

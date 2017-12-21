@@ -29,6 +29,10 @@ class Car : public Animated
 
 		virtual const Texture* getCurrentTexture(bool mirror) const override;
 
+	private:
+
+		void checkCollision();
+
 	protected:
 
 		Direction direction;

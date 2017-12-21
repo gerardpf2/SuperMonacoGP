@@ -7,6 +7,7 @@
 
 class Road;
 class Camera;
+class Player;
 class Background;
 class GameObject;
 
@@ -44,7 +45,7 @@ class ModuleWorld : public Module
 
 		Camera* cameraMirror = nullptr;
 
-		GameObject* player = nullptr;
+		Player* player = nullptr;
 
 		std::vector<GameObject*> gameObjects;
 

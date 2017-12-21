@@ -57,4 +57,9 @@ static bool isOutsideWindowX(const WindowTrapezoid& windowTrapezoid)
 	return (windowTrapezoid.nr.x <= 0 && windowTrapezoid.fr.x <= 0) || (windowTrapezoid.nl.x >= WINDOW_WIDTH && windowTrapezoid.fl.x >= WINDOW_WIDTH);
 }
 
+static uint kmh(float value)
+{
+	return (uint)interpolate(value, 0.0f, CAR_MAX_VELOCITY, 0.0f, 350.0f);
+}
+
 #endif

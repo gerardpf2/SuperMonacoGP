@@ -34,6 +34,9 @@ float Car::getVelocityPercent() const
 	return velocity / CAR_MAX_VELOCITY;
 }
 
+#include <iostream>
+using namespace std;
+
 void Car::update(float deltaTimeS)
 {
 	Animated::update(deltaTimeS);
@@ -77,7 +80,7 @@ void Car::update(float deltaTimeS)
 
 	updateOffsetX(dX, velocityPercent, newSegment->getCurve());
 
-	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
+	// position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
 
 	position.y = interpolate(position.z, newSegment->getZNear(), newSegment->getZFar(), newSegment->getYNear(), newSegment->getYFar());
 
@@ -101,13 +104,15 @@ void Car::update(float deltaTimeS)
 		newSegment->addGameObject(this);
 	}
 
-	// getModuleWorld()->getGameEngine()->getModuleCollision()->getColliding()
+	checkCollision();
+
+	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
 }
 
 void Car::updateDirection(float deltaTimeS)
 {
 	direction.x = 0.0f;
-	direction.z = 0.0f; //
+	direction.z = 1.0f;
 }
 
 void Car::updateCurrentAnimation(float deltaTimeS) const
@@ -188,4 +193,75 @@ const Texture* Car::getCurrentTexture(bool mirror) const
 	}
 
 	return currentFrame;
+}
+
+void Car::checkCollision()
+{
+	/*
+	
+	Priority: Static = Animated > Car = Player
+
+	Find biggest static / animated
+	If found, solve collision and end
+
+	Find first car / player
+	If found, solve collision
+	
+	*/
+
+	const Collider* mainCollider = nullptr;
+	const list<const Collider*>* colliding = nullptr;
+	
+	if(getModuleWorld()->getGameEngine()->getModuleCollision()->getColliding(&collider, colliding))
+	{
+		for(list<const Collider*>::const_iterator it = colliding->begin(); it != colliding->end(); ++it)
+		{
+			const Collider* currentCollider = *it;
+
+			float z0 = mod0L(position.z + collider.b.d, getModuleWorld()->getRoad()->getLength());
+			float z1 = mod0L(currentCollider->g->getPosition()->z + currentCollider->b.d, getModuleWorld()->getRoad()->getLength());
+
+			if(z1 < z0) continue;
+			// if(currentCollider->g->getPosition()->z < position.z) continue;
+
+			if(!mainCollider) mainCollider = currentCollider;
+			else
+			{
+				switch(mainCollider->g->getType())
+				{
+					case GameObjectType::STATIC:
+					case GameObjectType::ANIMATED:
+						if(currentCollider->g->getType() == GameObjectType::STATIC || currentCollider->g->getType() == GameObjectType::ANIMATED)
+							if(currentCollider->b.w > mainCollider->b.w)
+								mainCollider = currentCollider;
+
+						break;
+					case GameObjectType::CAR:
+					case GameObjectType::PLAYER:
+						if(currentCollider->g->getType() == GameObjectType::STATIC || currentCollider->g->getType() == GameObjectType::ANIMATED)
+							mainCollider = currentCollider;
+				}
+			}
+		}
+	}
+
+	if(mainCollider)
+	{
+		velocity *= 0.5f;
+		position.z -= /* getVelocityPercent() * */ SEGMENT_LENGTH; limitZ();
+
+		if(mainCollider->g->getType() == GameObjectType::STATIC || mainCollider->g->getType() == GameObjectType::ANIMATED)
+		{
+			float maxW = fmaxf(mainCollider->b.w, collider.b.w);
+
+			if(mainCollider->g->getPosition()->x >= ROAD_MAX_X)
+				position.x = ROAD_MAX_X - maxW;
+			else if(mainCollider->g->getPosition()->x <= ROAD_MIN_X)
+				position.x = ROAD_MIN_X + maxW;
+			else if(mainCollider->g->getPosition()->x >= position.x)
+				position.x -= mainCollider->b.w;
+			else
+				position.x += mainCollider->b.w;
+		}
+	}
 }

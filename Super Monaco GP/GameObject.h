@@ -32,6 +32,12 @@ class GameObject
 
 		const Collider* getCollider() const;
 
+		void setColliderBox(const Box& box);
+
+		void defineColliderBox(float mW, float d);
+
+		void enableCollider();
+
 		// const Road* getRoad() const;
 
 		// void setRoad(const Road* road);

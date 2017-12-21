@@ -9,112 +9,128 @@
 			
 			"type" : 0,
 			"animationGroupPath" : "Resources/Configurations/Animations/Player.json",
-			"animationContainerId" : 0
+			"animationContainerId" : 0,
+			"collider" : { "mW" : 0.9, "d" : 4.0 }
 		},
 		{
 			"_info" : "1: Car",
 			
 			"type" : 1,
 			"animationGroupPath" : "Resources/Configurations/Animations/Car.json",
-			"animationContainerId" : 0
+			"animationContainerId" : 0,
+			"collider" : { "mW" : 0.55, "d" : 8.0 }
 		},
 		{
 			"_info" : "2: Yellow arrow",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 0
+			"textureId" : 0,
+			"collider" : { "mW" : 0.75, "d" : 4.0 }
 		},
 		{
 			"_info" : "3: Yellow arrow hF",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 1
+			"textureId" : 1,
+			"collider" : { "mW" : 0.75, "d" : 4.0 }
 		},
 		{
 			"_info" : "4: Red arrow",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 2
+			"textureId" : 2,
+			"collider" : { "mW" : 0.75, "d" : 4.0 }
 		},
 		{
 			"_info" : "5: Red arrow hF",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 3
+			"textureId" : 3,
+			"collider" : { "mW" : 0.75, "d" : 4.0 }
 		},
 		{
 			"_info" : "6: Ster's",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 4
+			"textureId" : 4,
+			"collider" : { "mW" : 0.9, "d" : 4.0 }
 		},
 		{
 			"_info" : "7: F1 power",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 5
+			"textureId" : 5,
+			"collider" : { "mW" : 0.9, "d" : 4.0 }
 		},
 		{
 			"_info" : "8: Nobel",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 6
+			"textureId" : 6,
+			"collider" : { "mW" : 0.9, "d" : 4.0 }
 		},
 		{
 			"_info" : "9: Pot90",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 7
+			"textureId" : 7,
+			"collider" : { "mW" : 0.9, "d" : 4.0 }
 		},
 		{
 			"_info" : "10: Olf olf",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 8
+			"textureId" : 8,
+			"collider" : { "mW" : 0.9, "d" : 4.0 }
 		},
 		{
 			"_info" : "11: Shadow dancer",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 9
+			"textureId" : 9,
+			"collider" : { "mW" : 0.75, "d" : 4.0 }
 		},
 		{
 			"_info" : "12: Nok",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 10
+			"textureId" : 10,
+			"collider" : { "mW" : 0.75, "d" : 4.0 }
 		},
 		{
 			"_info" : "13: Tree",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 11
+			"textureId" : 11,
+			"collider" : { "mW" : 0.6, "d" : 4.0 }
 		},
 		{
 			"_info" : "14: Tires",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 12
+			"textureId" : 12,
+			"collider" : { "mW" : 0.9, "d" : 4.0 }
 		},
 		{
 			"_info" : "15: Crocodile",
 			
 			"type" : 2,
 			"textureGroupPath" : "Resources/Configurations/Textures/Environment.json",
-			"textureId" : 13
+			"textureId" : 13,
+			"collider" : { "mW" : 0.9, "d" : 4.0 }
 		}
 	]
 }

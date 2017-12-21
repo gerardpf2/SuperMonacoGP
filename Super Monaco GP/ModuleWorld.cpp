@@ -65,7 +65,7 @@ bool ModuleWorld::setUp()
 
 	// Player
 
-	player = addGameObject(0, WorldPosition{ 0.0f, 0.0f, 0.0f });
+	player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, 0.0f });
 
 	// Cars
 
@@ -81,7 +81,7 @@ bool ModuleWorld::setUp()
 		RoadGameObjectDefinition* gameObjectDefinition = (*gameObjectDefinitions)[i];
 		addGameObject(gameObjectDefinition->id, gameObjectDefinition->wp, gameObjectDefinition->offsetX);
 	}
-	
+
 	// --- GameObjects
 
 	camera = new CameraFollow(true, road, player->getPosition());
@@ -101,6 +101,8 @@ bool ModuleWorld::setUp()
 
 	return true;
 }
+
+#include <string>
 
 bool ModuleWorld::update(float deltaTimeS)
 {
@@ -122,6 +124,8 @@ bool ModuleWorld::update(float deltaTimeS)
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoad);
 	background->render(!camera->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(camera, getGameEngine()->getModuleRenderer());
+
+	getGameEngine()->getModuleFont()->renderText(to_string(kmh(player->getVelocity())), WindowPosition{ (int)((1.0f - 0.1f) * WINDOW_WIDTH), (int)((1.0f - 0.15f) * WINDOW_HEIGHT) }, Alignment::RIGHT, 1.5f, 224, 160, 0);
 
 	// getGameEngine()->getModuleFont()->renderText("LEFT", WindowPosition{ 320, 200 }, Alignment::LEFT); //
 	// getGameEngine()->getModuleFont()->renderText("RIGHT", WindowPosition{ 320, 300 }, Alignment::RIGHT, 2.0f, 255, 255, 0); //
@@ -180,6 +184,7 @@ GameObject* ModuleWorld::addGameObject(uint id, const WorldPosition& worldPositi
 
 	// gameObject->setRoad(road);
 	gameObject->setModuleWorld(this);
+	gameObject->enableCollider();
 
 	// Adjust game object's position
 
