@@ -8,7 +8,8 @@ class Module;
 class ModuleJson;
 class ModuleFont;
 class ModuleInput;
-class ModuleWorld;
+class ModuleStart;
+// class ModuleWorld;
 class ModuleWindow;
 class ModuleTexture;
 class ModuleRenderer;
@@ -31,7 +32,7 @@ class GameEngine
 
 		ModuleInput* getModuleInput() const;
 
-		ModuleWorld* getModuleWorld() const;
+		// ModuleWorld* getModuleWorld() const;
 
 		ModuleWindow* getModuleWindow() const;
 
@@ -47,7 +48,11 @@ class GameEngine
 
 		ModulePerformance* getModulePerformance() const;
 
-		void run();
+		Module* getGameModule() const;
+
+		void setGameModule(Module* gameModule);
+
+		void run(Module* initialGameModule);
 
 	private:
 
@@ -56,6 +61,8 @@ class GameEngine
 		bool setUp();
 
 		bool mainLoop();
+
+		bool setUpNewGameModule();
 
 		void cleanUp();
 
@@ -71,7 +78,7 @@ class GameEngine
 
 		ModuleInput* moduleInput = nullptr;
 
-		ModuleWorld* moduleWorld = nullptr;
+		// ModuleWorld* moduleWorld = nullptr;
 
 		ModuleWindow* moduleWindow = nullptr;
 
@@ -86,6 +93,10 @@ class GameEngine
 		ModuleGameObject* moduleGameObject = nullptr;
 
 		ModulePerformance* modulePerformance = nullptr;
+
+		Module* gameModule = nullptr;
+
+		Module* tmpGameModule = nullptr;
 };
 
 #endif

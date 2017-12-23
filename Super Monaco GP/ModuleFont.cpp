@@ -15,33 +15,33 @@ ModuleFont::ModuleFont(GameEngine* gameEngine) :
 ModuleFont::~ModuleFont()
 { }
 
-void ModuleFont::renderText(const std::string& text, const WindowPosition& position, Alignment alignment, float scale, Uint8 modR, Uint8 modG, Uint8 modB, Uint8 modA) const
+void ModuleFont::renderText(const std::string& text, const WindowPosition& position, HAlignment hAlignment, VAlignment vAlignment, float scaleW, float scaleH, Uint8 modR, Uint8 modG, Uint8 modB, Uint8 modA) const
 {
 	vector<const Texture*> characterTextures;
 	getCharacterTextures(text, characterTextures);
 
-	float offsetX = 0.0f;
+	float width, height;
+	getTextWidthHeight(characterTextures, scaleW, scaleH, width, height);
 
-	if(alignment != Alignment::LEFT)
-	{
-		offsetX = -getTextWidth(characterTextures, scale);
-		if(alignment == Alignment::CENTER) offsetX *= 0.5f;
-	}
+	float offsetX = 0.0f;
+	float offsetY = 0.0f;
+
+	if(hAlignment == HAlignment::RIGHT) offsetX = width;
+	else if(hAlignment == HAlignment::CENTER) offsetX = 0.5f * width;
+
+	if(vAlignment == VAlignment::TOP) offsetY = height;
+	else if(vAlignment == VAlignment::CENTER) offsetY = 0.5f * height;
 
 	ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
 
-	SDL_Rect dstRect{ (int)(position.x + offsetX), position.y };
+	SDL_Rect dstRect{ (int)(position.x - offsetX), (int)(position.y - offsetY) };
 
 	for(const Texture* characterTexture : characterTextures)
 	{
-		dstRect.w = (int)(scale * characterTexture->r->w);
-		dstRect.h = (int)(scale * characterTexture->r->h);
-
-		// SDL_SetTextureColorMod(characterTexture->t, modR, modG, modB);
+		dstRect.w = (int)(scaleW * characterTexture->r->w);
+		dstRect.h = (int)(scaleH * characterTexture->r->h);
 
 		moduleRenderer->renderTexture(characterTexture->t, characterTexture->r, &dstRect, characterTexture->hFlipped, modR, modG, modB, modA);
-		
-		// SDL_SetTextureColorMod(characterTexture->t, 255, 255, 255);
 
 		dstRect.x += dstRect.w;
 	}
@@ -84,14 +84,19 @@ void ModuleFont::cleanUp()
 	characters.clear();
 }
 
-float ModuleFont::getTextWidth(const vector<const Texture*>& characterTextures, float scale) const
+void ModuleFont::getTextWidthHeight(const vector<const Texture*>& characterTextures, float scaleW, float scaleH, float& width, float& height) const
 {
-	float offsetX = 0.0f;
+	width = height = 0.0f;
 
 	for(const Texture* characterTexture : characterTextures)
-		if(characterTexture) offsetX += characterTexture->r->w;
+		if(characterTexture)
+		{
+			width += characterTexture->r->w;
+			height = fmaxf(height, (float)characterTexture->r->h);
+		}
 
-	return scale * offsetX;
+	width *= scaleW;
+	height *= scaleH;
 }
 
 void ModuleFont::getCharacterTextures(const string& text, vector<const Texture*>& characterTextures) const

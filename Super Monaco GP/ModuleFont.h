@@ -6,10 +6,17 @@
 #include "Types.h"
 #include "Module.h"
 
-enum class Alignment
+enum class HAlignment
 {
 	LEFT,
 	RIGHT,
+	CENTER,
+};
+
+enum class VAlignment
+{
+	TOP,
+	BOTTOM,
 	CENTER,
 };
 
@@ -21,7 +28,7 @@ class ModuleFont : public Module
 
 		virtual ~ModuleFont();
 
-		void renderText(const std::string& text, const WindowPosition& position, Alignment alignment, float scale = 1.0f, Uint8 modR = 255, Uint8 modG = 255, Uint8 modB = 255, Uint8 modA = 255) const;
+		void renderText(const std::string& text, const WindowPosition& position, HAlignment hAlignment, VAlignment vAlignment, float scaleW = 1.0f, float scaleH = 1.0f, Uint8 modR = 255, Uint8 modG = 255, Uint8 modB = 255, Uint8 modA = 255) const;
 
 		virtual bool setUp() override;
 
@@ -29,7 +36,7 @@ class ModuleFont : public Module
 
 	private:
 
-		float getTextWidth(const std::vector<const Texture*>& characterTextures, float scale) const;
+		void getTextWidthHeight(const std::vector<const Texture*>& characterTextures, float scaleW, float scaleH, float& width, float& height) const;
 
 		void getCharacterTextures(const std::string& text, std::vector<const Texture*>& characterTextures) const;
 

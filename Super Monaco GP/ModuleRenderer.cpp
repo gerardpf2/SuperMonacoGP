@@ -50,9 +50,8 @@ void ModuleRenderer::removeLayer(uint id)
 			layer->v = nullptr;
 			layer->tr = nullptr;
 
-			delete layer;
-
 			layers.remove(layer);
+			delete layer; layer = nullptr;
 
 			break;
 		}

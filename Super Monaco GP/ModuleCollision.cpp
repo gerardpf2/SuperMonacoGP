@@ -30,6 +30,11 @@ void ModuleCollision::addCollider(const Collider* collider)
 	if(collider->b.d > 0.0f) colliders.push_back(collider);
 }
 
+void ModuleCollision::removeColliders()
+{
+	colliders.clear();
+}
+
 #include <iostream>
 
 bool ModuleCollision::update(float deltaTimeS)
@@ -66,21 +71,31 @@ bool ModuleCollision::update(float deltaTimeS)
 
 bool ModuleCollision::collide(const Collider* collider0, const Collider* collider1) const
 {
+	/*
+	
+	When computing y00 and y10 (bottom y of collider0 and collider1) use its base y - 5.0f (arbitrary but large value)
+	in order not to avoid their collision if they land on a hill
+	
+	*/
+
 	float x00 = collider0->g->getPosition()->x - collider0->b.w / 2.0f;
-	float y00 = collider0->g->getPosition()->y; // - collider0->b.h / 2.0f;
+	float y00 = collider0->g->getPosition()->y - 5.0f; // - collider0->b.h / 2.0f;
 	float z00 = collider0->g->getPosition()->z; // - collider0->b.d / 2.0f;
 
 	float x01 = x00 + collider0->b.w;
-	float y01 = y00 + collider0->b.h;
-	float z01 = mod0L(z00 + collider0->b.d, getGameEngine()->getModuleWorld()->getRoad()->getLength());
+	float y01 = collider0->g->getPosition()->y + collider0->b.h;
+
+	float z01 = mod0L(z00 + collider0->b.d, collider0->g->getModuleWorld()->getRoad()->getLength());
+	// float z01 = mod0L(z00 + collider0->b.d, getGameEngine()->getModuleWorld()->getRoad()->getLength());
 
 	float x10 = collider1->g->getPosition()->x - collider1->b.w / 2.0f;
-	float y10 = collider1->g->getPosition()->y; // - collider1->b.h / 2.0f;
+	float y10 = collider1->g->getPosition()->y - 5.0f; // - collider1->b.h / 2.0f;
 	float z10 = collider1->g->getPosition()->z; // - collider1->b.d / 2.0f;
 
 	float x11 = x10 + collider1->b.w;
-	float y11 = y10 + collider1->b.h;
-	float z11 = mod0L(z10 + collider1->b.d, getGameEngine()->getModuleWorld()->getRoad()->getLength());
+	float y11 = collider1->g->getPosition()->y + collider1->b.h;
+	float z11 = mod0L(z10 + collider1->b.d, collider1->g->getModuleWorld()->getRoad()->getLength());
+	// float z11 = mod0L(z10 + collider1->b.d, getGameEngine()->getModuleWorld()->getRoad()->getLength());
 
 	bool noCollideZ;
 

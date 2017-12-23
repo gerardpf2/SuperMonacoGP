@@ -2,6 +2,7 @@
 #define _UTILS_
 
 #include <math.h>
+#include <string>
 #include "Types.h"
 #include "Globals.h"
 
@@ -60,6 +61,18 @@ static bool isOutsideWindowX(const WindowTrapezoid& windowTrapezoid)
 static uint kmh(float value)
 {
 	return (uint)interpolate(value, 0.0f, CAR_MAX_VELOCITY, 0.0f, 350.0f);
+}
+
+static void time(float time, std::string& timeText)
+{
+	uint minutes = (uint)(time / 60.0f);
+	uint seconds = (uint)fmodf(time, 60.0f);
+	uint mSeconds = (uint)roundf((time - (uint)time) * 100.0f) % 100;
+
+	char buffer[64]; // Cannot control minutes (size 9 works if minutes < 10)
+	sprintf_s(buffer, "%.1u'%.2u''%.2u", minutes, seconds, mSeconds);
+
+	timeText = buffer;
 }
 
 #endif

@@ -7,21 +7,51 @@
 	"textures" :
 	[
 		{
-			"_info" : "Texture",
+			"_info" : "Italy Texture",
 			
-			"rect" : { "x" : 0, "y" : 1, "w" : 1024, "h" : 72 },
+			"rect" : { "x" : 0, "y" : 0, "w" : 1024, "h" : 72 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "TextureSky",
+			"_info" : "Italy TextureSky",
 			
-			"rect" : { "x" : 0, "y" : 0, "w" : 1, "h" : 1 },
+			"rect" : { "x" : 224, "y" : 144, "w" : 1, "h" : 1 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "TextureGround",
+			"_info" : "Italy TextureGround",
 			
-			"rect" : { "x" : 1, "y" : 0, "w" : 1, "h" : 1 },
+			"rect" : { "x" : 225, "y" : 144, "w" : 1, "h" : 1 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "Italy TextureStage",
+			
+			"rect" : { "x" : 0, "y" : 144, "w" : 112, "h" : 176 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "Portugal Texture",
+			
+			"rect" : { "x" : 0, "y" : 72, "w" : 1024, "h" : 72 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "Portugal TextureSky",
+			
+			"rect" : { "x" : 226, "y" : 144, "w" : 1, "h" : 1 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "Portugal TextureGround",
+			
+			"rect" : { "x" : 227, "y" : 144, "w" : 1, "h" : 1 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "Portugal TextureStage",
+			
+			"rect" : { "x" : 112, "y" : 144, "w" : 112, "h" : 176 },
 			"hFlipped" : false
 		}
 	]

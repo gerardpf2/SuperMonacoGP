@@ -4,8 +4,9 @@
 // Editable
 
 #define WINDOW_TITLE "Super Monaco GP"
-#define WINDOW_WIDTH (int)(640 * 1.0f) // 1.75f
-#define WINDOW_HEIGHT (int)(448 * 1.0f) // 1.75f
+#define WINDOW_SCALE 1.5f // 1.75f
+#define WINDOW_WIDTH (int)(640 * WINDOW_SCALE)
+#define WINDOW_HEIGHT (int)(448 * WINDOW_SCALE)
 
 #define CAMERA_Y 5.0f
 #define CAMERA_FOV 90.0f
@@ -33,8 +34,6 @@
 #define BACKGROUND_VELOCITY_OFFSET_Y 1.0f
 
 #define PI 3.14159265358979323846f
-
-
 
 /* #define CAR_STEP (1.0f / 60.0f)
 

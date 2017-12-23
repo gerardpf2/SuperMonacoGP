@@ -1,0 +1,40 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 90,
+	"bmpPath" : "Resources/Images/Start.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "0: Back",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 640, "h" : 448 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "1: Front",
+			
+			"rect" : { "x" : 0, "y" : 448, "w" : 640, "h" : 448 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "2: Logo",
+			
+			"rect" : { "x" : 368, "y" : 1154, "w" : 240, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "3: Options",
+			
+			"rect" : { "x" : 0, "y" : 1154, "w" : 368, "h" : 144 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "4: Arrow",
+			
+			"rect" : { "x" : 368, "y" : 1170, "w" : 14, "h" : 12 },
+			"hFlipped" : false
+		}
+	]
+}

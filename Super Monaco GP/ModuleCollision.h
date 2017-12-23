@@ -22,6 +22,8 @@ class ModuleCollision : public Module
 
 		void addCollider(const Collider* collider);
 
+		void removeColliders();
+
 		virtual bool update(float deltaTimeS) override;
 
 	private:

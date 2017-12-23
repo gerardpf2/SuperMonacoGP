@@ -56,16 +56,6 @@ void GameObject::enableCollider()
 	getModuleWorld()->getGameEngine()->getModuleCollision()->addCollider(&collider);
 }
 
-/* const Road* GameObject::getRoad() const
-{
-	return road;
-}
-
-void GameObject::setRoad(const Road* road)
-{
-	this->road = road;
-} */
-
 const ModuleWorld* GameObject::getModuleWorld() const
 {
 	return moduleWorld;
@@ -74,18 +64,6 @@ const ModuleWorld* GameObject::getModuleWorld() const
 void GameObject::setModuleWorld(const ModuleWorld* moduleWorld)
 {
 	this->moduleWorld = moduleWorld;
-
-	/*
-
-	// Register collider
-
-	collider.g = this;
-	collider.b = Box{ 0.5f * size.w, size.h, 2.0f }; //
-
-	if(collider.b.d > 0.0f)
-		getModuleWorld()->getGameEngine()->getModuleCollision()->addCollider(&collider);
-
-	*/
 }
 
 void GameObject::elevate()
@@ -94,11 +72,6 @@ void GameObject::elevate()
 
 	position.y += interpolate(position.z, segment->getZNear(), segment->getZFar(), segment->getYNear(), segment->getYFar());
 }
-
-/* void GameObject::moveX(float incX)
-{
-	position.x += incX;
-} */
 
 void GameObject::move(const WorldPosition& offset)
 {
@@ -167,7 +140,7 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 
 	moduleRenderer->renderTexture(texture->t, &src, &dst, texture->hFlipped);
 
-	_DEBUG_renderCollider_DEBUG_(xOffset, zOffset, clipY, camera, moduleRenderer);
+	// _DEBUG_renderCollider_DEBUG_(xOffset, zOffset, clipY, camera, moduleRenderer);
 }
 
 void GameObject::cleanUp()
@@ -183,8 +156,8 @@ void GameObject::_DEBUG_renderCollider_DEBUG_(float xOffset, float zOffset, shor
 	float xnl = position.x - collider.b.w / 2.0f + xOffset;
 	float xnr = xnl + collider.b.w;
 	
-	float ynb = position.y;
-	float ynt = ynb + collider.b.h;
+	float ynb = position.y - 5.0f;
+	float ynt = position.y + collider.b.h;
 
 	float zn = position.z + zOffset;
 	float zf = zn + collider.b.d;

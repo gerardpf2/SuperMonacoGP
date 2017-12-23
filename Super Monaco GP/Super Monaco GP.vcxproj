@@ -146,6 +146,7 @@
     <ClCompile Include="ModuleJson.cpp" />
     <ClCompile Include="ModulePerformance.cpp" />
     <ClCompile Include="ModuleRenderer.cpp" />
+    <ClCompile Include="ModuleStart.cpp" />
     <ClCompile Include="ModuleTexture.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleWorld.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="ModuleJson.h" />
     <ClInclude Include="ModulePerformance.h" />
     <ClInclude Include="ModuleRenderer.h" />
+    <ClInclude Include="ModuleStart.h" />
     <ClInclude Include="ModuleTexture.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleWorld.h" />

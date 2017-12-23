@@ -33,10 +33,10 @@ ModuleInput* GameEngine::getModuleInput() const
 	return moduleInput;
 }
 
-ModuleWorld* GameEngine::getModuleWorld() const
+/* ModuleWorld* GameEngine::getModuleWorld() const
 {
 	return moduleWorld;
-}
+} */
 
 ModuleWindow* GameEngine::getModuleWindow() const
 {
@@ -73,17 +73,30 @@ ModulePerformance* GameEngine::getModulePerformance() const
 	return modulePerformance;
 }
 
-void GameEngine::run()
+Module* GameEngine::getGameModule() const
 {
+	return gameModule;
+}
+
+void GameEngine::setGameModule(Module* gameModule)
+{
+	tmpGameModule = gameModule;
+}
+
+void GameEngine::run(Module* initialGameModule)
+{
+	setGameModule(initialGameModule);
+
 	if(setUp())
-		while(mainLoop());
+		while(mainLoop())
+			if(!setUpNewGameModule()) break;
 
 	cleanUp();
 }
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(10);
+	modules.reserve(10); // 9 (core modules) + 1 (game module)
 
 	modules.push_back(moduleJson = new ModuleJson(this));
 	modules.push_back(moduleInput = new ModuleInput(this));
@@ -96,7 +109,8 @@ void GameEngine::addInitialModules()
 	modules.push_back(moduleGameObject = new ModuleGameObject(this));
 	// modules.push_back(modulePerformance = new ModulePerformance(this));
 
-	modules.push_back(moduleWorld = new ModuleWorld(this));
+	modules.push_back(gameModule = nullptr);
+	// modules.push_back(moduleWorld = new ModuleWorld(this));
 }
 
 bool GameEngine::setUp()
@@ -106,7 +120,7 @@ bool GameEngine::setUp()
 	bool setUp = true;
 
 	for(uint i = 0; setUp && i < (uint)modules.size(); ++i)
-		setUp = modules[i]->setUp();
+		if(modules[i]) setUp = modules[i]->setUp();
 
 	timer.start();
 
@@ -122,25 +136,46 @@ bool GameEngine::mainLoop()
 	bool mainLoop = true;
 
 	for(uint i = 0; mainLoop && i < (uint)modules.size(); ++i)
-		mainLoop = modules[i]->preUpdate(deltaTimeS);
+		if(modules[i]) mainLoop = modules[i]->preUpdate(deltaTimeS);
 
 	for(uint i = 0; mainLoop && i < (uint)modules.size(); ++i)
-		mainLoop = modules[i]->update(deltaTimeS);
+		if(modules[i]) mainLoop = modules[i]->update(deltaTimeS);
 
 	for(uint i = 0; mainLoop && i < (uint)modules.size(); ++i)
-		mainLoop = modules[i]->postUpdate(deltaTimeS);
+		if(modules[i]) mainLoop = modules[i]->postUpdate(deltaTimeS);
 
 	return mainLoop;
+}
+
+bool GameEngine::setUpNewGameModule()
+{
+	if(tmpGameModule)
+	{
+		if(gameModule)
+		{
+			gameModule->cleanUp();
+			delete gameModule; gameModule = nullptr;
+		}
+
+		modules[modules.size() - 1] = gameModule = tmpGameModule;
+		
+		tmpGameModule = nullptr;
+
+		return gameModule->setUp();
+	}
+
+	return true;
 }
 
 void GameEngine::cleanUp()
 {
 	for(int i = (int)modules.size() - 1; i >= 0; --i)
 	{
-		modules[i]->cleanUp();
-		
-		delete modules[i];
-		modules[i] = nullptr;
+		if(modules[i])
+		{
+			modules[i]->cleanUp();
+			delete modules[i]; modules[i] = nullptr;
+		}
 	}
 
 	modules.clear();
@@ -148,7 +183,7 @@ void GameEngine::cleanUp()
 	moduleJson = nullptr;
 	moduleFont = nullptr;
 	moduleInput = nullptr;
-	moduleWorld = nullptr;
+	// moduleWorld = nullptr;
 	moduleWindow = nullptr;
 	moduleTexture = nullptr;
 	moduleRenderer = nullptr;
@@ -156,4 +191,6 @@ void GameEngine::cleanUp()
 	moduleCollision = nullptr;
 	moduleGameObject = nullptr;
 	modulePerformance = nullptr;
+
+	gameModule = tmpGameModule = nullptr;
 }
