@@ -7,15 +7,23 @@ class Car : public Animated
 {
 	public:
 
-		Car(uint id, AnimationContainer* animationContainer);
+		Car(/* uint id, */ AnimationContainer* animationContainer);
 
 		virtual ~Car();
 
 		virtual GameObjectType getType() const override;
 
+		uint getSpecificId() const;
+
+		void setSpecificId(uint specificId);
+
 		float getVelocity() const;
 
 		float getVelocityPercent() const;
+
+		uint getCurrentLap() const;
+
+		float getCurrentLapTime() const;
 
 		virtual void update(float deltaTimeS) override;
 
@@ -33,13 +41,27 @@ class Car : public Animated
 
 		void checkCollision();
 
+		bool lapCompleted();
+
+		void registerLapTime() const;
+
 	protected:
 
 		Direction direction;
 
 	private:
 
+		uint specificId = 0;
+
 		float velocity = 0.0f;
+
+		uint currentLap = 0;
+
+		float currentLapTime = 0.0f;
+
+		bool countingLap = true;
+
+		bool ignoreCurrentLap = true;
 };
 
 #endif

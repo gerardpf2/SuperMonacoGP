@@ -5,90 +5,9 @@
 #include "Types.h"
 #include "Module.h"
 #include <SDL_rect.h>
+#include "ModuleWorldUI.h"
 
-// Window coordinates ---
-
-#define TEXTURE_RECT_ROAD_X 0
-#define TEXTURE_RECT_ROAD_Y 0
-#define TEXTURE_RECT_ROAD_W WINDOW_WIDTH
-#define TEXTURE_RECT_ROAD_H WINDOW_HEIGHT
-#define TEXTURE_RECT_ROAD SDL_Rect{ TEXTURE_RECT_ROAD_X, TEXTURE_RECT_ROAD_Y, TEXTURE_RECT_ROAD_W, TEXTURE_RECT_ROAD_H }
-
-#define VIEWPORT_RECT_ROAD_X 0
-#define VIEWPORT_RECT_ROAD_Y 0
-#define VIEWPORT_RECT_ROAD_W WINDOW_WIDTH
-#define VIEWPORT_RECT_ROAD_H WINDOW_HEIGHT
-#define VIEWPORT_RECT_ROAD SDL_Rect{ VIEWPORT_RECT_ROAD_X, VIEWPORT_RECT_ROAD_Y, VIEWPORT_RECT_ROAD_W, VIEWPORT_RECT_ROAD_H }
-
-#define TEXTURE_RECT_ROAD_MIRROR_X 0
-#define TEXTURE_RECT_ROAD_MIRROR_Y (int)(0.76f * WINDOW_HEIGHT)
-#define TEXTURE_RECT_ROAD_MIRROR_W WINDOW_WIDTH
-#define TEXTURE_RECT_ROAD_MIRROR_H (int)(0.24f * WINDOW_HEIGHT)
-#define TEXTURE_RECT_ROAD_MIRROR SDL_Rect{ TEXTURE_RECT_ROAD_MIRROR_X, TEXTURE_RECT_ROAD_MIRROR_Y, TEXTURE_RECT_ROAD_MIRROR_W, TEXTURE_RECT_ROAD_MIRROR_H }
-
-#define VIEWPORT_RECT_ROAD_MIRROR_X (int)(0.15f * WINDOW_WIDTH)
-#define VIEWPORT_RECT_ROAD_MIRROR_Y (int)(0.12f * WINDOW_HEIGHT)
-#define VIEWPORT_RECT_ROAD_MIRROR_W (int)(0.7f * WINDOW_WIDTH)
-#define VIEWPORT_RECT_ROAD_MIRROR_H (int)(0.17f * WINDOW_HEIGHT)
-#define VIEWPORT_RECT_ROAD_MIRROR SDL_Rect{ VIEWPORT_RECT_ROAD_MIRROR_X, VIEWPORT_RECT_ROAD_MIRROR_Y, VIEWPORT_RECT_ROAD_MIRROR_W, VIEWPORT_RECT_ROAD_MIRROR_H }
-
-#define PAUSE_POSITION_SCALE (1.5f * WINDOW_SCALE)
-#define PAUSE_POSITION_X (int)(0.5f * WINDOW_WIDTH)
-#define PAUSE_POSITION_Y (int)(0.55f * WINDOW_HEIGHT)
-#define PAUSE_POSITION WindowPosition{ PAUSE_POSITION_X, PAUSE_POSITION_Y }
-
-#define GO_MENU_POSITION_SCALE (1.25f * WINDOW_SCALE)
-#define GO_MENU_POSITION_X (int)(0.5f * WINDOW_WIDTH)
-#define GO_MENU_POSITION_Y (int)(0.825f * WINDOW_HEIGHT)
-#define GO_MENU_POSITION WindowPosition{ GO_MENU_POSITION_X, GO_MENU_POSITION_Y }
-
-#define BEST_LAP_POSITION_SCALE WINDOW_SCALE
-#define BEST_LAP_POSITION_X (int)(0.01f * WINDOW_WIDTH)
-#define BEST_LAP_POSITION_Y (int)(0.0225f * WINDOW_HEIGHT)
-#define BEST_LAP_POSITION WindowPosition{ BEST_LAP_POSITION_X, BEST_LAP_POSITION_Y }
-
-#define CURRENT_VELOCITY_POSITION_SCALE (1.5f * WINDOW_SCALE)
-#define CURRENT_VELOCITY_POSITION_X (int)(0.9f * WINDOW_WIDTH)
-#define CURRENT_VELOCITY_POSITION_Y (int)(0.9f * WINDOW_HEIGHT)
-#define CURRENT_VELOCITY_POSITION WindowPosition{ CURRENT_VELOCITY_POSITION_X, CURRENT_VELOCITY_POSITION_Y }
-
-#define CURRENT_LAP_TIME_POSITION_SCALE (1.25f * WINDOW_SCALE)
-#define CURRENT_LAP_TIME_POSITION_X (int)(0.5f * WINDOW_WIDTH)
-#define CURRENT_LAP_TIME_POSITION_Y (int)(0.35f * WINDOW_HEIGHT)
-#define CURRENT_LAP_TIME_POSITION WindowPosition{ CURRENT_LAP_TIME_POSITION_X, CURRENT_LAP_TIME_POSITION_Y }
-
-#define MIRROR_BORDER_TRAPEZOID_OFFSET (int)(5 * WINDOW_SCALE)
-#define MIRROR_BORDER_TRAPEZOID_BL_0_X VIEWPORT_RECT_ROAD_MIRROR_X
-#define MIRROR_BORDER_TRAPEZOID_BL_0_Y (VIEWPORT_RECT_ROAD_MIRROR_Y + VIEWPORT_RECT_ROAD_MIRROR_H)
-#define MIRROR_BORDER_TRAPEZOID_BR_0_X (VIEWPORT_RECT_ROAD_MIRROR_X + VIEWPORT_RECT_ROAD_MIRROR_W)
-#define MIRROR_BORDER_TRAPEZOID_BR_0_Y MIRROR_BORDER_TRAPEZOID_BL_0_Y
-#define MIRROR_BORDER_TRAPEZOID_TR_0_X MIRROR_BORDER_TRAPEZOID_BR_0_X
-#define MIRROR_BORDER_TRAPEZOID_TR_0_Y VIEWPORT_RECT_ROAD_MIRROR_Y
-#define MIRROR_BORDER_TRAPEZOID_TL_0_X MIRROR_BORDER_TRAPEZOID_BL_0_X
-#define MIRROR_BORDER_TRAPEZOID_TL_0_Y MIRROR_BORDER_TRAPEZOID_TR_0_Y
-#define MIRROR_BORDER_TRAPEZOID_BL_1_X (MIRROR_BORDER_TRAPEZOID_BL_0_X - MIRROR_BORDER_TRAPEZOID_OFFSET)
-#define MIRROR_BORDER_TRAPEZOID_BL_1_Y (MIRROR_BORDER_TRAPEZOID_BL_0_Y + MIRROR_BORDER_TRAPEZOID_OFFSET)
-#define MIRROR_BORDER_TRAPEZOID_BR_1_X (MIRROR_BORDER_TRAPEZOID_BR_0_X + MIRROR_BORDER_TRAPEZOID_OFFSET)
-#define MIRROR_BORDER_TRAPEZOID_BR_1_Y MIRROR_BORDER_TRAPEZOID_BL_1_Y
-#define MIRROR_BORDER_TRAPEZOID_TR_1_X MIRROR_BORDER_TRAPEZOID_BR_1_X
-#define MIRROR_BORDER_TRAPEZOID_TR_1_Y (MIRROR_BORDER_TRAPEZOID_TR_0_Y - MIRROR_BORDER_TRAPEZOID_OFFSET)
-#define MIRROR_BORDER_TRAPEZOID_TL_1_X MIRROR_BORDER_TRAPEZOID_BL_1_X
-#define MIRROR_BORDER_TRAPEZOID_TL_1_Y MIRROR_BORDER_TRAPEZOID_TR_1_Y
-#define MIRROR_BORDER_TRAPEZOID_BL_0 WindowPosition{ MIRROR_BORDER_TRAPEZOID_BL_0_X, MIRROR_BORDER_TRAPEZOID_BL_0_Y }
-#define MIRROR_BORDER_TRAPEZOID_BR_0 WindowPosition{ MIRROR_BORDER_TRAPEZOID_BR_0_X, MIRROR_BORDER_TRAPEZOID_BR_0_Y }
-#define MIRROR_BORDER_TRAPEZOID_TR_0 WindowPosition{ MIRROR_BORDER_TRAPEZOID_TR_0_X, MIRROR_BORDER_TRAPEZOID_TR_0_Y }
-#define MIRROR_BORDER_TRAPEZOID_TL_0 WindowPosition{ MIRROR_BORDER_TRAPEZOID_TL_0_X, MIRROR_BORDER_TRAPEZOID_TL_0_Y }
-#define MIRROR_BORDER_TRAPEZOID_BL_1 WindowPosition{ MIRROR_BORDER_TRAPEZOID_BL_1_X, MIRROR_BORDER_TRAPEZOID_BL_1_Y }
-#define MIRROR_BORDER_TRAPEZOID_BR_1 WindowPosition{ MIRROR_BORDER_TRAPEZOID_BR_1_X, MIRROR_BORDER_TRAPEZOID_BR_1_Y }
-#define MIRROR_BORDER_TRAPEZOID_TR_1 WindowPosition{ MIRROR_BORDER_TRAPEZOID_TR_1_X, MIRROR_BORDER_TRAPEZOID_TR_1_Y }
-#define MIRROR_BORDER_TRAPEZOID_TL_1 WindowPosition{ MIRROR_BORDER_TRAPEZOID_TL_1_X, MIRROR_BORDER_TRAPEZOID_TL_1_Y }
-#define MIRROR_BORDER_TRAPEZOID_TOP WindowTrapezoid{ MIRROR_BORDER_TRAPEZOID_TL_0, MIRROR_BORDER_TRAPEZOID_TR_0, MIRROR_BORDER_TRAPEZOID_TR_1, MIRROR_BORDER_TRAPEZOID_TL_1 }
-#define MIRROR_BORDER_TRAPEZOID_LEFT WindowTrapezoid{ MIRROR_BORDER_TRAPEZOID_BL_0, MIRROR_BORDER_TRAPEZOID_TL_0, MIRROR_BORDER_TRAPEZOID_TL_1, MIRROR_BORDER_TRAPEZOID_BL_1 }
-#define MIRROR_BORDER_TRAPEZOID_RIGHT WindowTrapezoid{ MIRROR_BORDER_TRAPEZOID_BR_1, MIRROR_BORDER_TRAPEZOID_TR_1, MIRROR_BORDER_TRAPEZOID_TR_0, MIRROR_BORDER_TRAPEZOID_BR_0 }
-#define MIRROR_BORDER_TRAPEZOID_BOTTOM WindowTrapezoid{ MIRROR_BORDER_TRAPEZOID_BL_1, MIRROR_BORDER_TRAPEZOID_BR_1, MIRROR_BORDER_TRAPEZOID_BR_0, MIRROR_BORDER_TRAPEZOID_BL_0 }
-
-// Window coordinates
-
+class Car;
 class Road;
 class Camera;
 class Player;
@@ -98,8 +17,6 @@ class GameObject;
 class ModuleWorld : public Module
 {
 	public:
-
-		ModuleWorld(GameEngine* gameEngine);
 
 		virtual ~ModuleWorld();
 
@@ -115,9 +32,15 @@ class ModuleWorld : public Module
 
 		virtual void cleanUp() override;
 
-	private:
+		virtual void registerLapTime(const Car* car) const;
 
-		void updatePauseCounter(float deltaTimeS);
+	protected:
+
+		ModuleWorld(GameEngine* gameEngine);
+
+		virtual void addPlayer();
+
+		virtual void addCars();
 
 		virtual void renderUI() const;
 
@@ -125,15 +48,53 @@ class ModuleWorld : public Module
 
 	private:
 
+		void addRoad();
+
+		void removeRoad();
+
+		void addRoadGameObjects();
+
+		void addAllGameObjects();
+
+		void removeAllGameObjects();
+
+		void addCameras();
+
+		void removeCameras();
+
+		void addBackgrounds();
+
+		void removeBackgrounds();
+
+		void addRenderingLayers();
+
+		void removeRenderingLayers();
+
+		void checkPauseMode();
+
+		void checkGoMenu() const;
+
+		void updatePaused(float deltaTimeS);
+
+		void updateNotPaused(float deltaTimeS) const;
+
+		void updatePauseCounter(float deltaTimeS);
+
+		void render() const;
+
+	protected:
+
 		bool paused = false;
+
+		Player* player = nullptr;
+
+	private:
 
 		Road* road = nullptr;
 
 		Camera* camera = nullptr;
 
 		Camera* cameraMirror = nullptr;
-
-		Player* player = nullptr;
 
 		std::vector<GameObject*> gameObjects;
 
@@ -143,7 +104,9 @@ class ModuleWorld : public Module
 
 		float pauseCounter = 0.0;
 
-		float currentLapTime = 0.0f;
+		const Texture* kmhT = nullptr;
+
+		// float currentLapTime = 0.0f;
 
 		// Rendering layers and UI
 
@@ -153,11 +116,15 @@ class ModuleWorld : public Module
 
 		SDL_Rect textureRectRoadMirror, viewportRectRoadMirror;
 
+		SDL_Rect kmhRect;
+
 		WindowPosition pausePosition;
 
 		WindowPosition goMenuPosition;
 
 		WindowPosition bestLapPosition;
+
+		WindowPosition bestLapValuePosition;
 
 		WindowPosition currentLapTimePosition;
 

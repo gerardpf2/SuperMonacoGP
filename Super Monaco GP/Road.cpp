@@ -29,7 +29,7 @@ void Road::load(const char* jsonPath, const ModuleJson* moduleJson, ModuleTextur
 	addHills(jsonDocument["hills"]);
 
 	// Curves
-addCurves(jsonDocument["curves"]);
+	addCurves(jsonDocument["curves"]);
 
 	// RumbleColors
 	setRumbleColors(jsonDocument["rumbleColors"]);
@@ -84,6 +84,11 @@ float Road::getLength() const
 Segment* Road::getSegmentAtZ(float z) const
 {
 	return getSegment((int)(z / SEGMENT_LENGTH));
+}
+
+uint Road::getGameObjectsCount() const
+{
+	return gameObjectDefinitions.size();
 }
 
 const std::vector<RoadGameObjectDefinition*>* Road::getGameObjectDefinitions() const

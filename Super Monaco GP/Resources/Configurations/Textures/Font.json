@@ -68,172 +68,178 @@
 		},
 		
 		{
-			"_info" : "10: '",
-			
-			"rect" : { "x" : 176, "y" : 0, "w" : 8, "h" : 30 },
-			"hFlipped" : false
-		},
-		{
-			"_info" : "11:  ",
-			
-			"rect" : { "x" : 192, "y" : 0, "w" : 16, "h" : 30 },
-			"hFlipped" : false
-		},
-		
-		{
-			"_info" : "12: A",
+			"_info" : "10: A",
 			
 			"rect" : { "x" : 0, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "13: B",
+			"_info" : "11: B",
 			
 			"rect" : { "x" : 16, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "14: C",
+			"_info" : "12: C",
 			
 			"rect" : { "x" : 32, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "15: D",
+			"_info" : "13: D",
 			
 			"rect" : { "x" : 48, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "16: E",
+			"_info" : "14: E",
 			
 			"rect" : { "x" : 64, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "17: F",
+			"_info" : "15: F",
 			
 			"rect" : { "x" : 80, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "18: G",
+			"_info" : "16: G",
 			
 			"rect" : { "x" : 96, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "19: H",
+			"_info" : "17: H",
 			
 			"rect" : { "x" : 112, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "20: I",
+			"_info" : "18: I",
 			
 			"rect" : { "x" : 128, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "21: J",
+			"_info" : "19: J",
 			
 			"rect" : { "x" : 144, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "22: K",
+			"_info" : "20: K",
 			
 			"rect" : { "x" : 160, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "23: L",
+			"_info" : "21: L",
 			
 			"rect" : { "x" : 176, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "24: M",
+			"_info" : "22: M",
 			
 			"rect" : { "x" : 192, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "25: N",
+			"_info" : "23: N",
 			
 			"rect" : { "x" : 208, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "26: O",
+			"_info" : "24: O",
 			
 			"rect" : { "x" : 224, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "27: P",
+			"_info" : "25: P",
 			
 			"rect" : { "x" : 240, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "28: Q",
+			"_info" : "26: Q",
 			
 			"rect" : { "x" : 256, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "29: R",
+			"_info" : "27: R",
 			
 			"rect" : { "x" : 272, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "30: S",
+			"_info" : "28: S",
 			
 			"rect" : { "x" : 288, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "31: T",
+			"_info" : "29: T",
 			
 			"rect" : { "x" : 304, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "32: U",
+			"_info" : "30: U",
 			
 			"rect" : { "x" : 320, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "33: V",
+			"_info" : "31: V",
 			
 			"rect" : { "x" : 336, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "34: W",
+			"_info" : "32: W",
 			
 			"rect" : { "x" : 352, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "35: X",
+			"_info" : "33: X",
 			
 			"rect" : { "x" : 368, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "36: Y",
+			"_info" : "34: Y",
 			
 			"rect" : { "x" : 384, "y" : 30, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "37: Z",
+			"_info" : "35: Z",
 			
 			"rect" : { "x" : 400, "y" : 30, "w" : 16, "h" : 30 },
+			"hFlipped" : false
+		},
+		
+		{
+			"_info" : "36: '",
+			
+			"rect" : { "x" : 176, "y" : 0, "w" : 8, "h" : 30 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "37:  ",
+			
+			"rect" : { "x" : 192, "y" : 0, "w" : 16, "h" : 30 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "38: -",
+			
+			"rect" : { "x" : 208, "y" : 0, "w" : 16, "h" : 30 },
 			"hFlipped" : false
 		}
 	]

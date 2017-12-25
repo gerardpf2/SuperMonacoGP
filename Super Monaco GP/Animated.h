@@ -9,7 +9,7 @@ class Animated : public GameObject
 {
 	public:
 
-		Animated(uint id, AnimationContainer* animationContainer);
+		Animated(/* uint id, */ AnimationContainer* animationContainer);
 
 		virtual ~Animated();
 

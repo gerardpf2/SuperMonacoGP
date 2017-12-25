@@ -11,17 +11,17 @@
 #include "GameEngine.h"
 #include "ModuleCollision.h"
 
-GameObject::GameObject(uint id) :
-	id(id)
+GameObject::GameObject(/* uint id */) // :
+	// id(id)
 { }
 
 GameObject::~GameObject()
 { }
 
-uint GameObject::getId() const
+/* uint GameObject::getId() const
 {
 	return id;
-}
+} */
 
 const WorldPosition* GameObject::getPosition() const
 {

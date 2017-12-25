@@ -89,6 +89,31 @@
 			
 			"rect" : { "x" : 464, "y" : 96, "w" : 112, "h" : 158 },
 			"hFlipped" : false
+		},
+		
+		{
+			"_info" : "14: Flag",
+			
+			"rect" : { "x" : 0, "y" : 448, "w" : 40, "h" : 26 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "15: Flag hF",
+			
+			"rect" : { "x" : 0, "y" : 448, "w" : 40, "h" : 26 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "16: Km/h",
+			
+			"rect" : { "x" : 40, "y" : 448, "w" : 48, "h" : 30 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "17: Player icon",
+			
+			"rect" : { "x" : 88, "y" : 448, "w" : 12, "h" : 14 },
+			"hFlipped" : false
 		}
 	]
 }

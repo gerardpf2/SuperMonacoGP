@@ -13,6 +13,7 @@ class ModuleStart;
 class ModuleWindow;
 class ModuleTexture;
 class ModuleRenderer;
+class ModuleRegistry;
 class ModuleAnimation;
 class ModuleCollision;
 class ModuleGameObject;
@@ -39,6 +40,8 @@ class GameEngine
 		ModuleTexture* getModuleTexture() const;
 
 		ModuleRenderer* getModuleRenderer() const;
+
+		ModuleRegistry* getModuleRegistry() const;
 
 		ModuleAnimation* getModuleAnimation() const;
 
@@ -85,6 +88,8 @@ class GameEngine
 		ModuleTexture* moduleTexture = nullptr;
 
 		ModuleRenderer* moduleRenderer = nullptr;
+
+		ModuleRegistry* moduleRegistry = nullptr;
 
 		ModuleAnimation* moduleAnimation = nullptr;
 

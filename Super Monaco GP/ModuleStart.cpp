@@ -4,9 +4,12 @@
 #include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
-#include "ModuleWorld.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
+#include "ModuleFreePractice.h"
+#include "ModuleSuperMonacoGP.h"
+
+using namespace std;
 
 ModuleStart::ModuleStart(GameEngine* gameEngine) :
 	Module(gameEngine)
@@ -42,6 +45,17 @@ bool ModuleStart::setUp()
 	options = moduleTexture->get(textureGroupId, 3);
 	arrow = moduleTexture->get(textureGroupId, 4);
 
+	cars.reserve(6);
+
+	cars.push_back(new CarStart(moduleTexture->get(textureGroupId, 5)));
+	cars.push_back(new CarStart(moduleTexture->get(textureGroupId, 6)));
+	cars.push_back(new CarStart(moduleTexture->get(textureGroupId, 7)));
+	cars.push_back(new CarStart(moduleTexture->get(textureGroupId, 8)));
+	cars.push_back(new CarStart(moduleTexture->get(textureGroupId, 9)));
+	cars.push_back(new CarStart(moduleTexture->get(textureGroupId, 10)));
+
+	carIndex = rand() % cars.size();
+
 	return true;
 }
 
@@ -74,11 +88,63 @@ void ModuleStart::cleanUp()
 	front = nullptr;
 	logo = nullptr;
 	options = nullptr;
+
+	for(CarStart* car : cars)
+	{
+		delete car; car = nullptr;
+	}
+
+	cars.clear();
+
+	usedCars.clear();
 }
 
 void ModuleStart::updateCars(float deltaTimeS)
 {
+	uint n = 1;
 
+	if(usedCars.empty()) ++usedCars2Freq;
+
+	if(usedCars2Freq >= USED_CARS_2_FREQ)
+	{
+		n = 2;
+		usedCars2Freq = 0;
+	}
+
+	while(usedCars.size() < n)
+	{
+		CarStart* car = cars[carIndex++ % cars.size()];
+		list<CarStart*>::iterator it = usedCars.begin();
+
+		car->x = CAR_START_MAX_X;
+
+		if(usedCars.empty())
+		{
+			car->y = (rand() % 2 == 0) ? CAR_START_MIN_Y : CAR_START_MAX_Y;
+			car->v = CAR_START_MAX_V;
+		}
+		else
+		{
+			car->y = ((*it)->y == CAR_START_MIN_Y) ? CAR_START_MAX_Y : CAR_START_MIN_Y;
+			car->v = CAR_START_MIN_V;
+		}
+
+		while(it != usedCars.end() && (*it)->y <= car->y) ++it;
+
+		usedCars.insert(it, car);
+	}
+
+	for(list<CarStart*>::iterator it = usedCars.begin(); it != usedCars.end(); )
+	{
+		CarStart* car = *it;
+
+		car->update(deltaTimeS);
+
+		if(car->isOut())
+			it = usedCars.erase(it);
+
+		if(it != usedCars.end()) ++it;
+	}
 }
 
 void ModuleStart::updateEnterPressed(float deltaTimeS)
@@ -101,9 +167,11 @@ void ModuleStart::updateEnterPressed(float deltaTimeS)
 		switch(selectedOption)
 		{
 			case 0: // SUPER MONACO GP
+				getGameEngine()->setGameModule(new ModuleSuperMonacoGP(getGameEngine()));
+
 				break;
 			case 1: // FREE PRACTICE
-				getGameEngine()->setGameModule(new ModuleWorld(getGameEngine()));
+				getGameEngine()->setGameModule(new ModuleFreePractice(getGameEngine()));
 
 				break;
 			case 2: // ABOUT
@@ -140,7 +208,11 @@ void ModuleStart::renderBase() const
 
 void ModuleStart::renderCars() const
 {
-
+	for(CarStart* car : usedCars)
+	{
+		SDL_Rect rect{ (int)car->x, car->y, CAR_START_W, CAR_START_H };
+		getGameEngine()->getModuleRenderer()->renderTexture(car->t->t, car->t->r, &rect, car->t->hFlipped);
+	}
 }
 
 void ModuleStart::renderEnterPressed() const

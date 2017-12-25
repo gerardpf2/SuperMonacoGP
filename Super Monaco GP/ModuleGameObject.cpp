@@ -164,7 +164,7 @@ Car* ModuleGameObject::getCar(uint idGameObject) const
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getId());
 
-	Car* car = new Car(baseCar->getId(), animationContainer);
+	Car* car = new Car(/* baseCar->getId(), */ animationContainer);
 	car->setColliderBox(baseCar->getCollider()->b);
 
 	return car;
@@ -178,7 +178,7 @@ Player* ModuleGameObject::getPlayer(uint idGameObject) const
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getId());
 
-	Player* player = new Player(basePlayer->getId(), animationContainer, basePlayer->getModuleInput());
+	Player* player = new Player(/* basePlayer->getId(), */ animationContainer, basePlayer->getModuleInput());
 	player->setColliderBox(basePlayer->getCollider()->b);
 
 	return player;
@@ -197,7 +197,7 @@ Animated* ModuleGameObject::getAnimated(uint idGameObject) const
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getId());
 
-	Animated* animated = new Animated(baseAnimated->getId(), animationContainer);
+	Animated* animated = new Animated(/* baseAnimated->getId(), */ animationContainer);
 	animated->setColliderBox(baseAnimated->getCollider()->b);
 
 	return animated;
@@ -240,7 +240,7 @@ Car* ModuleGameObject::createCar(const rapidjson::Value& gameObjectJson, uint &r
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
-	Car* car = new Car(gameObjectId, animationContainer);
+	Car* car = new Car(/* gameObjectId, */ animationContainer);
 	car->defineColliderBox(mW, d);
 
 	return car;
@@ -262,7 +262,7 @@ Player* ModuleGameObject::createPlayer(const rapidjson::Value& gameObjectJson, u
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
-	Player* player = new Player(gameObjectId, animationContainer, getGameEngine()->getModuleInput());
+	Player* player = new Player(/* gameObjectId, */ animationContainer, getGameEngine()->getModuleInput());
 	player->defineColliderBox(mW, d);
 
 	return player;
@@ -284,7 +284,7 @@ Static* ModuleGameObject::createStatic(const rapidjson::Value& gameObjectJson, u
 
 	const Texture* texture = getGameEngine()->getModuleTexture()->get(resourceGroupId, textureId);
 
-	Static* static_ = new Static(gameObjectId, texture);
+	Static* static_ = new Static(/* gameObjectId, */ texture);
 	static_->defineColliderBox(mW, d);
 
 	return static_;
@@ -306,7 +306,7 @@ Animated* ModuleGameObject::createAnimated(const rapidjson::Value& gameObjectJso
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
-	Animated* animated = new Animated(gameObjectId, animationContainer);
+	Animated* animated = new Animated(/* gameObjectId, */ animationContainer);
 	animated->defineColliderBox(mW, d);
 
 	return animated;

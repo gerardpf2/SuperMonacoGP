@@ -1,7 +1,8 @@
 #include "MemLeaks.h"
 #include "GameEngine.h"
 #include "ModuleStart.h"
-// #include "ModuleWorld.h"
+#include "ModuleFreePractice.h"
+#include "ModuleSuperMonacoGP.h"
 
 int main()
 {
@@ -9,5 +10,6 @@ int main()
 
 	GameEngine gameEngine;
 	gameEngine.run(new ModuleStart(&gameEngine));
-	// gameEngine.run(new ModuleWorld(&gameEngine));
+	// gameEngine.run(new ModuleFreePractice(&gameEngine));
+	// gameEngine.run(new ModuleSuperMonacoGP(&gameEngine));
 }

@@ -7,13 +7,14 @@
 #include "Animation.h"
 #include "GameEngine.h"
 #include "ModuleWorld.h"
+#include "ModuleRegistry.h"
 #include "ModuleCollision.h"
 #include "AnimationContainer.h"
 
 using namespace std;
 
-Car::Car(uint id, AnimationContainer* animationContainer) :
-	Animated(id, animationContainer)
+Car::Car(/* uint id, */ AnimationContainer* animationContainer) :
+	Animated(/* id, */ animationContainer)
 { }
 
 Car::~Car()
@@ -24,6 +25,16 @@ GameObjectType Car::getType() const
 	return GameObjectType::CAR;
 }
 
+uint Car::getSpecificId() const
+{
+	return specificId;
+}
+
+void Car::setSpecificId(uint specificId)
+{
+	this->specificId = specificId;
+}
+
 float Car::getVelocity() const
 {
 	return velocity;
@@ -32,6 +43,16 @@ float Car::getVelocity() const
 float Car::getVelocityPercent() const
 {
 	return velocity / CAR_MAX_VELOCITY;
+}
+
+uint Car::getCurrentLap() const
+{
+	return currentLap;
+}
+
+float Car::getCurrentLapTime() const
+{
+	return currentLapTime;
 }
 
 #include <iostream>
@@ -107,6 +128,23 @@ void Car::update(float deltaTimeS)
 	checkCollision();
 
 	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
+
+	currentLapTime += deltaTimeS;
+
+	if(lapCompleted())
+	{
+		if(!ignoreCurrentLap)
+		{
+			registerLapTime();
+
+			++currentLap;
+			currentLapTime = 0.0f;
+
+			if(getType() == GameObjectType::PLAYER)
+				cout << "LAP" << endl;
+		}
+		else ignoreCurrentLap = false;
+	}
 }
 
 void Car::updateDirection(float deltaTimeS)
@@ -218,8 +256,11 @@ void Car::checkCollision()
 		{
 			const Collider* currentCollider = *it;
 
-			float z0 = mod0L(position.z + collider.b.d, getModuleWorld()->getRoad()->getLength());
-			float z1 = mod0L(currentCollider->g->getPosition()->z + currentCollider->b.d, getModuleWorld()->getRoad()->getLength());
+			// float z0 = mod0L(position.z + collider.b.d, getModuleWorld()->getRoad()->getLength());
+			// float z1 = mod0L(currentCollider->g->getPosition()->z + currentCollider->b.d, getModuleWorld()->getRoad()->getLength());
+
+			float z0 = position.z + collider.b.d; // mod0L(position.z + collider.b.d, getModuleWorld()->getRoad()->getLength());
+			float z1 = currentCollider->g->getPosition()->z + currentCollider->b.d; // mod0L(currentCollider->g->getPosition()->z + currentCollider->b.d, getModuleWorld()->getRoad()->getLength());
 
 			if(z1 < z0) continue;
 			// if(currentCollider->g->getPosition()->z < position.z) continue;
@@ -264,4 +305,31 @@ void Car::checkCollision()
 				position.x += mainCollider->b.w;
 		}
 	}
+}
+
+void Car::registerLapTime() const
+{
+	getModuleWorld()->registerLapTime(this);
+}
+
+bool Car::lapCompleted()
+{
+	// bool previousCountingLap = countingLap;
+
+	float z0 = (1.0f / 3.0f) * getModuleWorld()->getRoad()->getLength();
+	float z1 = (2.0f / 3.0f) * getModuleWorld()->getRoad()->getLength();
+
+	if(countingLap && position.z < z0)
+	{
+		countingLap = false;
+
+		return true;
+	}
+
+	if(position.z >= z0 && position.z <= z1)
+		countingLap = true;
+
+	return false;
+
+	// return previousCountingLap != countingLap && previousCountingLap;
 }

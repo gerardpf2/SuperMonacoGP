@@ -27,6 +27,8 @@ class Road
 
 		Segment* getSegmentAtZ(float z) const;
 
+		uint getGameObjectsCount() const;
+
 		const std::vector<RoadGameObjectDefinition*>* getGameObjectDefinitions() const;
 
 		const RoadBackgroundDefinition* getRoadBackgroundDefinition() const;

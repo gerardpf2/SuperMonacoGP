@@ -10,7 +10,7 @@ class Player : public Car
 {
 	public:
 
-		Player(uint id, AnimationContainer* animationContainer, const ModuleInput* moduleInput);
+		Player(/* uint id, */ AnimationContainer* animationContainer, const ModuleInput* moduleInput);
 
 		virtual ~Player();
 

@@ -1,16 +1,10 @@
 #include "ModuleWorld.h"
 
 #include "Road.h"
-#include <vector>
 #include "Utils.h"
 #include "Player.h"
-#include "Static.h"
 #include "Segment.h"
-#include "Animated.h"
-#include <SDL_rect.h>
-#include "Animation.h"
 #include "Background.h"
-#include "GameObject.h"
 #include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
@@ -18,10 +12,9 @@
 #include "CameraFollow.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
-#include "ModuleAnimation.h"
+#include "ModuleRegistry.h"
 #include "ModuleCollision.h"
 #include "ModuleGameObject.h"
-#include "AnimationContainer.h"
 
 using namespace std;
 
@@ -34,11 +27,15 @@ ModuleWorld::ModuleWorld(GameEngine* gameEngine) :
 	textureRectRoadMirror = TEXTURE_RECT_ROAD_MIRROR;
 	viewportRectRoadMirror = VIEWPORT_RECT_ROAD_MIRROR;
 
+	kmhRect = KMH_RECT;
+
 	pausePosition = PAUSE_POSITION;
 
 	goMenuPosition = GO_MENU_POSITION;
 
 	bestLapPosition = BEST_LAP_POSITION;
+
+	bestLapValuePosition = BEST_LAP_VALUE_POSITION;
 
 	currentLapTimePosition = CURRENT_LAP_TIME_POSITION;
 
@@ -68,145 +65,60 @@ const Camera* ModuleWorld::getCameraMirror() const
 	return cameraMirror;
 }
 
-// Revisar
-// SDL_Rect textureRectRoadMirror{ 0, (int)((1.0f - 0.24f) * WINDOW_HEIGHT), WINDOW_WIDTH, (int)(0.24f * WINDOW_HEIGHT) };
-// SDL_Rect viewportRoadMirror{ (int)(0.15f * WINDOW_WIDTH), (int)(0.12f * WINDOW_HEIGHT), (int)(0.7f * WINDOW_WIDTH), (int)(0.17f * WINDOW_HEIGHT) };
-
 bool ModuleWorld::setUp()
 {
-	getGameEngine()->getModuleGameObject()->load();
+	addRoad();
 
-	road = new Road();
+	addAllGameObjects();
 
-	// road->load("Resources/Configurations/Roads/Italy.json", getGameEngine()->getModuleJson(), getGameEngine()->getModuleTexture());
-	road->load("Resources/Configurations/Roads/Portugal.json", getGameEngine()->getModuleJson(), getGameEngine()->getModuleTexture());
+	addCameras();
 
-	// GameObjects ---
+	addBackgrounds();
 
-	const vector<RoadGameObjectDefinition*>* gameObjectDefinitions = road->getGameObjectDefinitions();
+	addRenderingLayers();
 
-	gameObjects.reserve(gameObjectDefinitions->size() + 2);
-
-	// Player
-
-	player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, 0.0f });
-
-	// Cars
-
-	addGameObject(1, WorldPosition{ 5.5f, 0.0f, 2.5f });
-	addGameObject(1, WorldPosition{ -5.5f, 0.0f, 2.5f });
-	addGameObject(1, WorldPosition{ 0.0f, 0.0f, 30.0f });
-	addGameObject(1, WorldPosition{ 0.0f, 0.0f, -10.0f });
-
-	// Environment
-
-	for(uint i = 0; i < (uint)gameObjectDefinitions->size(); ++i)
-	{
-		RoadGameObjectDefinition* gameObjectDefinition = (*gameObjectDefinitions)[i];
-		addGameObject(gameObjectDefinition->id, gameObjectDefinition->wp, gameObjectDefinition->offsetX);
-	}
-
-	// --- GameObjects
-
-	camera = new CameraFollow(true, road, player->getPosition());
-	cameraMirror = new CameraFollow(false, road, player->getPosition(), 1.1f, 11.0f, WorldPosition{ 0.0f, 0.0f, -CAMERA_Y });
-
-	// Background ---
-
-	const RoadBackgroundDefinition* roadBackgroundDefinition = road->getRoadBackgroundDefinition();
-	
-	background = new Background(getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureSkyId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureGroundId), camera->getProjectionY1());
-	backgroundMirror = new Background(getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureSkyId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureGroundId), cameraMirror->getProjectionY1());
-
-	// --- Background
-
-	layerRoad = getGameEngine()->getModuleRenderer()->addLayer(&textureRectRoad, &viewportRectRoad);
-	layerRoadMirror = getGameEngine()->getModuleRenderer()->addLayer(&textureRectRoadMirror, &viewportRectRoadMirror);
+	kmhT = getGameEngine()->getModuleTexture()->get(2, 16);
 
 	return true;
 }
 
-// #include <string>
-
 bool ModuleWorld::update(float deltaTimeS)
 {
-	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
-	{
-		paused = !paused;
-		pauseCounter = 0.0f;
-	}
+	checkPauseMode();
 
-	if(!paused)
-	{
-		for(uint i = 0; i < (uint)gameObjects.size(); ++i)
-			gameObjects[i]->update(deltaTimeS);
+	if(!paused) updateNotPaused(deltaTimeS);
+	else updatePaused(deltaTimeS);
 
-		camera->update(deltaTimeS);
-		cameraMirror->update(deltaTimeS);
-
-		background->update((Player*)player, road, deltaTimeS);
-		backgroundMirror->update((Player*)player, road, deltaTimeS);
-
-		currentLapTime += deltaTimeS; //
-	}
-	else
-	{
-		updatePauseCounter(deltaTimeS);
-
-		if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
-			getGameEngine()->setGameModule(new ModuleStart(getGameEngine()));
-	}
-
-	getGameEngine()->getModuleRenderer()->setLayer(layerRoad);
-	background->render(!camera->getForward(), getGameEngine()->getModuleRenderer());
-	road->render(camera, getGameEngine()->getModuleRenderer());
-
-	renderUI();
-
-	getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
-	backgroundMirror->render(!cameraMirror->getForward(), getGameEngine()->getModuleRenderer());
-	road->render(cameraMirror, getGameEngine()->getModuleRenderer());
+	render();
 
 	return true;
 }
 
 void ModuleWorld::cleanUp()
 {
-	getGameEngine()->getModuleRenderer()->removeLayer(layerRoad);
-	getGameEngine()->getModuleRenderer()->removeLayer(layerRoadMirror);
+	kmhT = nullptr;
 
-	getGameEngine()->getModuleCollision()->removeColliders();
+	removeRenderingLayers();
 
-	if(road)
-	{
-		road->unload(getGameEngine()->getModuleTexture());
-		delete road; road = nullptr;
-	}
+	removeBackgrounds();
 
-	if(camera)
-	{
-		delete camera; camera = nullptr;
-	}
+	removeCameras();
 
-	if(cameraMirror)
-	{
-		delete cameraMirror; cameraMirror = nullptr;
-	}
+	removeAllGameObjects();
 
-	player = nullptr;
-
-	gameObjects.clear();
-
-	delete background; background = nullptr;
-	delete backgroundMirror; backgroundMirror = nullptr;
-
-	getGameEngine()->getModuleGameObject()->unload();
+	removeRoad();
 }
 
-void ModuleWorld::updatePauseCounter(float deltaTimeS)
+void ModuleWorld::registerLapTime(const Car* car) const
+{ }
+
+void ModuleWorld::addPlayer()
 {
-	pauseCounter = mod0L(pauseCounter + deltaTimeS, 1.0f);
+	player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, -5.0f });
 }
+
+void ModuleWorld::addCars()
+{ }
 
 void ModuleWorld::renderUI() const
 {
@@ -220,14 +132,18 @@ void ModuleWorld::renderUI() const
 	// Best lap
 
 	getGameEngine()->getModuleFont()->renderText("BEST LAP", bestLapPosition, HAlignment::LEFT, VAlignment::BOTTOM, BEST_LAP_POSITION_SCALE, BEST_LAP_POSITION_SCALE, 224, 160, 0);
+	
+	string bestLapTimeStr; time(getGameEngine()->getModuleRegistry()->getPlayerBestLapTime(), bestLapTimeStr);
+	getGameEngine()->getModuleFont()->renderText(bestLapTimeStr, bestLapValuePosition, HAlignment::LEFT, VAlignment::BOTTOM, BEST_LAP_VALUE_POSITION_SCALE, BEST_LAP_VALUE_POSITION_SCALE, 248, 252, 248);
 
 	// Current velocity
 
 	getGameEngine()->getModuleFont()->renderText(to_string(kmh(player->getVelocity())), currentVelocityPosition, HAlignment::RIGHT, VAlignment::TOP, CURRENT_VELOCITY_POSITION_SCALE, CURRENT_VELOCITY_POSITION_SCALE, 224, 160, 0);
+	getGameEngine()->getModuleRenderer()->renderTexture(kmhT->t, kmhT->r, &kmhRect, kmhT->hFlipped);
 
 	// Current lap time
 
-	string currentLapTimeStr; time(currentLapTime, currentLapTimeStr);
+	string currentLapTimeStr; time(player->getCurrentLapTime(), currentLapTimeStr);
 	getGameEngine()->getModuleFont()->renderText(currentLapTimeStr, currentLapTimePosition, HAlignment::CENTER, VAlignment::BOTTOM, CURRENT_LAP_TIME_POSITION_SCALE, CURRENT_LAP_TIME_POSITION_SCALE, 224, 160, 0);
 
 	// Pause
@@ -245,7 +161,6 @@ GameObject* ModuleWorld::addGameObject(uint id, const WorldPosition& worldPositi
 {
 	GameObject* gameObject = getGameEngine()->getModuleGameObject()->getGameObject(id);
 
-	// gameObject->setRoad(road);
 	gameObject->setModuleWorld(this);
 	gameObject->enableCollider();
 
@@ -263,4 +178,166 @@ GameObject* ModuleWorld::addGameObject(uint id, const WorldPosition& worldPositi
 	road->getSegmentAtZ(gameObject->getPosition()->z)->addGameObject(gameObject);
 
 	return gameObject;
+}
+
+void ModuleWorld::addRoad()
+{
+	const char* roadJsonFile;
+
+	if(getGameEngine()->getModuleRegistry()->getCurrentCourseId() == 0)
+		roadJsonFile = "Resources/Configurations/Roads/Italy.json";
+	else
+		roadJsonFile = "Resources/Configurations/Roads/Portugal.json";
+
+	road = new Road();
+	road->load(roadJsonFile, getGameEngine()->getModuleJson(), getGameEngine()->getModuleTexture());
+}
+
+void ModuleWorld::removeRoad()
+{
+	if(road)
+	{
+		road->unload(getGameEngine()->getModuleTexture());
+		delete road; road = nullptr;
+	}
+}
+
+void ModuleWorld::addRoadGameObjects()
+{
+	const vector<RoadGameObjectDefinition*>* gameObjectDefinitions = road->getGameObjectDefinitions();
+
+	for(uint i = 0; i < (uint)gameObjectDefinitions->size(); ++i)
+	{
+		RoadGameObjectDefinition* gameObjectDefinition = (*gameObjectDefinitions)[i];
+		addGameObject(gameObjectDefinition->id, gameObjectDefinition->wp, gameObjectDefinition->offsetX);
+	}
+}
+
+void ModuleWorld::addAllGameObjects()
+{
+	getGameEngine()->getModuleGameObject()->load();
+
+	gameObjects.reserve(road->getGameObjectsCount() + 1);
+
+	addPlayer();
+
+	addCars();
+
+	// At this point all added game objects are cars (including player)
+	// Assign an id to each one
+
+	for(uint i = 0; i < (uint)gameObjects.size(); ++i)
+		((Car*)gameObjects[i])->setSpecificId(i);
+
+	addRoadGameObjects();
+}
+
+void ModuleWorld::removeAllGameObjects()
+{
+	getGameEngine()->getModuleCollision()->removeColliders();
+
+	player = nullptr;
+
+	gameObjects.clear();
+
+	getGameEngine()->getModuleGameObject()->unload();
+}
+
+void ModuleWorld::addCameras()
+{
+	camera = new CameraFollow(true, road, player->getPosition());
+	cameraMirror = new CameraFollow(false, road, player->getPosition(), 1.1f, 11.0f, WorldPosition{ 0.0f, 0.0f, -CAMERA_Y });
+}
+
+void ModuleWorld::removeCameras()
+{
+	if(camera)
+	{
+		delete camera; camera = nullptr;
+	}
+
+	if(cameraMirror)
+	{
+		delete cameraMirror; cameraMirror = nullptr;
+	}
+}
+
+void ModuleWorld::addBackgrounds()
+{
+	const RoadBackgroundDefinition* roadBackgroundDefinition = road->getRoadBackgroundDefinition();
+
+	background = new Background(getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureSkyId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureGroundId), camera->getProjectionY1());
+	backgroundMirror = new Background(getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureSkyId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureGroundId), cameraMirror->getProjectionY1());
+}
+
+void ModuleWorld::removeBackgrounds()
+{
+	delete background; background = nullptr;
+	delete backgroundMirror; backgroundMirror = nullptr;
+}
+
+void ModuleWorld::addRenderingLayers()
+{
+	layerRoad = getGameEngine()->getModuleRenderer()->addLayer(&textureRectRoad, &viewportRectRoad);
+	layerRoadMirror = getGameEngine()->getModuleRenderer()->addLayer(&textureRectRoadMirror, &viewportRectRoadMirror);
+}
+
+void ModuleWorld::removeRenderingLayers()
+{
+	getGameEngine()->getModuleRenderer()->removeLayer(layerRoad);
+	getGameEngine()->getModuleRenderer()->removeLayer(layerRoadMirror);
+
+	layerRoad = layerRoadMirror = -1;
+}
+
+void ModuleWorld::checkPauseMode()
+{
+	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
+	{
+		paused = !paused;
+		pauseCounter = 0.0f;
+	}
+}
+
+void ModuleWorld::checkGoMenu() const
+{
+	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
+		getGameEngine()->setGameModule(new ModuleStart(getGameEngine()));
+}
+
+void ModuleWorld::updatePaused(float deltaTimeS)
+{
+	checkGoMenu();
+
+	updatePauseCounter(deltaTimeS);
+}
+
+void ModuleWorld::updateNotPaused(float deltaTimeS) const
+{
+	for(GameObject* gameObject : gameObjects)
+		gameObject->update(deltaTimeS);
+
+	camera->update(deltaTimeS);
+	cameraMirror->update(deltaTimeS);
+
+	background->update(player, road, deltaTimeS);
+	backgroundMirror->update(player, road, deltaTimeS);
+}
+
+void ModuleWorld::updatePauseCounter(float deltaTimeS)
+{
+	pauseCounter = mod0L(pauseCounter + deltaTimeS, 1.0f);
+}
+
+void ModuleWorld::render() const
+{
+	getGameEngine()->getModuleRenderer()->setLayer(layerRoad);
+	background->render(!camera->getForward(), getGameEngine()->getModuleRenderer());
+	road->render(camera, getGameEngine()->getModuleRenderer());
+
+	renderUI();
+
+	getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
+	backgroundMirror->render(!cameraMirror->getForward(), getGameEngine()->getModuleRenderer());
+	road->render(cameraMirror, getGameEngine()->getModuleRenderer());
 }

@@ -4,7 +4,7 @@
 // Editable
 
 #define WINDOW_TITLE "Super Monaco GP"
-#define WINDOW_SCALE 1.5f // 1.75f
+#define WINDOW_SCALE 1.75f
 #define WINDOW_WIDTH (int)(640 * WINDOW_SCALE)
 #define WINDOW_HEIGHT (int)(448 * WINDOW_SCALE)
 

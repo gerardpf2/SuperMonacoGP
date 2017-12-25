@@ -22,7 +22,7 @@ class GameObject
 
 		virtual ~GameObject();
 
-		uint getId() const;
+		// uint getId() const;
 
 		virtual GameObjectType getType() const = 0;
 
@@ -60,7 +60,7 @@ class GameObject
 
 	protected:
 
-		GameObject(uint id);
+		GameObject(/* uint id */);
 
 		void limitZ();
 
@@ -82,7 +82,7 @@ class GameObject
 
 	private:
 
-		uint id;
+		// uint id;
 
 		// const Road* road = nullptr;
 

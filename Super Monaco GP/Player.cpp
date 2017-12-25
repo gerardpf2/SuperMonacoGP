@@ -6,8 +6,8 @@
 #include "AnimationGrid.h"
 #include "AnimationContainer.h"
 
-Player::Player(uint id, AnimationContainer* animationContainer, const ModuleInput* moduleInput) :
-	Car(id, animationContainer), moduleInput(moduleInput)
+Player::Player(/* uint id, */ AnimationContainer* animationContainer, const ModuleInput* moduleInput) :
+	Car(/* id, */ animationContainer), moduleInput(moduleInput)
 {
 	animationGrid = new AnimationGrid(animationContainer->getAnimation(0));
 

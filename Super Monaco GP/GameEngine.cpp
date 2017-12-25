@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 
+#include <time.h>
 #include "ModuleJson.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
@@ -7,13 +8,16 @@
 #include "ModuleWindow.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
+#include "ModuleRegistry.h"
 #include "ModuleAnimation.h"
 #include "ModuleCollision.h"
 #include "ModuleGameObject.h"
 #include "ModulePerformance.h"
 
 GameEngine::GameEngine()
-{ }
+{
+	srand((uint)time(nullptr));
+}
 
 GameEngine::~GameEngine()
 { }
@@ -51,6 +55,11 @@ ModuleTexture* GameEngine::getModuleTexture() const
 ModuleRenderer* GameEngine::getModuleRenderer() const
 {
 	return moduleRenderer;
+}
+
+ModuleRegistry* GameEngine::getModuleRegistry() const
+{
+	return moduleRegistry;
 }
 
 ModuleAnimation* GameEngine::getModuleAnimation() const
@@ -96,8 +105,9 @@ void GameEngine::run(Module* initialGameModule)
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(10); // 9 (core modules) + 1 (game module)
+	modules.reserve(11); // 9 (core modules) + 1 (game module)
 
+	modules.push_back(moduleRegistry = new ModuleRegistry(this));
 	modules.push_back(moduleJson = new ModuleJson(this));
 	modules.push_back(moduleInput = new ModuleInput(this));
 	modules.push_back(moduleWindow = new ModuleWindow(this));
@@ -187,6 +197,7 @@ void GameEngine::cleanUp()
 	moduleWindow = nullptr;
 	moduleTexture = nullptr;
 	moduleRenderer = nullptr;
+	moduleRegistry = nullptr;
 	moduleAnimation = nullptr;
 	moduleCollision = nullptr;
 	moduleGameObject = nullptr;

@@ -1,7 +1,10 @@
 #ifndef _MODULE_START_
 #define _MODULE_START_
 
+#include <list>
+#include <vector>
 #include "Types.h"
+#include <cstdlib>
 #include "Module.h"
 #include "Globals.h"
 #include <SDL_rect.h>
@@ -57,7 +60,38 @@
 #define ARROW_2_RECT_Y (int)(OPTIONS_RECT_Y + 0.7f * OPTIONS_RECT_H)
 #define ARROW_2_RECT SDL_Rect{ ARROW_RECT_X, ARROW_2_RECT_Y, ARROW_RECT_W, ARROW_RECT_H }
 
+#define USED_CARS_2_FREQ 3
+#define CAR_START_MIN_V (1000.0f * WINDOW_SCALE)
+#define CAR_START_MAX_V (1500.0f * WINDOW_SCALE)
+#define CAR_START_W (int)(320 * WINDOW_SCALE)
+#define CAR_START_H (int)(86 * WINDOW_SCALE)
+#define CAR_START_MIN_X 0
+#define CAR_START_MAX_X WINDOW_WIDTH
+#define CAR_START_MIN_Y (int)(0.65f * WINDOW_HEIGHT)
+#define CAR_START_MAX_Y (int)(0.75f * WINDOW_HEIGHT)
+
 // --- Window coordinates
+
+struct CarStart
+{
+	int y;
+	float x, v;
+	const Texture* t;
+
+	CarStart(const Texture* t) :
+		t(t)
+	{ }
+
+	bool isOut()
+	{
+		return x + CAR_START_W <= CAR_MIN_X;
+	}
+
+	void update(float deltaTimeS)
+	{
+		x -= v * deltaTimeS;
+	}
+};
 
 struct Texture;
 
@@ -122,6 +156,14 @@ class ModuleStart : public Module
 		WindowPosition pressEnterPosition;
 
 		WindowPosition option0Position, option1Position, option2Position;
+
+		uint carIndex = 0;
+
+		uint usedCars2Freq = 0;
+
+		std::vector<CarStart*> cars;
+
+		std::list<CarStart*> usedCars;
 };
 
 #endif
