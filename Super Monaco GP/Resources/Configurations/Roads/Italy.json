@@ -2,7 +2,7 @@
 	"length" : 405.0,
 	"background" :
 	{
-		"textureGroupPath" : "Resources/Configurations/Textures/Background.json",
+		"textureGroupPath" : "Resources/Configurations/Textures/CoursesBackgrounds.json",
 		"textureId" : 0,
 		"textureSkyId" : 1,
 		"textureGroundId" : 2,

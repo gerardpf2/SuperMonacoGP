@@ -5,6 +5,7 @@
 #include <string>
 #include "Types.h"
 #include "Globals.h"
+#include <SDL_rect.h>
 
 static float degToRad(float d)
 {
@@ -73,6 +74,45 @@ static void time(float time, std::string& timeText)
 	sprintf_s(buffer, "%.1u'%.2u''%.2u", minutes, seconds, mSeconds);
 
 	timeText = buffer;
+}
+
+static bool getRectsEndlessTexture(const Texture* texture, const SDL_Rect& textureRect, const SDL_Rect& renderRect, bool mirror, float offsetX, SDL_Rect& rect0, SDL_Rect& renderRect0, SDL_Rect& rect1, SDL_Rect& renderRect1)
+{
+	rect0 = textureRect;
+	rect0.x += (!mirror ? (int)offsetX : (int)mod0L(offsetX + texture->r->w / 2.0f, (float)texture->r->w));
+
+	if(rect0.x + rect0.w <= texture->r->x + texture->r->w)
+	{
+		renderRect0 = renderRect;
+
+		return false;
+	}
+	else
+	{
+		rect0.w -= rect0.x + rect0.w - (texture->r->x + texture->r->w);
+
+		rect1 = textureRect;
+
+		if(!mirror)
+			rect1.w = textureRect.w - rect0.w;
+		else
+		{
+			rect1.x = rect0.x;
+			rect1.w = rect0.w;
+
+			rect0.x = textureRect.x;
+			rect0.w = textureRect.w - rect1.w;
+		}
+
+		renderRect0 = renderRect;
+		renderRect0.w = (int)(renderRect0.w * ((float)rect0.w / textureRect.w));
+
+		renderRect1 = renderRect;
+		renderRect1.x += renderRect0.w;
+		renderRect1.w = renderRect.w - renderRect0.w;
+
+		return true;
+	}
 }
 
 #endif

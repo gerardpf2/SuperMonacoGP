@@ -18,7 +18,7 @@ class ModuleFreePractice : public ModuleWorld
 
 		virtual void cleanUp() override;
 
-		virtual void registerLapTime(const Car* car) const override;
+		virtual void registerLapTime(const Car* car) override;
 
 	private:
 

@@ -241,6 +241,18 @@
 			
 			"rect" : { "x" : 208, "y" : 0, "w" : 16, "h" : 30 },
 			"hFlipped" : false
+		},
+		{
+			"_info" : "39: >",
+			
+			"rect" : { "x" : 224, "y" : 0, "w" : 16, "h" : 30 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "40: <",
+			
+			"rect" : { "x" : 224, "y" : 0, "w" : 16, "h" : 30 },
+			"hFlipped" : true
 		}
 	]
 }

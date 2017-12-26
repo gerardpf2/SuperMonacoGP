@@ -30,8 +30,10 @@ void ModuleSuperMonacoGP::cleanUp()
 	ModuleWorld::cleanUp();
 }
 
-void ModuleSuperMonacoGP::registerLapTime(const Car* car) const
+void ModuleSuperMonacoGP::registerLapTime(const Car* car)
 {
+	ModuleWorld::registerLapTime(car);
+
 	getGameEngine()->getModuleRegistry()->updateCarLapTimeIfBetter(car->getSpecificId(), car->getCurrentLap(), car->getCurrentLapTime());
 
 	if(car->getType() == GameObjectType::PLAYER)

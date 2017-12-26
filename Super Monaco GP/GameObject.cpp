@@ -56,12 +56,12 @@ void GameObject::enableCollider()
 	getModuleWorld()->getGameEngine()->getModuleCollision()->addCollider(&collider);
 }
 
-const ModuleWorld* GameObject::getModuleWorld() const
+ModuleWorld* GameObject::getModuleWorld() const
 {
 	return moduleWorld;
 }
 
-void GameObject::setModuleWorld(const ModuleWorld* moduleWorld)
+void GameObject::setModuleWorld(ModuleWorld* moduleWorld)
 {
 	this->moduleWorld = moduleWorld;
 }

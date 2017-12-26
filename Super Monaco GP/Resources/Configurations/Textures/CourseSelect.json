@@ -1,0 +1,64 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 4,
+	"bmpPath" : "Resources/Images/CourseSelect.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "0: Base",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 640, "h" : 448 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "1: Black_0",
+			
+			"rect" : { "x" : 0, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "2: Black_1",
+			
+			"rect" : { "x" : 16, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "3: Black_2",
+			
+			"rect" : { "x" : 32, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "4: Black_3",
+			
+			"rect" : { "x" : 48, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "5: Black_4",
+			
+			"rect" : { "x" : 64, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "6: Black_5",
+			
+			"rect" : { "x" : 80, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "7: Black_6",
+			
+			"rect" : { "x" : 96, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "8: Black_7",
+			
+			"rect" : { "x" : 112, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		}
+	]
+}

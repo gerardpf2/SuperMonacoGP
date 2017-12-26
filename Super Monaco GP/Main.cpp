@@ -1,15 +1,14 @@
 #include "MemLeaks.h"
 #include "GameEngine.h"
-#include "ModuleStart.h"
-#include "ModuleFreePractice.h"
-#include "ModuleSuperMonacoGP.h"
 
 int main()
 {
 	ReportMemoryLeaks();
 
 	GameEngine gameEngine;
-	gameEngine.run(new ModuleStart(&gameEngine));
-	// gameEngine.run(new ModuleFreePractice(&gameEngine));
-	// gameEngine.run(new ModuleSuperMonacoGP(&gameEngine));
+
+	// gameEngine.run(GameModule::START);
+	gameEngine.run(GameModule::COURSE_SELECT);
+	// gameEngine.run(GameModule::FREE_PRACTICE);
+	// gameEngine.run(GameModule::SUPER_MONACO_GP);
 }

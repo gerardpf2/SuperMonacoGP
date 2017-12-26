@@ -153,31 +153,9 @@ void ModuleStart::updateEnterPressed(float deltaTimeS)
 	
 	arrowCounter = mod0L(arrowCounter + 5.0f * deltaTimeS, 1.0f);
 
-	// Update selected option
+	checkChangeOption();
 
-	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_UP) == KeyState::DOWN)
-		selectedOption = mod0L(selectedOption - 1, 3);
-	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_DOWN) == KeyState::DOWN)
-		selectedOption = mod0L(selectedOption + 1, 3);
-
-	// Selection has been done
-
-	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
-	{
-		switch(selectedOption)
-		{
-			case 0: // SUPER MONACO GP
-				getGameEngine()->setGameModule(new ModuleSuperMonacoGP(getGameEngine()));
-
-				break;
-			case 1: // FREE PRACTICE
-				getGameEngine()->setGameModule(new ModuleFreePractice(getGameEngine()));
-
-				break;
-			case 2: // ABOUT
-				break;
-		}
-	}
+	checkSelectOption();
 }
 
 void ModuleStart::updateEnterNoPressed(float deltaTimeS)
@@ -190,9 +168,38 @@ void ModuleStart::updateEnterNoPressed(float deltaTimeS)
 		enterPressed = true;
 }
 
-void ModuleStart::selectOption() const
+void ModuleStart::checkSelectOption() const
 {
+	// Selection has been done
 
+	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
+	{
+		switch(selectedOption)
+		{
+		case 0: // SUPER MONACO GP
+			getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
+
+			break;
+		case 1: // COURSE_SELECT, FREE PRACTICE
+			getGameEngine()->setGameModule(GameModule::COURSE_SELECT);
+
+			break;
+		case 2: // ABOUT
+			getGameEngine()->setGameModule(GameModule::ABOUT);
+
+			break;
+		}
+	}
+}
+
+void ModuleStart::checkChangeOption()
+{
+	// Update selected option
+
+	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_UP) == KeyState::DOWN)
+		selectedOption = mod0L(selectedOption - 1, 3);
+	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_DOWN) == KeyState::DOWN)
+		selectedOption = mod0L(selectedOption + 1, 3);
 }
 
 void ModuleStart::renderBase() const

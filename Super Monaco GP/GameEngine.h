@@ -4,11 +4,21 @@
 #include <vector>
 #include "Timer.h"
 
+enum class GameModule
+{
+	START,
+	COURSE_SELECT,
+	FREE_PRACTICE,
+	SUPER_MONACO_GP,
+	RESULTS,
+	ABOUT,
+};
+
 class Module;
 class ModuleJson;
 class ModuleFont;
 class ModuleInput;
-class ModuleStart;
+// class ModuleStart;
 // class ModuleWorld;
 class ModuleWindow;
 class ModuleTexture;
@@ -53,9 +63,9 @@ class GameEngine
 
 		Module* getGameModule() const;
 
-		void setGameModule(Module* gameModule);
+		void setGameModule(GameModule gameModule);
 
-		void run(Module* initialGameModule);
+		void run(GameModule gameModule);
 
 	private:
 

@@ -89,6 +89,18 @@ void Background::render(bool mirror, const ModuleRenderer* moduleRenderer) const
 
 	// Render
 
+	SDL_Rect rect0, rect1, renderRect0, renderRect1;
+
+	if(!getRectsEndlessTexture(texture, textureRect, renderRect, mirror, offsetX, rect0, renderRect0, rect1, renderRect1))
+		moduleRenderer->renderTexture(texture->t, &rect0, &renderRect0, texture->hFlipped || mirror);
+	else
+	{
+		moduleRenderer->renderTexture(texture->t, &rect0, &renderRect0, texture->hFlipped || mirror);
+		moduleRenderer->renderTexture(texture->t, &rect1, &renderRect1, texture->hFlipped || mirror);
+	}
+
+	/*
+
 	SDL_Rect rect0 = textureRect;
 	rect0.x += (!mirror ? (int)offsetX : (int)mod0L(offsetX + texture->r->w / 2.0f, (float)texture->r->w));
 
@@ -101,10 +113,7 @@ void Background::render(bool mirror, const ModuleRenderer* moduleRenderer) const
 		SDL_Rect rect1 = textureRect;
 
 		if(!mirror)
-		{
-			rect1.x = textureRect.x;
 			rect1.w = textureRect.w - rect0.w;
-		}
 		else
 		{
 			rect1.x = rect0.x;
@@ -118,10 +127,12 @@ void Background::render(bool mirror, const ModuleRenderer* moduleRenderer) const
 		renderRect0.w = (int)(renderRect0.w * ((float)rect0.w / textureRect.w));
 
 		SDL_Rect renderRect1 = renderRect;
-		renderRect1.x = renderRect0.w;
+		renderRect1.x += renderRect0.w;
 		renderRect1.w = renderRect.w - renderRect0.w;
 
 		moduleRenderer->renderTexture(texture->t, &rect0, &renderRect0, texture->hFlipped || mirror);
 		moduleRenderer->renderTexture(texture->t, &rect1, &renderRect1, texture->hFlipped || mirror);
 	}
+
+	*/
 }

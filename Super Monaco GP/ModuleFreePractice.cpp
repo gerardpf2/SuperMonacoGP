@@ -47,8 +47,10 @@ void ModuleFreePractice::cleanUp()
 	flag0 = flag1 = nullptr;
 }
 
-void ModuleFreePractice::registerLapTime(const Car* car) const
+void ModuleFreePractice::registerLapTime(const Car* car)
 {
+	ModuleWorld::registerLapTime(car);
+
 	if(car->getType() == GameObjectType::PLAYER)
 		getGameEngine()->getModuleRegistry()->updatePlayerBestLapTimeIfBetter(car->getCurrentLapTime());
 }

@@ -140,6 +140,7 @@
     <ClCompile Include="Module.cpp" />
     <ClCompile Include="ModuleAnimation.cpp" />
     <ClCompile Include="ModuleCollision.cpp" />
+    <ClCompile Include="ModuleCourseSelect.cpp" />
     <ClCompile Include="ModuleFont.cpp" />
     <ClCompile Include="ModuleFreePractice.cpp" />
     <ClCompile Include="ModuleGameObject.cpp" />
@@ -175,6 +176,8 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAnimation.h" />
     <ClInclude Include="ModuleCollision.h" />
+    <ClInclude Include="ModuleCourseSelect.h" />
+    <ClInclude Include="ModuleCourseSelectUI.h" />
     <ClInclude Include="ModuleFont.h" />
     <ClInclude Include="ModuleFreePractice.h" />
     <ClInclude Include="ModuleFreePracticeUI.h" />
@@ -185,6 +188,7 @@
     <ClInclude Include="ModuleRegistry.h" />
     <ClInclude Include="ModuleRenderer.h" />
     <ClInclude Include="ModuleStart.h" />
+    <ClInclude Include="ModuleStartUI.h" />
     <ClInclude Include="ModuleSuperMonacoGP.h" />
     <ClInclude Include="ModuleTexture.h" />
     <ClInclude Include="ModuleWindow.h" />

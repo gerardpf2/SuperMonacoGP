@@ -25,6 +25,12 @@ class Car : public Animated
 
 		float getCurrentLapTime() const;
 
+		float getCurrentLapTimeStored() const;
+
+		bool getMovementEnabled() const;
+
+		void setMovementEnabled(bool movementEnabled);
+
 		virtual void update(float deltaTimeS) override;
 
 	protected:
@@ -59,9 +65,13 @@ class Car : public Animated
 
 		float currentLapTime = 0.0f;
 
+		float currentLapTimeStored = 0.0f;
+
 		bool countingLap = true;
 
 		bool ignoreCurrentLap = true;
+
+		bool movementEnabled = false;
 };
 
 #endif

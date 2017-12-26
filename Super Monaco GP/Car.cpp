@@ -55,6 +55,21 @@ float Car::getCurrentLapTime() const
 	return currentLapTime;
 }
 
+float Car::getCurrentLapTimeStored() const
+{
+	return currentLapTimeStored;
+}
+
+bool Car::getMovementEnabled() const
+{
+	return movementEnabled;
+}
+
+void Car::setMovementEnabled(bool movementEnabled)
+{
+	this->movementEnabled = movementEnabled;
+}
+
 #include <iostream>
 using namespace std;
 
@@ -111,8 +126,11 @@ void Car::update(float deltaTimeS)
 
 	// direction.z = 1.0f; //
 
-	if(direction.z == 1.0f) velocity += acceleration * deltaTimeS;
-	else if(direction.z == -1.0f) velocity -= deacceleration * deltaTimeS;
+	if(movementEnabled)
+	{
+		if(direction.z == 1.0f) velocity += acceleration * deltaTimeS;
+		else if(direction.z == -1.0f) velocity -= deacceleration * deltaTimeS;
+	}
 
 	if(velocity > CAR_DEACCELERATION_FRICTION_LIMIT_VELOCITY)
 		velocity -= deaccelerationFrictionExtra * deltaTimeS;
@@ -129,7 +147,7 @@ void Car::update(float deltaTimeS)
 
 	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
 
-	currentLapTime += deltaTimeS;
+	if(movementEnabled) currentLapTime += deltaTimeS;
 
 	if(lapCompleted())
 	{
@@ -138,6 +156,7 @@ void Car::update(float deltaTimeS)
 			registerLapTime();
 
 			++currentLap;
+			currentLapTimeStored = currentLapTime;
 			currentLapTime = 0.0f;
 
 			if(getType() == GameObjectType::PLAYER)

@@ -11,6 +11,7 @@ class Car;
 class Road;
 class Camera;
 class Player;
+class Animation;
 class Background;
 class GameObject;
 
@@ -32,7 +33,7 @@ class ModuleWorld : public Module
 
 		virtual void cleanUp() override;
 
-		virtual void registerLapTime(const Car* car) const;
+		virtual void registerLapTime(const Car* car);
 
 	protected:
 
@@ -76,9 +77,13 @@ class ModuleWorld : public Module
 
 		void updatePaused(float deltaTimeS);
 
-		void updateNotPaused(float deltaTimeS) const;
+		void updateNotPaused(float deltaTimeS);
 
 		void updatePauseCounter(float deltaTimeS);
+
+		void updateCurrentLapTimeNotificationCounter(float deltaTimeS);
+
+		void updateLightAnimation(float deltaTimeS) const;
 
 		void render() const;
 
@@ -128,9 +133,23 @@ class ModuleWorld : public Module
 
 		WindowPosition currentLapTimePosition;
 
+		bool currentLapTimeNotificate = false;
+
+		float currentLapTimeNotificationCounter = 0.0;
+
+		WindowPosition currentLapTimeNotificationPosition;
+
+		WindowPosition currentLapTimeNotificationValuePosition;
+
 		WindowPosition currentVelocityPosition;
 
 		WindowTrapezoid mirrorBorderTrapezoidLeft, mirrorBorderTrapezoidBottom, mirrorBorderTrapezoidRight, mirrorBorderTrapezoidTop;
+
+		SDL_Rect lightRect;
+
+		uint lightIdAnimationGroup;
+
+		Animation* lightAnimation = nullptr;
 };
 
 #endif

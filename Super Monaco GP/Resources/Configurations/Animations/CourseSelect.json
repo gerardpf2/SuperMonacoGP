@@ -1,0 +1,25 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"animationGroupId" : 4,
+	"textureGroupPath" : "Resources/Configurations/Textures/CourseSelect.json",
+	"animations" :
+	[
+		{
+			"_info" : "",
+			
+			"loop" : false,
+			"endTime" : 0.333,
+			"textureIds" : [ 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1 ]
+		}
+	],
+	"animationContainers" :
+	[
+		{
+			"_info" : "",
+			
+			"animationIds" : [ 0 ]
+		}
+	]
+}

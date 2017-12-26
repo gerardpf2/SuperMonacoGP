@@ -45,6 +45,8 @@
 		
 		{ "id" : "'", "textureId" : 36 },
 		{ "id" : " ", "textureId" : 37 },
-		{ "id" : "-", "textureId" : 38 }
+		{ "id" : "-", "textureId" : 38 },
+		{ "id" : ">", "textureId" : 39 },
+		{ "id" : "<", "textureId" : 40 }
 	]
 }

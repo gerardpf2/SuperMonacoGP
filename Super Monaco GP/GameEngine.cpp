@@ -4,6 +4,7 @@
 #include "ModuleJson.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
+#include "ModuleStart.h"
 #include "ModuleWorld.h"
 #include "ModuleWindow.h"
 #include "ModuleTexture.h"
@@ -13,6 +14,9 @@
 #include "ModuleCollision.h"
 #include "ModuleGameObject.h"
 #include "ModulePerformance.h"
+#include "ModuleCourseSelect.h"
+#include "ModuleFreePractice.h"
+#include "ModuleSuperMonacoGP.h"
 
 GameEngine::GameEngine()
 {
@@ -87,14 +91,38 @@ Module* GameEngine::getGameModule() const
 	return gameModule;
 }
 
-void GameEngine::setGameModule(Module* gameModule)
+void GameEngine::setGameModule(GameModule gameModule)
 {
-	tmpGameModule = gameModule;
+	switch(gameModule)
+	{
+		case GameModule::START:
+			tmpGameModule = new ModuleStart(this);
+
+			break;
+		case GameModule::COURSE_SELECT:
+			tmpGameModule = new ModuleCourseSelect(this);
+
+			break;
+		case GameModule::FREE_PRACTICE:
+			tmpGameModule = new ModuleFreePractice(this);
+
+			break;
+		case GameModule::SUPER_MONACO_GP:
+			tmpGameModule = new ModuleSuperMonacoGP(this);
+
+			break;
+		case GameModule::RESULTS:
+
+			break;
+		case GameModule::ABOUT:
+
+			break;
+	}
 }
 
-void GameEngine::run(Module* initialGameModule)
+void GameEngine::run(GameModule gameModule)
 {
-	setGameModule(initialGameModule);
+	setGameModule(gameModule);
 
 	if(setUp())
 		while(mainLoop())

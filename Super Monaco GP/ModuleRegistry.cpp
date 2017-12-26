@@ -13,14 +13,12 @@ void ModuleRegistry::defaultValues()
 
 	for(uint i = 0; i < (uint)values.size(); ++i)
 	{
+		values[i].first = PLAYER_BEST_LAP_TIMES[i];
 		values[i].second.resize(N_CARS);
 
 		for(uint j = 0; j < (uint)values[i].second.size(); ++j)
 			values[i].second[j].resize(N_LAPS, -1.0f);
 	}
-
-	values[0].first = PLAYER_BEST_LAP_TIME_COURSE_0;
-	values[1].first = PLAYER_BEST_LAP_TIME_COURSE_1;
 }
 
 uint ModuleRegistry::getCurrentCourseId() const
@@ -36,6 +34,11 @@ void ModuleRegistry::setCurrentCourseId(uint courseId)
 float ModuleRegistry::getPlayerBestLapTime() const
 {
 	return values[currentCourseId].first;
+}
+
+float ModuleRegistry::getPlayerBestLapTime(uint courseId) const
+{
+	return values[courseId].first;
 }
 
 void ModuleRegistry::setPlayerBestLapTime(float time)

@@ -3,53 +3,53 @@
 	"_info" : "",
 	
 	"textureGroupId" : 30,
-	"bmpPath" : "Resources/Images/Background.bmp",
+	"bmpPath" : "Resources/Images/CoursesBackgrounds.bmp",
 	"textures" :
 	[
 		{
-			"_info" : "Italy Texture",
+			"_info" : "0: Italy Texture",
 			
 			"rect" : { "x" : 0, "y" : 0, "w" : 1024, "h" : 72 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "Italy TextureSky",
+			"_info" : "1: Italy TextureSky",
 			
 			"rect" : { "x" : 224, "y" : 144, "w" : 1, "h" : 1 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "Italy TextureGround",
+			"_info" : "2: Italy TextureGround",
 			
 			"rect" : { "x" : 225, "y" : 144, "w" : 1, "h" : 1 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "Italy TextureStage",
+			"_info" : "3: Italy TextureStage",
 			
 			"rect" : { "x" : 0, "y" : 144, "w" : 112, "h" : 176 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "Portugal Texture",
+			"_info" : "4: Portugal Texture",
 			
 			"rect" : { "x" : 0, "y" : 72, "w" : 1024, "h" : 72 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "Portugal TextureSky",
+			"_info" : "5: Portugal TextureSky",
 			
 			"rect" : { "x" : 226, "y" : 144, "w" : 1, "h" : 1 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "Portugal TextureGround",
+			"_info" : "6: Portugal TextureGround",
 			
 			"rect" : { "x" : 227, "y" : 144, "w" : 1, "h" : 1 },
 			"hFlipped" : false
 		},
 		{
-			"_info" : "Portugal TextureStage",
+			"_info" : "7: Portugal TextureStage",
 			
 			"rect" : { "x" : 112, "y" : 144, "w" : 112, "h" : 176 },
 			"hFlipped" : false

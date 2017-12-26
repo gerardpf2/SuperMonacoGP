@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "Player.h"
 #include "Segment.h"
+#include "Animation.h"
 #include "Background.h"
 #include "GameEngine.h"
 #include "ModuleFont.h"
@@ -14,6 +15,7 @@
 #include "ModuleRenderer.h"
 #include "ModuleRegistry.h"
 #include "ModuleCollision.h"
+#include "ModuleAnimation.h"
 #include "ModuleGameObject.h"
 
 using namespace std;
@@ -39,12 +41,18 @@ ModuleWorld::ModuleWorld(GameEngine* gameEngine) :
 
 	currentLapTimePosition = CURRENT_LAP_TIME_POSITION;
 
+	currentLapTimeNotificationPosition = CURRENT_LAP_TIME_NOTIFICATION_POSITION;
+
+	currentLapTimeNotificationValuePosition = CURRENT_LAP_TIME_NOTIFICATION_VALUE_POSITION;
+
 	currentVelocityPosition = CURRENT_VELOCITY_POSITION;
 
 	mirrorBorderTrapezoidTop = MIRROR_BORDER_TRAPEZOID_TOP;
 	mirrorBorderTrapezoidLeft = MIRROR_BORDER_TRAPEZOID_LEFT;
 	mirrorBorderTrapezoidRight = MIRROR_BORDER_TRAPEZOID_RIGHT;
 	mirrorBorderTrapezoidBottom = MIRROR_BORDER_TRAPEZOID_BOTTOM;
+
+	lightRect = LIGHT_RECT;
 }
 
 ModuleWorld::~ModuleWorld()
@@ -79,6 +87,9 @@ bool ModuleWorld::setUp()
 
 	kmhT = getGameEngine()->getModuleTexture()->get(2, 16);
 
+	lightIdAnimationGroup = getGameEngine()->getModuleAnimation()->load("Resources/Configurations/Animations/Light.json");
+	lightAnimation = getGameEngine()->getModuleAnimation()->getAnimation(lightIdAnimationGroup, 0);
+
 	return true;
 }
 
@@ -96,6 +107,9 @@ bool ModuleWorld::update(float deltaTimeS)
 
 void ModuleWorld::cleanUp()
 {
+	getGameEngine()->getModuleAnimation()->unload(lightIdAnimationGroup);
+	lightAnimation = nullptr;
+
 	kmhT = nullptr;
 
 	removeRenderingLayers();
@@ -109,8 +123,11 @@ void ModuleWorld::cleanUp()
 	removeRoad();
 }
 
-void ModuleWorld::registerLapTime(const Car* car) const
-{ }
+void ModuleWorld::registerLapTime(const Car* car)
+{
+	if(car->getType() == GameObjectType::PLAYER)
+		currentLapTimeNotificate = true;
+}
 
 void ModuleWorld::addPlayer()
 {
@@ -145,6 +162,27 @@ void ModuleWorld::renderUI() const
 
 	string currentLapTimeStr; time(player->getCurrentLapTime(), currentLapTimeStr);
 	getGameEngine()->getModuleFont()->renderText(currentLapTimeStr, currentLapTimePosition, HAlignment::CENTER, VAlignment::BOTTOM, CURRENT_LAP_TIME_POSITION_SCALE, CURRENT_LAP_TIME_POSITION_SCALE, 224, 160, 0);
+
+	// Current lap time notification
+
+	if(currentLapTimeNotificate)
+	{
+		if(roundf(currentLapTimeNotificationCounter) == (int)currentLapTimeNotificationCounter)
+		{
+			getGameEngine()->getModuleFont()->renderText("LAP TIME", currentLapTimeNotificationPosition, HAlignment::RIGHT, VAlignment::CENTER, CURRENT_LAP_TIME_NOTIFICATION_POSITION_SCALE, CURRENT_LAP_TIME_NOTIFICATION_POSITION_SCALE, 248, 252, 248);
+
+			string currentLapTimeStoredStr; time(player->getCurrentLapTimeStored(), currentLapTimeStoredStr);
+			getGameEngine()->getModuleFont()->renderText(currentLapTimeStoredStr, currentLapTimeNotificationValuePosition, HAlignment::LEFT, VAlignment::CENTER, CURRENT_LAP_TIME_NOTIFICATION_VALUE_POSITION_SCALE, CURRENT_LAP_TIME_NOTIFICATION_VALUE_POSITION_SCALE, 224, 160, 0);
+		}
+	}
+
+	// Light
+
+	if(!lightAnimation->hasEnded())
+	{
+		const Texture* lightT = lightAnimation->getCurrentFrame();
+		getGameEngine()->getModuleRenderer()->renderTexture(lightT->t, lightT->r, &lightRect, lightT->hFlipped);
+	}
 
 	// Pause
 
@@ -302,7 +340,7 @@ void ModuleWorld::checkPauseMode()
 void ModuleWorld::checkGoMenu() const
 {
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
-		getGameEngine()->setGameModule(new ModuleStart(getGameEngine()));
+		getGameEngine()->setGameModule(GameModule::START);
 }
 
 void ModuleWorld::updatePaused(float deltaTimeS)
@@ -312,8 +350,13 @@ void ModuleWorld::updatePaused(float deltaTimeS)
 	updatePauseCounter(deltaTimeS);
 }
 
-void ModuleWorld::updateNotPaused(float deltaTimeS) const
+void ModuleWorld::updateNotPaused(float deltaTimeS)
 {
+	updateLightAnimation(deltaTimeS);
+
+	if(currentLapTimeNotificate)
+		updateCurrentLapTimeNotificationCounter(deltaTimeS);
+
 	for(GameObject* gameObject : gameObjects)
 		gameObject->update(deltaTimeS);
 
@@ -327,6 +370,32 @@ void ModuleWorld::updateNotPaused(float deltaTimeS) const
 void ModuleWorld::updatePauseCounter(float deltaTimeS)
 {
 	pauseCounter = mod0L(pauseCounter + deltaTimeS, 1.0f);
+}
+
+void ModuleWorld::updateCurrentLapTimeNotificationCounter(float deltaTimeS)
+{
+	currentLapTimeNotificationCounter += deltaTimeS;
+	
+	if(currentLapTimeNotificationCounter >= 5.0f)
+	{
+		currentLapTimeNotificate = false;
+		currentLapTimeNotificationCounter = 0.0f;
+	}
+}
+
+void ModuleWorld::updateLightAnimation(float deltaTimeS) const
+{
+	if(!lightAnimation->hasEnded())
+	{
+		lightAnimation->update(deltaTimeS);
+
+		if(lightAnimation->hasEnded())
+		{
+			for(GameObject* gameObject : gameObjects)
+				if(gameObject->getType() == GameObjectType::CAR || gameObject->getType() == GameObjectType::PLAYER)
+					((Car*)gameObject)->setMovementEnabled(true);
+		}
+	}
 }
 
 void ModuleWorld::render() const

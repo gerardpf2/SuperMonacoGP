@@ -1,0 +1,64 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 3,
+	"bmpPath" : "Resources/Images/Light.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "0: Black",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 192, "h" : 80 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "1: Red_0",
+			
+			"rect" : { "x" : 0, "y" : 80, "w" : 192, "h" : 80 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "2: Red_1",
+			
+			"rect" : { "x" : 0, "y" : 160, "w" : 192, "h" : 80 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "3: Red_2",
+			
+			"rect" : { "x" : 0, "y" : 240, "w" : 192, "h" : 80 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "4: Red_3",
+			
+			"rect" : { "x" : 0, "y" : 320, "w" : 192, "h" : 80 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "5: Green_0",
+			
+			"rect" : { "x" : 192, "y" : 0, "w" : 192, "h" : 80 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "6: Green_1",
+			
+			"rect" : { "x" : 192, "y" : 80, "w" : 192, "h" : 80 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "7: Green_2",
+			
+			"rect" : { "x" : 192, "y" : 160, "w" : 192, "h" : 80 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "8: Green_3",
+			
+			"rect" : { "x" : 192, "y" : 240, "w" : 192, "h" : 80 },
+			"hFlipped" : false
+		}
+	]
+}

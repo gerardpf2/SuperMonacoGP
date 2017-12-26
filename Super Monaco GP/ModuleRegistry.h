@@ -4,12 +4,7 @@
 #include <vector>
 #include "Types.h"
 #include "Module.h"
-
-#define N_COURSES 2
-#define N_CARS 16
-#define N_LAPS 3
-#define PLAYER_BEST_LAP_TIME_COURSE_0 300.0f // Ajustar
-#define PLAYER_BEST_LAP_TIME_COURSE_1 400.0f // Ajustar
+#include "Globals.h"
 
 class ModuleRegistry : public Module
 {
@@ -26,6 +21,8 @@ class ModuleRegistry : public Module
 		void setCurrentCourseId(uint courseId);
 
 		float getPlayerBestLapTime() const;
+
+		float getPlayerBestLapTime(uint courseId) const;
 
 		void setPlayerBestLapTime(float time);
 

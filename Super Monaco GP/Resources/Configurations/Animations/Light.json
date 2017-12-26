@@ -1,0 +1,25 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"animationGroupId" : 3,
+	"textureGroupPath" : "Resources/Configurations/Textures/Light.json",
+	"animations" :
+	[
+		{
+			"_info" : "",
+			
+			"loop" : false,
+			"endTime" : 5.0,
+			"textureIds" : [ 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 7, 8, 0, 0, 0, 0, 0 ]
+		}
+	],
+	"animationContainers" :
+	[
+		{
+			"_info" : "",
+			
+			"animationIds" : [ 0 ]
+		}
+	]
+}

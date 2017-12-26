@@ -42,9 +42,9 @@ class GameObject
 
 		// void setRoad(const Road* road);
 
-		const ModuleWorld* getModuleWorld() const;
+		ModuleWorld* getModuleWorld() const;
 
-		void setModuleWorld(const ModuleWorld* moduleWorld);
+		void setModuleWorld(ModuleWorld* moduleWorld);
 		
 		void elevate();
 
@@ -86,7 +86,7 @@ class GameObject
 
 		// const Road* road = nullptr;
 
-		const ModuleWorld* moduleWorld = nullptr;
+		ModuleWorld* moduleWorld = nullptr;
 };
 
 #endif
