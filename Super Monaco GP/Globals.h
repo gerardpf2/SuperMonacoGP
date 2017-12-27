@@ -5,8 +5,6 @@
 
 #define WINDOW_TITLE "Super Monaco GP"
 #define WINDOW_SCALE 1.75f
-#define WINDOW_WIDTH (int)(640 * WINDOW_SCALE)
-#define WINDOW_HEIGHT (int)(448 * WINDOW_SCALE)
 
 #define CAMERA_Y 5.0f
 #define CAMERA_FOV 90.0f
@@ -62,6 +60,9 @@ static const float PLAYER_BEST_LAP_TIMES[N_COURSES]{ 300.0f, 400.0f };
 #define CAR_DEACCELERATION_FRICTION_EXTRA_GRASS 10.0f
 
 // Computed
+
+#define WINDOW_WIDTH (int)(640 * WINDOW_SCALE)
+#define WINDOW_HEIGHT (int)(448 * WINDOW_SCALE)
 
 #define N_SEGMENTS_DRAW (uint)(DRAW_DISTANCE / SEGMENT_LENGTH)
 

@@ -57,6 +57,12 @@ void ModuleRenderer::removeLayer(uint id)
 		}
 }
 
+void ModuleRenderer::renderRect(const SDL_Rect* dstRect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled) const
+{
+	if(filled) boxRGBA(renderer, dstRect->x, dstRect->y, dstRect->x + dstRect->w, dstRect->y + dstRect->h, r, g, b, a);
+	else rectangleRGBA(renderer, dstRect->x, dstRect->y, dstRect->x + dstRect->w, dstRect->y + dstRect->h, r, g, b, a);
+}
+
 void ModuleRenderer::renderTexture(SDL_Texture* texture, const SDL_Rect* srcRect, const SDL_Rect* dstRect, bool hFlipped, Uint8 modR, Uint8 modG, Uint8 modB, Uint8 modA) const
 {
 	SDL_SetTextureColorMod(texture, modR, modG, modB);

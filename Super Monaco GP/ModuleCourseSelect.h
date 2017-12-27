@@ -61,7 +61,7 @@ class ModuleCourseSelect : public Module
 
 		std::vector<const Texture*> backgrounds;
 
-		bool showChangeCourseAnimation = false;
+		bool showChangeCourseAnimation = true;
 
 		Animation* changeCourseAnimation = nullptr;
 

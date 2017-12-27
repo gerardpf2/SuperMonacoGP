@@ -51,6 +51,7 @@ bool ModuleCourseSelect::setUp()
 	courseSelectAnimationGroupId = getGameEngine()->getModuleAnimation()->load("Resources/Configurations/Animations/CourseSelect.json");
 
 	changeCourseAnimation = getGameEngine()->getModuleAnimation()->getAnimation(courseSelectAnimationGroupId, 0);
+	changeCourseAnimation->advancePercent(0.5f);
 
 	coursesBackgroundsTextureGroupId = getGameEngine()->getModuleTexture()->load("Resources/Configurations/Textures/CoursesBackgrounds.json");
 

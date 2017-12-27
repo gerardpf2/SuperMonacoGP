@@ -1,0 +1,40 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 5,
+	"bmpPath" : "Resources/Images/Results.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "0: Base_0",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 640, "h" : 160 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "1: Base_1",
+			
+			"rect" : { "x" : 0, "y" : 160, "w" : 640, "h" : 160 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "2: Base_2",
+			
+			"rect" : { "x" : 0, "y" : 320, "w" : 640, "h" : 160 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "3: Grid",
+			
+			"rect" : { "x" : 0, "y" : 480, "w" : 276, "h" : 292 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "4: Car",
+			
+			"rect" : { "x" : 276, "y" : 480, "w" : 222, "h" : 86 },
+			"hFlipped" : false
+		}
+	]
+}

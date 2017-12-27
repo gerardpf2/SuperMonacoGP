@@ -47,6 +47,7 @@
 		{ "id" : " ", "textureId" : 37 },
 		{ "id" : "-", "textureId" : 38 },
 		{ "id" : ">", "textureId" : 39 },
-		{ "id" : "<", "textureId" : 40 }
+		{ "id" : "<", "textureId" : 40 },
+		{ "id" : ".", "textureId" : 41 }
 	]
 }

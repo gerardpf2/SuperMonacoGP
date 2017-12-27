@@ -149,6 +149,7 @@
     <ClCompile Include="ModulePerformance.cpp" />
     <ClCompile Include="ModuleRegistry.cpp" />
     <ClCompile Include="ModuleRenderer.cpp" />
+    <ClCompile Include="ModuleResults.cpp" />
     <ClCompile Include="ModuleStart.cpp" />
     <ClCompile Include="ModuleSuperMonacoGP.cpp" />
     <ClCompile Include="ModuleTexture.cpp" />
@@ -187,6 +188,8 @@
     <ClInclude Include="ModulePerformance.h" />
     <ClInclude Include="ModuleRegistry.h" />
     <ClInclude Include="ModuleRenderer.h" />
+    <ClInclude Include="ModuleResults.h" />
+    <ClInclude Include="ModuleResultsUI.h" />
     <ClInclude Include="ModuleStart.h" />
     <ClInclude Include="ModuleStartUI.h" />
     <ClInclude Include="ModuleSuperMonacoGP.h" />

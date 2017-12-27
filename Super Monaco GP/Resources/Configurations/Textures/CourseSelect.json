@@ -59,6 +59,150 @@
 			
 			"rect" : { "x" : 112, "y" : 448, "w" : 16, "h" : 16 },
 			"hFlipped" : false
+		},
+		{
+			"_info" : "9: Black_8",
+			
+			"rect" : { "x" : 128, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "10: Black_9",
+			
+			"rect" : { "x" : 144, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "11: Black_10",
+			
+			"rect" : { "x" : 160, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "12: Black_11",
+			
+			"rect" : { "x" : 176, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "13: Black_12",
+			
+			"rect" : { "x" : 192, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "14: Black_13",
+			
+			"rect" : { "x" : 208, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "15: Black_14",
+			
+			"rect" : { "x" : 224, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "16: Black_15",
+			
+			"rect" : { "x" : 240, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "17: Black_16",
+			
+			"rect" : { "x" : 256, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "18: Black_17",
+			
+			"rect" : { "x" : 272, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "19: Black_18",
+			
+			"rect" : { "x" : 288, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "20: Black_19",
+			
+			"rect" : { "x" : 304, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "21: Black_20",
+			
+			"rect" : { "x" : 320, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "22: Black_21",
+			
+			"rect" : { "x" : 336, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "23: Black_22",
+			
+			"rect" : { "x" : 352, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "24: Black_23",
+			
+			"rect" : { "x" : 368, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "25: Black_24",
+			
+			"rect" : { "x" : 384, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "26: Black_25",
+			
+			"rect" : { "x" : 400, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "27: Black_26",
+			
+			"rect" : { "x" : 416, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "28: Black_27",
+			
+			"rect" : { "x" : 432, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "29: Black_28",
+			
+			"rect" : { "x" : 448, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "30: Black_29",
+			
+			"rect" : { "x" : 464, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "31: Black_30",
+			
+			"rect" : { "x" : 480, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "32: Black_31",
+			
+			"rect" : { "x" : 496, "y" : 448, "w" : 16, "h" : 16 },
+			"hFlipped" : false
 		}
 	]
 }

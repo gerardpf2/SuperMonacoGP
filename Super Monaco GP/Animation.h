@@ -40,7 +40,7 @@ class Animation
 
 		void synchronizeInverse(const Animation& animation);
 
-		// void advancePercent(float percent);
+		void advancePercent(float percent);
 
 		void reset();
 

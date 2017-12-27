@@ -8,6 +8,7 @@
 #include "ModuleWorld.h"
 #include "ModuleWindow.h"
 #include "ModuleTexture.h"
+#include "ModuleResults.h"
 #include "ModuleRenderer.h"
 #include "ModuleRegistry.h"
 #include "ModuleAnimation.h"
@@ -112,6 +113,7 @@ void GameEngine::setGameModule(GameModule gameModule)
 
 			break;
 		case GameModule::RESULTS:
+			tmpGameModule = new ModuleResults(this);
 
 			break;
 		case GameModule::ABOUT:

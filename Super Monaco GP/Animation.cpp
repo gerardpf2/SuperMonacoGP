@@ -110,11 +110,11 @@ void Animation::synchronizeInverse(const Animation& animation)
 	currentTime = percent * endTime;
 }
 
-/* void Animation::advancePercent(float percent)
+void Animation::advancePercent(float percent)
 {
 	currentTime += percent * endTime;
 	currentTime = mod0L(currentTime, endTime);
-} */
+}
 
 void Animation::reset()
 {

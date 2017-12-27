@@ -115,4 +115,27 @@ static bool getRectsEndlessTexture(const Texture* texture, const SDL_Rect& textu
 	}
 }
 
+static void rankStr(uint index, std::string& indexText)
+{
+	indexText = std::to_string(index);
+
+	switch(index)
+	{
+		case 1:
+			indexText += "ST";
+
+			break;
+		case 2:
+			indexText += "ND";
+
+			break;
+		case 3:
+			indexText += "RD";
+
+			break;
+		default:
+			indexText += "TH";
+	}
+}
+
 #endif
