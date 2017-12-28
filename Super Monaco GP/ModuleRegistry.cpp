@@ -15,12 +15,11 @@ void ModuleRegistry::defaultValues()
 
 		for(uint i = 0; i < (uint)values.size(); ++i)
 		{
-			values[i].first = PLAYER_BEST_LAP_TIMES[i];
+			values[i].first = INFINITY; // PLAYER_BEST_LAP_TIMES[i];
 			values[i].second.resize(N_CARS);
 
 			for(uint j = 0; j < (uint)values[i].second.size(); ++j)
-				// values[i].second[j].resize(N_LAPS, -1.0f);
-				values[i].second[j].resize(N_LAPS, fmodf((float)rand(), 60.0f) + 60.0f);
+				values[i].second[j].resize(N_LAPS, INFINITY);
 		}
 	}
 	else
@@ -28,7 +27,7 @@ void ModuleRegistry::defaultValues()
 		for(uint i = 0; i < (uint)values.size(); ++i)
 			for(uint j = 0; j < (uint)values[i].second.size(); ++j)
 				for(uint k = 0; k < (uint)values[i].second[j].size(); ++k)
-					values[i].second[j][k] = -1.0f;
+					values[i].second[j][k] = INFINITY;
 	}
 }
 

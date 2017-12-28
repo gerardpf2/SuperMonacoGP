@@ -66,14 +66,18 @@ static uint kmh(float value)
 
 static void time(float time, std::string& timeText)
 {
-	uint minutes = (uint)(time / 60.0f);
-	uint seconds = (uint)fmodf(time, 60.0f);
-	uint mSeconds = (uint)roundf((time - (uint)time) * 100.0f) % 100;
+	if(isinf(time)) timeText = "-'--''--";
+	else
+	{
+		uint minutes = (uint)(time / 60.0f);
+		uint seconds = (uint)fmodf(time, 60.0f);
+		uint mSeconds = (uint)roundf((time - (uint)time) * 100.0f) % 100;
 
-	char buffer[64]; // Cannot control minutes (size 9 works if minutes < 10)
-	sprintf_s(buffer, "%.1u'%.2u''%.2u", minutes, seconds, mSeconds);
+		char buffer[64]; // Cannot control minutes (size 9 works if minutes < 10)
+		sprintf_s(buffer, "%.1u'%.2u''%.2u", minutes, seconds, mSeconds);
 
-	timeText = buffer;
+		timeText = buffer;
+	}
 }
 
 static bool getRectsEndlessTexture(const Texture* texture, const SDL_Rect& textureRect, const SDL_Rect& renderRect, bool mirror, float offsetX, SDL_Rect& rect0, SDL_Rect& renderRect0, SDL_Rect& rect1, SDL_Rect& renderRect1)

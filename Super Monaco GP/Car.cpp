@@ -70,9 +70,6 @@ void Car::setMovementEnabled(bool movementEnabled)
 	this->movementEnabled = movementEnabled;
 }
 
-#include <iostream>
-using namespace std;
-
 void Car::update(float deltaTimeS)
 {
 	Animated::update(deltaTimeS);
@@ -98,6 +95,8 @@ void Car::update(float deltaTimeS)
 
 	position.z += velocity * deltaTimeS;
 	
+	globalZ += velocity * deltaTimeS;
+
 	limitZ();
 
 	Segment* newSegment = getModuleWorld()->getRoad()->getSegmentAtZ(position.z);
@@ -158,9 +157,6 @@ void Car::update(float deltaTimeS)
 			++currentLap;
 			currentLapTimeStored = currentLapTime;
 			currentLapTime = 0.0f;
-
-			if(getType() == GameObjectType::PLAYER)
-				cout << "LAP" << endl;
 		}
 		else ignoreCurrentLap = false;
 	}
@@ -309,6 +305,8 @@ void Car::checkCollision()
 	{
 		velocity *= 0.5f;
 		position.z -= /* getVelocityPercent() * */ SEGMENT_LENGTH; limitZ();
+
+		globalZ -= SEGMENT_LENGTH;
 
 		if(mainCollider->g->getType() == GameObjectType::STATIC || mainCollider->g->getType() == GameObjectType::ANIMATED)
 		{

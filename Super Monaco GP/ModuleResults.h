@@ -36,7 +36,7 @@ class ModuleResults : public Module
 
 		void updateCar(float deltaTimeS);
 
-		void checkGoMenuOrNextCourse() const;
+		void checkGoNextCourseOrMenu() const;
 
 		void render() const;
 

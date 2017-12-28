@@ -6,6 +6,7 @@
 #include "ModuleInput.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
+#include "ModuleRegistry.h"
 #include "ModuleFreePractice.h"
 #include "ModuleSuperMonacoGP.h"
 
@@ -55,6 +56,8 @@ bool ModuleStart::setUp()
 	cars.push_back(new CarStart(moduleTexture->get(textureGroupId, 10)));
 
 	carIndex = rand() % cars.size();
+
+	getGameEngine()->getModuleRegistry()->setCurrentCourseId(0);
 
 	return true;
 }

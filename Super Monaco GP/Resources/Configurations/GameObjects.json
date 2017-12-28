@@ -18,7 +18,7 @@
 			"type" : 1,
 			"animationGroupPath" : "Resources/Configurations/Animations/Car.json",
 			"animationContainerId" : 0,
-			"collider" : { "mW" : 0.55, "d" : 8.0 }
+			"collider" : { "mW" : 0.55, "d" : 2.0 }
 		},
 		{
 			"_info" : "2: Yellow arrow",

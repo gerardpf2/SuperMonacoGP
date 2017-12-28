@@ -23,6 +23,11 @@ GameObject::~GameObject()
 	return id;
 } */
 
+float GameObject::getGlobalZ() const
+{
+	return globalZ;
+}
+
 const WorldPosition* GameObject::getPosition() const
 {
 	return &position;
@@ -33,6 +38,8 @@ void GameObject::setPosition(const WorldPosition& position)
 	this->position = position;
 
 	limitZ();
+
+	globalZ = position.z;
 }
 
 const Collider* GameObject::getCollider() const
@@ -78,6 +85,8 @@ void GameObject::move(const WorldPosition& offset)
 	position.x += offset.x;
 	position.y += offset.y;
 	position.z += offset.z;
+
+	globalZ += offset.z;
 }
 
 void GameObject::update(float deltaTimeS)

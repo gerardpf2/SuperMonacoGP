@@ -26,6 +26,8 @@ class GameObject
 
 		virtual GameObjectType getType() const = 0;
 
+		float getGlobalZ() const;
+
 		const WorldPosition* getPosition() const;
 
 		void setPosition(const WorldPosition& position);
@@ -79,6 +81,8 @@ class GameObject
 		Collider collider;
 
 		WorldPosition position;
+
+		float globalZ = 0.0f;
 
 	private:
 

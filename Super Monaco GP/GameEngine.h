@@ -65,7 +65,7 @@ class GameEngine
 
 		void setGameModule(GameModule gameModule);
 
-		void run(GameModule gameModule);
+		void run(GameModule gameModule = GameModule::START);
 
 	private:
 

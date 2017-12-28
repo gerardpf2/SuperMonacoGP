@@ -193,6 +193,7 @@
     <ClInclude Include="ModuleStart.h" />
     <ClInclude Include="ModuleStartUI.h" />
     <ClInclude Include="ModuleSuperMonacoGP.h" />
+    <ClInclude Include="ModuleSuperMonacoGPUI.h" />
     <ClInclude Include="ModuleTexture.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleWorld.h" />

@@ -245,5 +245,8 @@
     <ClInclude Include="ModuleResultsUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleSuperMonacoGPUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

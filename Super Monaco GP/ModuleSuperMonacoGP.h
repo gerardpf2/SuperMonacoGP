@@ -1,6 +1,11 @@
 #ifndef _MODULE_SUPER_MONACO_GP_
 #define _MODULE_SUPER_MONACO_GP_
 
+#define CARS_X 7.5f
+#define CARS_OFFSET_Z 5.0f
+#define PLAYER_POSITION 10
+#define WAIT_TIME_GO_RESULTS 2.0f
+
 #include "ModuleWorld.h"
 
 class ModuleSuperMonacoGP : public ModuleWorld
@@ -21,9 +26,33 @@ class ModuleSuperMonacoGP : public ModuleWorld
 
 	private:
 
+		void registerEstimatedLapTimes() const;
+
 		virtual void addPlayer() override;
 
 		virtual void addCars() override;
+
+		virtual void renderUI() const override;
+
+		void renderLapTimes() const;
+
+		void renderCurrentPosition() const;
+
+	private:
+
+		std::vector<uint> lapsCars;
+
+		std::vector<const Car*> enemyCars;
+
+		bool goResults = false;
+
+		float waitTimeGoResults = 0.0f;
+
+		WindowPosition lapTimesPosition;
+
+		WindowPosition positionPosition, positionValuePosition;
+
+		WindowPosition currentLapPosition; // , currentLapValuePosition;
 };
 
 #endif

@@ -108,6 +108,7 @@ bool ModuleWorld::update(float deltaTimeS)
 void ModuleWorld::cleanUp()
 {
 	getGameEngine()->getModuleAnimation()->unload(lightIdAnimationGroup);
+	
 	lightAnimation = nullptr;
 
 	kmhT = nullptr;
@@ -131,7 +132,7 @@ void ModuleWorld::registerLapTime(const Car* car)
 
 void ModuleWorld::addPlayer()
 {
-	player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, -5.0f });
+	player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, 0.0f });
 }
 
 void ModuleWorld::addCars()
@@ -160,8 +161,11 @@ void ModuleWorld::renderUI() const
 
 	// Current lap time
 
-	string currentLapTimeStr; time(player->getCurrentLapTime(), currentLapTimeStr);
-	getGameEngine()->getModuleFont()->renderText(currentLapTimeStr, currentLapTimePosition, HAlignment::CENTER, VAlignment::BOTTOM, CURRENT_LAP_TIME_POSITION_SCALE, CURRENT_LAP_TIME_POSITION_SCALE, 224, 160, 0);
+	if(renderCurrentLapTime)
+	{
+		string currentLapTimeStr; time(player->getCurrentLapTime(), currentLapTimeStr);
+		getGameEngine()->getModuleFont()->renderText(currentLapTimeStr, currentLapTimePosition, HAlignment::CENTER, VAlignment::BOTTOM, CURRENT_LAP_TIME_POSITION_SCALE, CURRENT_LAP_TIME_POSITION_SCALE, 224, 160, 0);
+	}
 
 	// Current lap time notification
 

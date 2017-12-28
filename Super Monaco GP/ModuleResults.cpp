@@ -31,23 +31,23 @@ struct CarResult
 
 	bool isOut()
 	{
-		return x >= CAR_END_POSITION_X && y >= CAR_END_POSITION_Y;
+		return x >= CAR_END_POSITION_X || y >= CAR_END_POSITION_Y;
 	}
 
 	float distancePercent()
 	{
-		float xx = CAR_END_POSITION_X - x;
-		float yy = CAR_END_POSITION_Y - y;
+		float xx = x - CAR_START_POSITION_X;
+		float yy = y - CAR_START_POSITION_Y;
 
 		return sqrtf(xx * xx + yy * yy) / CAR_DISTANCE;
 	}
 
 	void update(float deltaTimeS)
 	{
-		float distPercent = (1.0f - distancePercent());
+		float velocityExtraMultiplier = distancePercent();
 
-		x += distPercent * CAR_VELOCITY * CAR_STEP_X * deltaTimeS;
-		y += distPercent * CAR_VELOCITY * CAR_STEP_Y * deltaTimeS;
+		x += velocityExtraMultiplier * CAR_VELOCITY * CAR_STEP_X * deltaTimeS;
+		y += velocityExtraMultiplier * CAR_VELOCITY * CAR_STEP_Y * deltaTimeS;
 	}
 };
 
@@ -95,7 +95,7 @@ bool ModuleResults::setUp()
 
 bool ModuleResults::update(float deltaTimeS)
 {
-	checkGoMenuOrNextCourse();
+	checkGoNextCourseOrMenu();
 
 	updateBase(deltaTimeS);
 
@@ -191,12 +191,21 @@ void ModuleResults::updateCar(float deltaTimeS)
 	else if((waitNextCarCounter += deltaTimeS) >= TIME_BETWEEN_CARS) carInUse = true;
 }
 
-void ModuleResults::checkGoMenuOrNextCourse() const
+void ModuleResults::checkGoNextCourseOrMenu() const
 {
-	// If SuperMonacoGP go next course
+	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
+	{
+		// getGameEngine()->getModuleRegistry()->defaultValues();
 
-	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN || getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
+		getGameEngine()->getModuleRegistry()->setCurrentCourseId((getGameEngine()->getModuleRegistry()->getCurrentCourseId() + 1) % N_COURSES);
+		getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
+	}
+	else if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
+	{
+		// getGameEngine()->getModuleRegistry()->defaultValues();
+
 		getGameEngine()->setGameModule(GameModule::START);
+	}
 }
 
 void ModuleResults::render() const
@@ -221,7 +230,7 @@ void ModuleResults::renderCar() const
 {
 	if(!carInUse) return;
 
-	float scale = interpolate(carResult->distancePercent(), 1.0f, 0.0f, CAR_START_SCALE, CAR_END_SCALE);
+	float scale = interpolate(carResult->distancePercent(), 0.0f, 1.0f, CAR_START_SCALE, CAR_END_SCALE);
 
 	int x = (int)carResult->x;
 	int y = (int)carResult->y;

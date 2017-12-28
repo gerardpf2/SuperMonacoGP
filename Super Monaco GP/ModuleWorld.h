@@ -93,6 +93,8 @@ class ModuleWorld : public Module
 
 		Player* player = nullptr;
 
+		bool renderCurrentLapTime = true;
+
 	private:
 
 		Road* road = nullptr;
