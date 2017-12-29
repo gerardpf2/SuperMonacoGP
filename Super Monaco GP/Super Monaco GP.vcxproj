@@ -152,6 +152,7 @@
     <ClCompile Include="ModuleResults.cpp" />
     <ClCompile Include="ModuleStart.cpp" />
     <ClCompile Include="ModuleSuperMonacoGP.cpp" />
+    <ClCompile Include="ModuleSwitch.cpp" />
     <ClCompile Include="ModuleTexture.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleWorld.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="ModuleStartUI.h" />
     <ClInclude Include="ModuleSuperMonacoGP.h" />
     <ClInclude Include="ModuleSuperMonacoGPUI.h" />
+    <ClInclude Include="ModuleSwitch.h" />
     <ClInclude Include="ModuleTexture.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleWorld.h" />

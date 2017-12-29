@@ -12,6 +12,16 @@ GameEngine* Module::getGameEngine() const
 	return gameEngine;
 }
 
+bool Module::getBlocked() const
+{
+	return blocked;
+}
+
+void Module::setBlocked(bool blocked)
+{
+	this->blocked = blocked;
+}
+
 bool Module::setUp()
 {
 	return true;

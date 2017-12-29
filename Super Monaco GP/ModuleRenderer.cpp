@@ -9,7 +9,9 @@ using namespace std;
 
 ModuleRenderer::ModuleRenderer(GameEngine* gameEngine) :
 	Module(gameEngine)
-{ }
+{
+	windowRect = SDL_Rect{ 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+}
 
 ModuleRenderer::~ModuleRenderer()
 { }
@@ -55,6 +57,16 @@ void ModuleRenderer::removeLayer(uint id)
 
 			break;
 		}
+}
+
+void ModuleRenderer::setColorAtTop(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+	colorAtTopR = r;
+	colorAtTopG = g;
+	colorAtTopB = b;
+	colorAtTopA = a;
+
+	renderColorAtTop = true;
 }
 
 void ModuleRenderer::renderRect(const SDL_Rect* dstRect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled) const
@@ -108,6 +120,8 @@ bool ModuleRenderer::preUpdate(float deltaTimeS)
 
 	SDL_SetRenderTarget(renderer, nullptr);
 
+	renderColorAtTop = false;
+
 	return true;
 }
 
@@ -117,6 +131,9 @@ bool ModuleRenderer::postUpdate(float deltaTimeS)
 
 	for(Layer* layer : layers)
 		SDL_RenderCopy(renderer, layer->t, layer->tr, layer->v);
+
+	if(renderColorAtTop)
+		renderRect(&windowRect, colorAtTopR, colorAtTopG, colorAtTopB, colorAtTopA);
 
 	SDL_RenderPresent(renderer);
 

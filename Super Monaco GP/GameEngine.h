@@ -21,6 +21,7 @@ class ModuleInput;
 // class ModuleStart;
 // class ModuleWorld;
 class ModuleWindow;
+class ModuleSwitch;
 class ModuleTexture;
 class ModuleRenderer;
 class ModuleRegistry;
@@ -47,6 +48,8 @@ class GameEngine
 
 		ModuleWindow* getModuleWindow() const;
 
+		ModuleSwitch* getModuleSwitch() const;
+
 		ModuleTexture* getModuleTexture() const;
 
 		ModuleRenderer* getModuleRenderer() const;
@@ -63,7 +66,7 @@ class GameEngine
 
 		Module* getGameModule() const;
 
-		void setGameModule(GameModule gameModule);
+		void setGameModule(GameModule gameModule, bool blocked = false);
 
 		void run(GameModule gameModule = GameModule::START);
 
@@ -94,6 +97,8 @@ class GameEngine
 		// ModuleWorld* moduleWorld = nullptr;
 
 		ModuleWindow* moduleWindow = nullptr;
+
+		ModuleSwitch* moduleSwitch = nullptr;
 
 		ModuleTexture* moduleTexture = nullptr;
 

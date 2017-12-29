@@ -7,9 +7,9 @@ int main()
 
 	GameEngine gameEngine;
 
-	// gameEngine.run(GameModule::START);
+	gameEngine.run(GameModule::START);
 	// gameEngine.run(GameModule::COURSE_SELECT);
 	// gameEngine.run(GameModule::FREE_PRACTICE);
-	gameEngine.run(GameModule::SUPER_MONACO_GP);
+	// gameEngine.run(GameModule::SUPER_MONACO_GP);
 	// gameEngine.run(GameModule::RESULTS);
 }

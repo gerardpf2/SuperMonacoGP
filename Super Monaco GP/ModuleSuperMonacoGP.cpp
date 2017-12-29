@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "GameEngine.h"
 #include "ModuleFont.h"
+#include "ModuleSwitch.h"
 #include "ModuleRegistry.h"
 #include "ModuleSuperMonacoGPUI.h"
 
@@ -43,11 +44,12 @@ bool ModuleSuperMonacoGP::update(float deltaTimeS)
 {
 	bool ret = ModuleWorld::update(deltaTimeS);
 
-	if(!paused && goResults)
+	if(!getBlocked() && !paused && goResults)
 	{
 		if((waitTimeGoResults += deltaTimeS) >= WAIT_TIME_GO_RESULTS)
 		{
-			getGameEngine()->setGameModule(GameModule::RESULTS);
+			// getGameEngine()->setGameModule(GameModule::RESULTS);
+			getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::RESULTS);
 
 			registerEstimatedLapTimes();
 		}

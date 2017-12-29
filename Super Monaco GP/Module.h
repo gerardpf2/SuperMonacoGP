@@ -11,6 +11,10 @@ class Module
 
 		GameEngine* getGameEngine() const;
 
+		bool getBlocked() const;
+
+		void setBlocked(bool blocked);
+
 		virtual bool setUp();
 
 		virtual bool preUpdate(float deltaTimeS);
@@ -28,6 +32,8 @@ class Module
 	private:
 
 		GameEngine* gameEngine = nullptr;
+
+		bool blocked = false;
 };
 
 #endif

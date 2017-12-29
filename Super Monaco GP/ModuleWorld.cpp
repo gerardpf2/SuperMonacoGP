@@ -10,6 +10,7 @@
 #include "ModuleFont.h"
 #include "ModuleInput.h"
 #include "ModuleStart.h"
+#include "ModuleSwitch.h"
 #include "CameraFollow.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
@@ -90,15 +91,36 @@ bool ModuleWorld::setUp()
 	lightIdAnimationGroup = getGameEngine()->getModuleAnimation()->load("Resources/Configurations/Animations/Light.json");
 	lightAnimation = getGameEngine()->getModuleAnimation()->getAnimation(lightIdAnimationGroup, 0);
 
+	// When the setUp function is executed, this module is still blocked
+	// At this point, this is rendered without being updated
+	// All the cameras need to be positioned first
+	// Then, it is necessary to compute the segment offsets by rendering the road
+	// Finally, all the game objects (especially the cars) need to be updated in order to compute the correct texture that is going to be rendered
+	// The cars compute that based on the difference between their position and the position of the camera
+	// If all the previous steps are ignored all is still working, but the initial rendered scene is not correct
+	// Once the module is not blocked any more, that scene is correctly rendered
+	// By doing the previous steps it is possible for the player to see all being correctly rendered while the module is still blocked
+
+	camera->update(0.0f);
+	cameraMirror->update(0.0f);
+
+	road->render(camera, getGameEngine()->getModuleRenderer());
+
+	for(GameObject* gameObject : gameObjects)
+		gameObject->update(0.0f);
+
 	return true;
 }
 
 bool ModuleWorld::update(float deltaTimeS)
 {
-	checkPauseMode();
+	if(!getBlocked())
+	{
+		checkPauseMode();
 
-	if(!paused) updateNotPaused(deltaTimeS);
-	else updatePaused(deltaTimeS);
+		if(!paused) updateNotPaused(deltaTimeS);
+		else updatePaused(deltaTimeS);
+	}
 
 	render();
 
@@ -344,7 +366,8 @@ void ModuleWorld::checkPauseMode()
 void ModuleWorld::checkGoMenu() const
 {
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
-		getGameEngine()->setGameModule(GameModule::START);
+		// getGameEngine()->setGameModule(GameModule::START);
+		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::START);
 }
 
 void ModuleWorld::updatePaused(float deltaTimeS)

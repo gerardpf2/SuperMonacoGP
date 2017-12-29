@@ -6,6 +6,7 @@
 #include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
+#include "ModuleSwitch.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
 #include "ModuleRegistry.h"
@@ -95,11 +96,14 @@ bool ModuleResults::setUp()
 
 bool ModuleResults::update(float deltaTimeS)
 {
-	checkGoNextCourseOrMenu();
+	if(!getBlocked())
+	{
+		checkGoNextCourseOrMenu();
 
-	updateBase(deltaTimeS);
+		updateBase(deltaTimeS);
 
-	updateCar(deltaTimeS);
+		updateCar(deltaTimeS);
+	}
 
 	render();
 
@@ -198,13 +202,15 @@ void ModuleResults::checkGoNextCourseOrMenu() const
 		// getGameEngine()->getModuleRegistry()->defaultValues();
 
 		getGameEngine()->getModuleRegistry()->setCurrentCourseId((getGameEngine()->getModuleRegistry()->getCurrentCourseId() + 1) % N_COURSES);
-		getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
+		// getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
+		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::SUPER_MONACO_GP);
 	}
 	else if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
 	{
 		// getGameEngine()->getModuleRegistry()->defaultValues();
 
-		getGameEngine()->setGameModule(GameModule::START);
+		// getGameEngine()->setGameModule(GameModule::START);
+		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::START);
 	}
 }
 

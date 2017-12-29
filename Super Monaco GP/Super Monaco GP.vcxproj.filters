@@ -117,6 +117,9 @@
     <ClCompile Include="ModuleResults.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleSwitch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -246,6 +249,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ModuleSuperMonacoGPUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSwitch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

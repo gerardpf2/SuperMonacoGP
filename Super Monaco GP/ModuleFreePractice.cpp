@@ -34,7 +34,7 @@ bool ModuleFreePractice::update(float deltaTimeS)
 {
 	bool ret = ModuleWorld::update(deltaTimeS);
 
-	if(!paused)
+	if(!getBlocked() && !paused)
 		updateFreePracticeCounter(deltaTimeS);
 
 	return ret;

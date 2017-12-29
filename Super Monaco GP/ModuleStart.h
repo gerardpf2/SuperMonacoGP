@@ -59,6 +59,8 @@ class ModuleStart : public Module
 
 		void checkChangeOption();
 
+		void render() const;
+
 		void renderBase() const;
 
 		void renderCars() const;

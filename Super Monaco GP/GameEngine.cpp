@@ -7,6 +7,7 @@
 #include "ModuleStart.h"
 #include "ModuleWorld.h"
 #include "ModuleWindow.h"
+#include "ModuleSwitch.h"
 #include "ModuleTexture.h"
 #include "ModuleResults.h"
 #include "ModuleRenderer.h"
@@ -52,6 +53,11 @@ ModuleWindow* GameEngine::getModuleWindow() const
 	return moduleWindow;
 }
 
+ModuleSwitch* GameEngine::getModuleSwitch() const
+{
+	return moduleSwitch;
+}
+
 ModuleTexture* GameEngine::getModuleTexture() const
 {
 	return moduleTexture;
@@ -92,7 +98,7 @@ Module* GameEngine::getGameModule() const
 	return gameModule;
 }
 
-void GameEngine::setGameModule(GameModule gameModule)
+void GameEngine::setGameModule(GameModule gameModule, bool blocked)
 {
 	switch(gameModule)
 	{
@@ -120,6 +126,8 @@ void GameEngine::setGameModule(GameModule gameModule)
 
 			break;
 	}
+
+	tmpGameModule->setBlocked(blocked);
 }
 
 void GameEngine::run(GameModule gameModule)
@@ -135,7 +143,7 @@ void GameEngine::run(GameModule gameModule)
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(11); // 9 (core modules) + 1 (game module)
+	modules.reserve(12); // 9 (core modules) + 1 (game module)
 
 	modules.push_back(moduleRegistry = new ModuleRegistry(this));
 	modules.push_back(moduleJson = new ModuleJson(this));
@@ -147,6 +155,7 @@ void GameEngine::addInitialModules()
 	modules.push_back(moduleAnimation = new ModuleAnimation(this));
 	modules.push_back(moduleCollision = new ModuleCollision(this));
 	modules.push_back(moduleGameObject = new ModuleGameObject(this));
+	modules.push_back(moduleSwitch = new ModuleSwitch(this));
 	// modules.push_back(modulePerformance = new ModulePerformance(this));
 
 	modules.push_back(gameModule = nullptr);
@@ -225,6 +234,7 @@ void GameEngine::cleanUp()
 	moduleInput = nullptr;
 	// moduleWorld = nullptr;
 	moduleWindow = nullptr;
+	moduleSwitch = nullptr;
 	moduleTexture = nullptr;
 	moduleRenderer = nullptr;
 	moduleRegistry = nullptr;

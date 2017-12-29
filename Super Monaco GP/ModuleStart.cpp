@@ -4,6 +4,7 @@
 #include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
+#include "ModuleSwitch.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
 #include "ModuleRegistry.h"
@@ -64,21 +65,26 @@ bool ModuleStart::setUp()
 
 bool ModuleStart::update(float deltaTimeS)
 {
-	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN) return false;
-
-	updateCars(deltaTimeS);
-	renderBase();
-
-	if(!enterPressed)
+	if(!getBlocked())
 	{
-		updateEnterNoPressed(deltaTimeS);
-		renderEnterNoPressed();
+		if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN) return false;
+
+		updateCars(deltaTimeS);
+		// renderBase();
+
+		if(!enterPressed)
+		{
+			updateEnterNoPressed(deltaTimeS);
+			// renderEnterNoPressed();
+		}
+		else
+		{
+			updateEnterPressed(deltaTimeS);
+			// renderEnterPressed();
+		}
 	}
-	else
-	{
-		updateEnterPressed(deltaTimeS);
-		renderEnterPressed();
-	}
+
+	render();
 
 	return true;
 }
@@ -180,15 +186,18 @@ void ModuleStart::checkSelectOption() const
 		switch(selectedOption)
 		{
 		case 0: // SUPER MONACO GP
-			getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
+			// getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
+			getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::SUPER_MONACO_GP);
 
 			break;
 		case 1: // COURSE_SELECT, FREE PRACTICE
-			getGameEngine()->setGameModule(GameModule::COURSE_SELECT);
+			// getGameEngine()->setGameModule(GameModule::COURSE_SELECT);
+			getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::COURSE_SELECT);
 
 			break;
 		case 2: // ABOUT
-			getGameEngine()->setGameModule(GameModule::ABOUT);
+			// getGameEngine()->setGameModule(GameModule::ABOUT);
+			getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::ABOUT);
 
 			break;
 		}
@@ -203,6 +212,16 @@ void ModuleStart::checkChangeOption()
 		selectedOption = mod0L(selectedOption - 1, 3);
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_DOWN) == KeyState::DOWN)
 		selectedOption = mod0L(selectedOption + 1, 3);
+}
+
+void ModuleStart::render() const
+{
+	renderBase();
+
+	if(!enterPressed)
+		renderEnterNoPressed();
+	else
+		renderEnterPressed();
 }
 
 void ModuleStart::renderBase() const

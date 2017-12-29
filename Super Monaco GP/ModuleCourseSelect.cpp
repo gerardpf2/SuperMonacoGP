@@ -5,6 +5,7 @@
 #include "ModuleFont.h"
 #include "GameEngine.h"
 #include "ModuleInput.h"
+#include "ModuleSwitch.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
 #include "ModuleRegistry.h"
@@ -73,15 +74,18 @@ bool ModuleCourseSelect::setUp()
 
 bool ModuleCourseSelect::update(float deltaTimeS)
 {
-	checkGoMenu();
+	if(!getBlocked())
+	{
+		checkGoMenu();
 
-	checkSelectOption();
+		checkSelectOption();
 
-	checkChangeCourse();
+		checkChangeCourse();
 
-	updateBackground(deltaTimeS);
+		updateBackground(deltaTimeS);
 
-	updateCourseChangeAnimation(deltaTimeS);
+		updateCourseChangeAnimation(deltaTimeS);
+	}
 
 	render();
 
@@ -152,7 +156,8 @@ void ModuleCourseSelect::updateCourseChangeAnimation(float deltaTimeS)
 void ModuleCourseSelect::checkGoMenu() const
 {
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
-		getGameEngine()->setGameModule(GameModule::START);
+		// getGameEngine()->setGameModule(GameModule::START);
+		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::START);
 }
 
 void ModuleCourseSelect::checkSelectOption() const
@@ -160,7 +165,8 @@ void ModuleCourseSelect::checkSelectOption() const
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
 	{
 		getGameEngine()->getModuleRegistry()->setCurrentCourseId(currentCourseId);
-		getGameEngine()->setGameModule(GameModule::FREE_PRACTICE);
+		// getGameEngine()->setGameModule(GameModule::FREE_PRACTICE);
+		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::FREE_PRACTICE);
 	}
 }
 
