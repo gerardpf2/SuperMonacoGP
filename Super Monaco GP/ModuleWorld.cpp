@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "Player.h"
 #include "Segment.h"
+#include "Minimap.h"
 #include "Animation.h"
 #include "Background.h"
 #include "GameEngine.h"
@@ -78,6 +79,8 @@ bool ModuleWorld::setUp()
 {
 	addRoad();
 
+	addMinimap();
+
 	addAllGameObjects();
 
 	addCameras();
@@ -142,6 +145,8 @@ void ModuleWorld::cleanUp()
 	removeCameras();
 
 	removeAllGameObjects();
+
+	removeMinimap();
 
 	removeRoad();
 }
@@ -266,6 +271,28 @@ void ModuleWorld::removeRoad()
 	}
 }
 
+void ModuleWorld::addMinimap()
+{
+	const char* minimapJsonFile;
+
+	if(getGameEngine()->getModuleRegistry()->getCurrentCourseId() == 0)
+		minimapJsonFile = "Resources/Configurations/Minimaps/Italy.json";
+	else
+		minimapJsonFile = "Resources/Configurations/Minimaps/Portugal.json";
+
+	minimap = new Minimap(road);
+	minimap->load(minimapJsonFile, getGameEngine()->getModuleJson(), getGameEngine()->getModuleTexture());
+}
+
+void ModuleWorld::removeMinimap()
+{
+	if(minimap)
+	{
+		minimap->unload(getGameEngine()->getModuleTexture());
+		delete minimap; minimap = nullptr;
+	}
+}
+
 void ModuleWorld::addRoadGameObjects()
 {
 	const vector<RoadGameObjectDefinition*>* gameObjectDefinitions = road->getGameObjectDefinitions();
@@ -291,7 +318,13 @@ void ModuleWorld::addAllGameObjects()
 	// Assign an id to each one
 
 	for(uint i = 0; i < (uint)gameObjects.size(); ++i)
-		((Car*)gameObjects[i])->setSpecificId(i);
+	{
+		Car* car = (Car*)gameObjects[i];
+
+		car->setSpecificId(i);
+		minimap->registerCar(car);
+
+	}
 
 	addRoadGameObjects();
 }
@@ -430,6 +463,7 @@ void ModuleWorld::render() const
 	getGameEngine()->getModuleRenderer()->setLayer(layerRoad);
 	background->render(!camera->getForward(), getGameEngine()->getModuleRenderer());
 	road->render(camera, getGameEngine()->getModuleRenderer());
+	minimap->render(getGameEngine()->getModuleRenderer());
 
 	renderUI();
 

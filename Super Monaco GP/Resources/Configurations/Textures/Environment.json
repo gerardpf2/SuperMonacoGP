@@ -108,12 +108,6 @@
 			
 			"rect" : { "x" : 40, "y" : 448, "w" : 48, "h" : 30 },
 			"hFlipped" : false
-		},
-		{
-			"_info" : "17: Player icon",
-			
-			"rect" : { "x" : 88, "y" : 448, "w" : 12, "h" : 14 },
-			"hFlipped" : false
 		}
 	]
 }

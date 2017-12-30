@@ -11,6 +11,7 @@ class Car;
 class Road;
 class Camera;
 class Player;
+class Minimap;
 class Animation;
 class Background;
 class GameObject;
@@ -52,6 +53,10 @@ class ModuleWorld : public Module
 		void addRoad();
 
 		void removeRoad();
+
+		void addMinimap();
+
+		void removeMinimap();
 
 		void addRoadGameObjects();
 
@@ -104,6 +109,8 @@ class ModuleWorld : public Module
 		Camera* cameraMirror = nullptr;
 
 		std::vector<GameObject*> gameObjects;
+
+		Minimap* minimap = nullptr;
 
 		Background* background = nullptr;
 

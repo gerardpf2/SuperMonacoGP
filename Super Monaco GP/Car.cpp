@@ -97,6 +97,8 @@ void Car::update(float deltaTimeS)
 	
 	globalZ += velocity * deltaTimeS;
 
+	checkCollision();
+
 	limitZ();
 
 	Segment* newSegment = getModuleWorld()->getRoad()->getSegmentAtZ(position.z);
@@ -142,7 +144,7 @@ void Car::update(float deltaTimeS)
 		newSegment->addGameObject(this);
 	}
 
-	checkCollision();
+	// checkCollision();
 
 	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
 

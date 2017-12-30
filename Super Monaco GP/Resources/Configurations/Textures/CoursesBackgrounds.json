@@ -53,6 +53,19 @@
 			
 			"rect" : { "x" : 112, "y" : 144, "w" : 112, "h" : 176 },
 			"hFlipped" : false
+		},
+		
+		{
+			"_info" : "8: Player icon",
+			
+			"rect" : { "x" : 224, "y" : 145, "w" : 12, "h" : 14 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "9: Enemy car icon",
+			
+			"rect" : { "x" : 236, "y" : 145, "w" : 10, "h" : 12 },
+			"hFlipped" : false
 		}
 	]
 }
