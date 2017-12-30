@@ -151,6 +151,7 @@
     <ClCompile Include="ModuleRegistry.cpp" />
     <ClCompile Include="ModuleRenderer.cpp" />
     <ClCompile Include="ModuleResults.cpp" />
+    <ClCompile Include="ModuleSega.cpp" />
     <ClCompile Include="ModuleStart.cpp" />
     <ClCompile Include="ModuleSuperMonacoGP.cpp" />
     <ClCompile Include="ModuleSwitch.cpp" />
@@ -193,6 +194,8 @@
     <ClInclude Include="ModuleRenderer.h" />
     <ClInclude Include="ModuleResults.h" />
     <ClInclude Include="ModuleResultsUI.h" />
+    <ClInclude Include="ModuleSega.h" />
+    <ClInclude Include="ModuleSegaUI.h" />
     <ClInclude Include="ModuleStart.h" />
     <ClInclude Include="ModuleStartUI.h" />
     <ClInclude Include="ModuleSuperMonacoGP.h" />

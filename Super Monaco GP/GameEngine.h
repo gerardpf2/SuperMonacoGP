@@ -6,6 +6,7 @@
 
 enum class GameModule
 {
+	SEGA,
 	START,
 	COURSE_SELECT,
 	FREE_PRACTICE,

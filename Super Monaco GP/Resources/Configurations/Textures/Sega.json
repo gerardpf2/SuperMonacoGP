@@ -1,0 +1,301 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 120,
+	"bmpPath" : "Resources/Images/Sega.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "0",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "1",
+			
+			"rect" : { "x" : 0, "y" : 64, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "2",
+			
+			"rect" : { "x" : 0, "y" : 128, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "3",
+			
+			"rect" : { "x" : 0, "y" : 192, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "4",
+			
+			"rect" : { "x" : 0, "y" : 256, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "5",
+			
+			"rect" : { "x" : 0, "y" : 320, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "6",
+			
+			"rect" : { "x" : 0, "y" : 384, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "7",
+			
+			"rect" : { "x" : 0, "y" : 448, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "8",
+			
+			"rect" : { "x" : 0, "y" : 512, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "9",
+			
+			"rect" : { "x" : 0, "y" : 576, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "10",
+			
+			"rect" : { "x" : 0, "y" : 640, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "11",
+			
+			"rect" : { "x" : 0, "y" : 704, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		
+		{
+			"_info" : "12",
+			
+			"rect" : { "x" : 192, "y" : 0, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "13",
+			
+			"rect" : { "x" : 192, "y" : 64, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "14",
+			
+			"rect" : { "x" : 192, "y" : 128, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "15",
+			
+			"rect" : { "x" : 192, "y" : 192, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "16",
+			
+			"rect" : { "x" : 192, "y" : 256, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "17",
+			
+			"rect" : { "x" : 192, "y" : 320, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "18",
+			
+			"rect" : { "x" : 192, "y" : 384, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "19",
+			
+			"rect" : { "x" : 192, "y" : 448, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "20",
+			
+			"rect" : { "x" : 192, "y" : 512, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "21",
+			
+			"rect" : { "x" : 192, "y" : 576, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "22",
+			
+			"rect" : { "x" : 192, "y" : 640, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "23",
+			
+			"rect" : { "x" : 192, "y" : 704, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		
+		{
+			"_info" : "24",
+			
+			"rect" : { "x" : 384, "y" : 0, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "25",
+			
+			"rect" : { "x" : 384, "y" : 64, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "26",
+			
+			"rect" : { "x" : 384, "y" : 128, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "27",
+			
+			"rect" : { "x" : 384, "y" : 192, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "28",
+			
+			"rect" : { "x" : 384, "y" : 256, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "29",
+			
+			"rect" : { "x" : 384, "y" : 320, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "30",
+			
+			"rect" : { "x" : 384, "y" : 384, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "31",
+			
+			"rect" : { "x" : 384, "y" : 448, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "32",
+			
+			"rect" : { "x" : 384, "y" : 512, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "33",
+			
+			"rect" : { "x" : 384, "y" : 576, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "34",
+			
+			"rect" : { "x" : 384, "y" : 640, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "35",
+			
+			"rect" : { "x" : 384, "y" : 704, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		
+		{
+			"_info" : "36",
+			
+			"rect" : { "x" : 576, "y" : 0, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "37",
+			
+			"rect" : { "x" : 576, "y" : 64, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "38",
+			
+			"rect" : { "x" : 576, "y" : 128, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "39",
+			
+			"rect" : { "x" : 576, "y" : 192, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "40",
+			
+			"rect" : { "x" : 576, "y" : 256, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "41",
+			
+			"rect" : { "x" : 576, "y" : 320, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "42",
+			
+			"rect" : { "x" : 576, "y" : 384, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "43",
+			
+			"rect" : { "x" : 576, "y" : 448, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "44",
+			
+			"rect" : { "x" : 576, "y" : 512, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "45",
+			
+			"rect" : { "x" : 576, "y" : 576, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "46",
+			
+			"rect" : { "x" : 576, "y" : 640, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "47",
+			
+			"rect" : { "x" : 576, "y" : 704, "w" : 192, "h" : 64 },
+			"hFlipped" : false
+		}
+	]
+}

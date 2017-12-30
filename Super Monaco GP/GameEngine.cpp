@@ -3,6 +3,7 @@
 #include <time.h>
 #include "ModuleJson.h"
 #include "ModuleFont.h"
+#include "ModuleSega.h"
 #include "ModuleInput.h"
 #include "ModuleStart.h"
 #include "ModuleWorld.h"
@@ -102,6 +103,10 @@ void GameEngine::setGameModule(GameModule gameModule, bool blocked)
 {
 	switch(gameModule)
 	{
+		case GameModule::SEGA:
+			tmpGameModule = new ModuleSega(this);
+
+			break;
 		case GameModule::START:
 			tmpGameModule = new ModuleStart(this);
 
