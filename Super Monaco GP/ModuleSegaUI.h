@@ -12,7 +12,7 @@
 #define LOGO_RECT_W (int)(192 * WINDOW_SCALE)
 #define LOGO_RECT_H (int)(64 * WINDOW_SCALE)
 #define LOGO_RECT_X (int)(0.5f * (WINDOW_WIDTH - LOGO_RECT_W))
-#define LOGO_RECT_Y (int)(0.5f * (WINDOW_HEIGHT - LOGO_RECT_H))
+#define LOGO_RECT_Y (int)(0.5f * (WINDOW_HEIGHT - LOGO_RECT_H) - 1.0f)
 #define LOGO_RECT SDL_Rect{ LOGO_RECT_X, LOGO_RECT_Y, LOGO_RECT_W, LOGO_RECT_H }
 
 #endif

@@ -4,6 +4,7 @@
 #include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleSwitch.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
@@ -60,6 +61,10 @@ bool ModuleStart::setUp()
 
 	getGameEngine()->getModuleRegistry()->setCurrentCourseId(0);
 
+	audioGroupId = getGameEngine()->getModuleAudio()->load("Resources/Configurations/Audios/Start.json");
+
+	getGameEngine()->getModuleAudio()->playMusic(audioGroupId, 0, 0);
+
 	return true;
 }
 
@@ -91,6 +96,8 @@ bool ModuleStart::update(float deltaTimeS)
 
 void ModuleStart::cleanUp()
 {
+	getGameEngine()->getModuleAudio()->unload(audioGroupId);
+
 	getGameEngine()->getModuleTexture()->unload(textureGroupId);
 
 	back = nullptr;
@@ -174,7 +181,11 @@ void ModuleStart::updateEnterNoPressed(float deltaTimeS)
 	pressEnterCounter = mod0L(pressEnterCounter + deltaTimeS, 1.0f);
 
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
+	{
 		enterPressed = true;
+
+		getGameEngine()->getModuleAudio()->playMusic(audioGroupId, 1);
+	}
 }
 
 void ModuleStart::checkSelectOption() const
@@ -185,21 +196,21 @@ void ModuleStart::checkSelectOption() const
 	{
 		switch(selectedOption)
 		{
-		case 0: // SUPER MONACO GP
-			// getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
-			getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::SUPER_MONACO_GP);
+			case 0: // SUPER MONACO GP
+				// getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
+				getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::SUPER_MONACO_GP);
 
-			break;
-		case 1: // COURSE_SELECT, FREE PRACTICE
-			// getGameEngine()->setGameModule(GameModule::COURSE_SELECT);
-			getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::COURSE_SELECT);
+				break;
+			case 1: // COURSE_SELECT, FREE PRACTICE
+				// getGameEngine()->setGameModule(GameModule::COURSE_SELECT);
+				getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::COURSE_SELECT);
 
-			break;
-		case 2: // ABOUT
-			// getGameEngine()->setGameModule(GameModule::ABOUT);
-			getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::ABOUT);
+				break;
+			case 2: // ABOUT
+				// getGameEngine()->setGameModule(GameModule::ABOUT);
+				getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::ABOUT);
 
-			break;
+				break;
 		}
 	}
 }
@@ -208,10 +219,13 @@ void ModuleStart::checkChangeOption()
 {
 	// Update selected option
 
-	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_UP) == KeyState::DOWN)
-		selectedOption = mod0L(selectedOption - 1, 3);
-	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_DOWN) == KeyState::DOWN)
-		selectedOption = mod0L(selectedOption + 1, 3);
+	int tmpSelectedOption = selectedOption;
+
+	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_UP) == KeyState::DOWN) selectedOption = mod0L(selectedOption - 1, 3);
+	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_DOWN) == KeyState::DOWN) selectedOption = mod0L(selectedOption + 1, 3);
+
+	if(selectedOption != tmpSelectedOption)
+		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 0);
 }
 
 void ModuleStart::render() const

@@ -19,6 +19,7 @@ class Module;
 class ModuleJson;
 class ModuleFont;
 class ModuleInput;
+class ModuleAudio;
 // class ModuleStart;
 // class ModuleWorld;
 class ModuleWindow;
@@ -44,6 +45,8 @@ class GameEngine
 		ModuleFont* getModuleFont() const;
 
 		ModuleInput* getModuleInput() const;
+
+		ModuleAudio* getModuleAudio() const;
 
 		// ModuleWorld* getModuleWorld() const;
 
@@ -94,6 +97,8 @@ class GameEngine
 		ModuleFont* moduleFont = nullptr;
 
 		ModuleInput* moduleInput = nullptr;
+
+		ModuleAudio* moduleAudio = nullptr;
 
 		// ModuleWorld* moduleWorld = nullptr;
 

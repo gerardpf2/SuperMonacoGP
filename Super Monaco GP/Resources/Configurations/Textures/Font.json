@@ -265,6 +265,12 @@
 			
 			"rect" : { "x" : 248, "y" : 0, "w" : 16, "h" : 30 },
 			"hFlipped" : false
+		},
+		{
+			"_info" : "43: +",
+			
+			"rect" : { "x" : 264, "y" : 0, "w" : 16, "h" : 30 },
+			"hFlipped" : false
 		}
 	]
 }

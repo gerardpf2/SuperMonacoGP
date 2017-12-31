@@ -1,0 +1,14 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"audioGroupId" : 2,
+	"musics" :
+	[
+		"Resources/Audios/ResultsMusic.wav"
+	],
+	"fxs" :
+	[
+		"Resources/Audios/ResultsCarFx.wav"
+	]
+}

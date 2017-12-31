@@ -5,7 +5,9 @@
 #include "ModuleFont.h"
 #include "ModuleSega.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleStart.h"
+#include "ModuleAbout.h"
 #include "ModuleWorld.h"
 #include "ModuleWindow.h"
 #include "ModuleSwitch.h"
@@ -42,6 +44,11 @@ ModuleFont* GameEngine::getModuleFont() const
 ModuleInput* GameEngine::getModuleInput() const
 {
 	return moduleInput;
+}
+
+ModuleAudio* GameEngine::getModuleAudio() const
+{
+	return moduleAudio;
 }
 
 /* ModuleWorld* GameEngine::getModuleWorld() const
@@ -128,6 +135,7 @@ void GameEngine::setGameModule(GameModule gameModule, bool blocked)
 
 			break;
 		case GameModule::ABOUT:
+			tmpGameModule = new ModuleAbout(this);
 
 			break;
 	}
@@ -148,11 +156,12 @@ void GameEngine::run(GameModule gameModule)
 
 void GameEngine::addInitialModules()
 {
-	modules.reserve(12); // 9 (core modules) + 1 (game module)
+	modules.reserve(13); // 12 (core modules) + 1 (game module)
 
 	modules.push_back(moduleRegistry = new ModuleRegistry(this));
 	modules.push_back(moduleJson = new ModuleJson(this));
 	modules.push_back(moduleInput = new ModuleInput(this));
+	modules.push_back(moduleAudio = new ModuleAudio(this));
 	modules.push_back(moduleWindow = new ModuleWindow(this));
 	modules.push_back(moduleRenderer = new ModuleRenderer(this));
 	modules.push_back(moduleTexture = new ModuleTexture(this));
@@ -237,6 +246,7 @@ void GameEngine::cleanUp()
 	moduleJson = nullptr;
 	moduleFont = nullptr;
 	moduleInput = nullptr;
+	moduleAudio = nullptr;
 	// moduleWorld = nullptr;
 	moduleWindow = nullptr;
 	moduleSwitch = nullptr;

@@ -28,6 +28,8 @@ class ModuleAnimation : public Module
 
 		AnimationContainer* getAnimationContainer(uint idAnimationGroup, uint idAnimationContainer) const;
 
+		virtual void cleanUp() override;
+
 	private:
 
 		bool isAlreadyLoaded(const std::string&, uint& idAnimationGroup) const;

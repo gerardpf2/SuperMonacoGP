@@ -51,6 +51,8 @@ class ModuleCourseSelect : public Module
 
 		int currentCourseId = 0;
 
+		uint audioGroupId = -1;
+
 		uint courseSelectAnimationGroupId = -1;
 
 		uint coursesBackgroundsTextureGroupId = -1;

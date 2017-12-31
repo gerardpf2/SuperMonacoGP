@@ -1,0 +1,14 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"audioGroupId" : 1,
+	"musics" :
+	[
+		"Resources/Audios/CourseSelectMusic.wav"
+	],
+	"fxs" :
+	[
+		"Resources/Audios/ChangeOptionFx.wav"
+	]
+}

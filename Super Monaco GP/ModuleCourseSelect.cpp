@@ -5,6 +5,7 @@
 #include "ModuleFont.h"
 #include "GameEngine.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleSwitch.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
@@ -69,6 +70,10 @@ bool ModuleCourseSelect::setUp()
 
 	time(getGameEngine()->getModuleRegistry()->getPlayerBestLapTime(currentCourseId), currentBestLapTimeStr);
 
+	audioGroupId = getGameEngine()->getModuleAudio()->load("Resources/Configurations/Audios/CourseSelect.json");
+
+	getGameEngine()->getModuleAudio()->playMusic(audioGroupId, 0);
+
 	return true;
 }
 
@@ -94,6 +99,8 @@ bool ModuleCourseSelect::update(float deltaTimeS)
 
 void ModuleCourseSelect::cleanUp()
 {
+	getGameEngine()->getModuleAudio()->unload(audioGroupId);
+
 	getGameEngine()->getModuleAnimation()->unload(courseSelectAnimationGroupId);
 
 	getGameEngine()->getModuleTexture()->unload(coursesBackgroundsTextureGroupId);
@@ -184,6 +191,7 @@ void ModuleCourseSelect::checkChangeCourse()
 		backgroundOffsetX = 0.0f;
 		changeCourseAnimation->reset();
 		showChangeCourseAnimation = true;
+		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 0);
 		time(getGameEngine()->getModuleRegistry()->getPlayerBestLapTime(currentCourseId), currentBestLapTimeStr);
 	}
 }

@@ -6,6 +6,7 @@
 #include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleSwitch.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
@@ -91,6 +92,10 @@ bool ModuleResults::setUp()
 
 	addResults();
 
+	audioGroupId = getGameEngine()->getModuleAudio()->load("Resources/Configurations/Audios/Results.json");
+
+	getGameEngine()->getModuleAudio()->playMusic(audioGroupId, 0);
+
 	return true;
 }
 
@@ -112,6 +117,8 @@ bool ModuleResults::update(float deltaTimeS)
 
 void ModuleResults::cleanUp()
 {
+	getGameEngine()->getModuleAudio()->unload(audioGroupId);
+
 	getGameEngine()->getModuleAnimation()->unload(baseAnimationGroupId);
 
 	baseAnimation = nullptr;
@@ -190,6 +197,8 @@ void ModuleResults::updateCar(float deltaTimeS)
 			carResult->reset();
 			carInUse = false;
 			waitNextCarCounter = 0.0f;
+
+			getGameEngine()->getModuleAudio()->playFx(audioGroupId, 0);
 		}
 	}
 	else if((waitNextCarCounter += deltaTimeS) >= TIME_BETWEEN_CARS) carInUse = true;

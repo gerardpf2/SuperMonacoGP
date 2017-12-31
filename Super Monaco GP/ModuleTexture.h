@@ -24,6 +24,8 @@ class ModuleTexture : public Module
 
 		const Texture* get(uint idTextureGroup, uint idTexture) const;
 
+		virtual void cleanUp() override;
+
 	private:
 
 		SDL_Texture* loadTexture(const char* bmpPath) const;

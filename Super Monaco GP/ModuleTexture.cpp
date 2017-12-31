@@ -42,7 +42,7 @@ uint ModuleTexture::load(const char* jsonPath)
 	{
 		// textureId, rect, hFlipped
 
-		uint textureId = i;
+		uint textureId = i; // ¿?
 		const Value& rectJson = texturesJson[i]["rect"];
 		bool hFlipped = texturesJson[i]["hFlipped"].GetBool();
 
@@ -94,6 +94,13 @@ void ModuleTexture::unload(uint idTextureGroup)
 const Texture* ModuleTexture::get(uint idTextureGroup, uint idTexture) const
 {
 	return (*textureGroups.at(idTextureGroup).second)[idTexture];
+}
+
+void ModuleTexture::cleanUp()
+{
+	textureGroups.clear();
+
+	loadedTextureGroups.clear();
 }
 
 SDL_Texture* ModuleTexture::loadTexture(const char* bmpPath) const

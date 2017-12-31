@@ -253,6 +253,21 @@ AnimationContainer* ModuleAnimation::getAnimationContainer(uint idAnimationGroup
 	return animationContainer;
 }
 
+void ModuleAnimation::cleanUp()
+{
+	animationGroups.clear();
+
+	animationContainerGroups.clear();
+
+	animationGroupsTextureGroupId.clear();
+
+	usedAnimations.clear();
+
+	usedAnimationContainers.clear();
+
+	loadedAnimationGroups.clear();
+}
+
 bool ModuleAnimation::isAlreadyLoaded(const string& jsonPath, uint& idAnimationGroup) const
 {
 	for(list<pair<pair<string, uint>, uint>>::const_iterator it = loadedAnimationGroups.begin(); it != loadedAnimationGroups.end(); ++it)

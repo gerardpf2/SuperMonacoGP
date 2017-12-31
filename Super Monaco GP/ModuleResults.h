@@ -48,6 +48,8 @@ class ModuleResults : public Module
 
 	private:
 
+		uint audioGroupId = -1;
+
 		uint gridTextureGroupId = -1;
 
 		uint baseAnimationGroupId = -1;

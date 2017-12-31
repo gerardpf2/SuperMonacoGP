@@ -71,6 +71,8 @@ class ModuleStart : public Module
 
 	private:
 
+		uint audioGroupId = -1;
+
 		uint textureGroupId = -1;
 
 		const Texture* back = nullptr;
