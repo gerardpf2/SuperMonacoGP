@@ -1,0 +1,25 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"animationGroupId" : 150,
+	"textureGroupPath" : "Resources/Configurations/Textures/About.json",
+	"animations" :
+	[
+		{
+			"_info" : "",
+			
+			"loop" : true,
+			"endTime" : 1.5,
+			"textureIds" : [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
+		}
+	],
+	"animationContainers" :
+	[
+		{
+			"_info" : "",
+			
+			"animationIds" : [ 0 ]
+		}
+	]
+}

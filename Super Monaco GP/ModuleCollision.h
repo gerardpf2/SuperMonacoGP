@@ -5,8 +5,11 @@
 #include <list>
 #include <vector>
 #include "Module.h"
+#include "Globals.h"
 
-struct Collider;
+#define COLLISION_DISTANCE_CHECK (20 * SEGMENT_LENGTH)
+
+// struct Collider;
 
 class GameObject;
 
@@ -18,23 +21,23 @@ class ModuleCollision : public Module
 
 		virtual ~ModuleCollision();
 
-		bool getColliding(const Collider* collider, const std::list<const Collider*>*& colliding) const;
+		bool getColliding(const GameObject* gameObject, std::list<const GameObject*>& colliding) const;
 
-		void addCollider(const Collider* collider);
+		// void addCollider(const Collider* collider);
 
-		void removeColliders();
+		// void removeColliders();
 
-		virtual bool update(float deltaTimeS) override;
-
-	private:
-
-		bool collide(const Collider* collider0, const Collider* collider1) const;
+		// virtual bool update(float deltaTimeS) override;
 
 	private:
 
-		std::vector<const Collider*> colliders;
+		bool collide(const GameObject* gameObject0, const GameObject* gameObject1) const;
 
-		std::map<const Collider*, std::list<const Collider*>> collisions;
+	// private:
+
+		// std::vector<const Collider*> colliders;
+
+		// std::map<const Collider*, std::list<const Collider*>> collisions;
 };
 
 #endif

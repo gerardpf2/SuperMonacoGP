@@ -1,0 +1,82 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"textureGroupId" : 150,
+	"bmpPath" : "Resources/Images/About.bmp",
+	"textures" :
+	[
+		{
+			"_info" : "0: Left",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 342, "h" : 92 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "1: Left_Front_0",
+			
+			"rect" : { "x" : 0, "y" : 92, "w" : 342, "h" : 92 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "2: Left_Front_1",
+			
+			"rect" : { "x" : 0, "y" : 184, "w" : 342, "h" : 92 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "3: Front",
+			
+			"rect" : { "x" : 0, "y" : 276, "w" : 342, "h" : 92 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "4: Right_Front_1",
+			
+			"rect" : { "x" : 0, "y" : 184, "w" : 342, "h" : 92 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "5: Right_Front_0",
+			
+			"rect" : { "x" : 0, "y" : 92, "w" : 342, "h" : 92 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "6: Right",
+			
+			"rect" : { "x" : 0, "y" : 0, "w" : 342, "h" : 92 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "7: Right_Back_0",
+			
+			"rect" : { "x" : 342, "y" : 0, "w" : 342, "h" : 92 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "8: Right_Back_1",
+			
+			"rect" : { "x" : 342, "y" : 92, "w" : 342, "h" : 92 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "9: Back",
+			
+			"rect" : { "x" : 342, "y" : 184, "w" : 342, "h" : 92 },
+			"hFlipped" : false
+		},
+		{
+			"_info" : "10: Left_Back_1",
+			
+			"rect" : { "x" : 342, "y" : 92, "w" : 342, "h" : 92 },
+			"hFlipped" : true
+		},
+		{
+			"_info" : "11: Left_Back_0",
+			
+			"rect" : { "x" : 342, "y" : 0, "w" : 342, "h" : 92 },
+			"hFlipped" : true
+		}
+	]
+}

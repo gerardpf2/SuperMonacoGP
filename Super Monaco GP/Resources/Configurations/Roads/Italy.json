@@ -1,5 +1,5 @@
 {
-	"length" : 405.0,
+	"length" : 3810.0,
 	"background" :
 	{
 		"textureGroupPath" : "Resources/Configurations/Textures/CoursesBackgrounds.json",
@@ -12,28 +12,170 @@
 	[
 		{
 			"defAngle" : true,
-			"zStart" : 150.0,
-			"length" : 250.0,
-			"angle" : 20.0
+			"zStart" : 600.0,
+			"length" : 150.0,
+			"angle" : 5.0
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 950.0,
+			"enterLength" : 500.0,
+			"holdLength" : 50.0,
+			"leaveLength" : 250.0,
+			"value" : 40.0
+		},
+		{
+			"defAngle" : true,
+			"zStart" : 1750.0,
+			"length" : 300.0,
+			"angle" : -10.0
+		},
+		{
+			"defAngle" : true,
+			"zStart" : 2100.0,
+			"length" : 300.0,
+			"angle" : 10.0
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 2600.0,
+			"enterLength" : 500.0,
+			"holdLength" : 50.0,
+			"leaveLength" : 250.0,
+			"value" : -40.0
 		}
 	],
 	"curves" :
 	[
 		{
+			"defAngle" : true,
+			"zStart" : 600.0,
+			"length" : 37.5,
+			"angle" : 40.0
+		},
+		{
 			"defAngle" : false,
-			"zStart" : 100.0,
+			"zStart" : 637.5,
+			"enterLength" : 18.75,
+			"holdLength" : 18.75,
+			"leaveLength" : 0.0,
+			"value" : -0.01
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 675,
+			"enterLength" : 0.0,
+			"holdLength" : 18.75,
+			"leaveLength" : 18.75,
+			"value" : -0.01
+		},
+		{
+			"defAngle" : true,
+			"zStart" : 712.5,
+			"length" : 37.5,
+			"angle" : 40.0
+		},
+		{
+			"defAngle" : true,
+			"zStart" : 775.0,
+			"length" : 175,
+			"angle" : 40.0
+		},
+		{
+			"defAngle" : true,
+			"zStart" : 950.0,
+			"length" : 400,
+			"angle" : 20.0
+		},
+		{
+			"defAngle" : true,
+			"zStart" : 1350.0,
+			"length" : 50,
+			"angle" : -60.0
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 1460.0,
+			"enterLength" : 95.0,
+			"holdLength" : 95.0,
+			"leaveLength" : 0.0,
+			"value" : 0.0125
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 1650.0,
+			"enterLength" : 0.0,
+			"holdLength" : 95.0,
+			"leaveLength" : 95.0,
+			"value" : 0.0125
+		},
+		{
+			"defAngle" : true,
+			"zStart" : 1840.0,
+			"length" : 590,
+			"angle" : 20.0
+		},
+		{
+			"defAngle" : true,
+			"zStart" : 2430.0,
+			"length" : 70,
+			"angle" : -60.0
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 2500.0,
 			"enterLength" : 35.0,
-			"holdLength" : 30.0,
-			"leaveLength" : 35.0,
+			"holdLength" : 35.0,
+			"leaveLength" : 0.0,
+			"value" : 0.01
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 2570.0,
+			"enterLength" : 0.0,
+			"holdLength" : 40.0,
+			"leaveLength" : 40.0,
+			"value" : 0.01
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 2650.0,
+			"enterLength" : 25.0,
+			"holdLength" : 25.0,
+			"leaveLength" : 0.0,
+			"value" : -0.001
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 2700.0,
+			"enterLength" : 0.0,
+			"holdLength" : 40.0,
+			"leaveLength" : 40.0,
 			"value" : -0.005
 		},
 		{
 			"defAngle" : false,
-			"zStart" : 205.0,
-			"enterLength" : 70.0,
-			"holdLength" : 60.0,
-			"leaveLength" : 70.0,
+			"zStart" : 3230.0,
+			"enterLength" : 50.0,
+			"holdLength" : 50.0,
+			"leaveLength" : 0.0,
 			"value" : 0.01
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 3230.0,
+			"enterLength" : 0.0,
+			"holdLength" : 300.0,
+			"leaveLength" : 0.0,
+			"value" : 0.005
+		},
+		{
+			"defAngle" : false,
+			"zStart" : 3530.0,
+			"enterLength" : 0.0,
+			"holdLength" : 0.0,
+			"leaveLength" : 50.0,
+			"value" : 0.0075
 		}
 	],
 	"rumbleColors" :
@@ -53,218 +195,206 @@
 	[
 		{
 			"id" : 2,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 580.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 8.0 },
+			"n" : 5
+		},
+		{
+			"id" : 3,
 			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 10.0 }
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 620.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 8.0 },
+			"n" : 5
+		},
+		{
+			"id" : 14,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 710.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 10
+		},
+		{
+			"id" : 14,
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 690.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 10
+		},
+		{
+			"id" : 8,
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 900.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 12.0 },
+			"n" : 10
+		},
+		{
+			"id" : 8,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 1000.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 12.0 },
+			"n" : 10
+		},
+		{
+			"id" : 7,
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 1100.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 12.0 },
+			"n" : 10
+		},
+		{
+			"id" : 7,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 1200.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 12.0 },
+			"n" : 10
+		},
+		{
+			"id" : 3,
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 1320.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 8.0 },
+			"n" : 5
 		},
 		{
 			"id" : 2,
 			"offsetX" : -1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 10.0 }
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 1450.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 8.0 },
+			"n" : 10
 		},
 		{
-			"id" : 3,
+			"id" : 13,
 			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 15.0 }
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 1500.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 85
 		},
 		{
-			"id" : 3,
+			"id" : 13,
 			"offsetX" : -1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 15.0 }
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 1540.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 75
 		},
 		{
-			"id" : 2,
-			"offsetX" : 0.0,
-			"position" : { "x" : -4.0, "y" : 15.0, "z" : 7.5 }
+			"id" : 6,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 1900.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 12.0 },
+			"n" : 10
+		},
+		{
+			"id" : 6,
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2000.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 12.0 },
+			"n" : 10
+		},
+		{
+			"id" : 13,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2100.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 20
+		},
+		{
+			"id" : 13,
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2200.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 20
 		},
 		{
 			"id" : 3,
-			"offsetX" : 0.0,
-			"position" : { "x" : -2.0, "y" : 15.0, "z" : 7.5 }
-		},
-		{
-			"id" : 3,
-			"offsetX" : 0.0,
-			"position" : { "x" : 0.0, "y" : 15.0, "z" : 7.5 }
-		},
-		{
-			"id" : 3,
-			"offsetX" : 0.0,
-			"position" : { "x" : 2.0, "y" : 15.0, "z" : 7.5 }
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2400.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 8.0 },
+			"n" : 5
 		},
 		{
 			"id" : 2,
-			"offsetX" : 0.0,
-			"position" : { "x" : 4.0, "y" : 15.0, "z" : 7.5 }
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2470.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 8.0 },
+			"n" : 5
 		},
 		{
-			"id" : 2,
-			"offsetX" : 1.0,
-			"position" : { "x" : -3.5, "y" : 0.0, "z" : 300.0 }
-		},
-		{
-			"id" : 2,
-			"offsetX" : 0.0,
-			"position" : { "x" : -4.0, "y" : 15.0, "z" : 300.0 }
-		},
-		{
-			"id" : 3,
-			"offsetX" : 0.0,
-			"position" : { "x" : -2.0, "y" : 15.0, "z" : 300.0 }
+			"id" : 14,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2550.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 15
 		},
 		{
 			"id" : 3,
-			"offsetX" : 0.0,
-			"position" : { "x" : 0.0, "y" : 15.0, "z" : 300.0 }
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2650.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 8.0 },
+			"n" : 5
 		},
 		{
-			"id" : 3,
-			"offsetX" : 0.0,
-			"position" : { "x" : 2.0, "y" : 15.0, "z" : 300.0 }
+			"id" : 14,
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2720.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 15
+		},
+		{
+			"id" : 13,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2800.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 20
+		},
+		{
+			"id" : 13,
+			"offsetX" : 1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 2900.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 20
+		},
+		{
+			"id" : 13,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 3000.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 4.0 },
+			"n" : 20
 		},
 		{
 			"id" : 2,
-			"offsetX" : 0.0,
-			"position" : { "x" : 4.0, "y" : 15.0, "z" : 300.0 }
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 3200.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 8.0 },
+			"n" : 5
 		},
 		{
 			"id" : 2,
-			"offsetX" : 0.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 30.0 }
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 3440.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 8.0 },
+			"n" : 5
 		},
 		{
-			"id" : 13,
+			"id" : 15,
 			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 30.0 }
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 3480.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 12.0 },
+			"n" : 10
 		},
 		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 35.0 }
+			"id" : 15,
+			"offsetX" : -1.0,
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 3580.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 12.0 },
+			"n" : 10
 		},
 		{
-			"id" : 13,
+			"id" : 15,
 			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 40.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 45.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 50.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 55.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 60.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 65.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 70.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 75.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 80.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 85.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 90.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 95.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 100.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 105.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 110.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 115.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 120.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 125.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 130.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 135.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 140.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 145.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 150.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 155.0 }
-		},
-		{
-			"id" : 13,
-			"offsetX" : 1.0,
-			"position" : { "x" : 0.0, "y" : 0.0, "z" : 160.0 }
+			"initialPosition" : { "x" : 0.0, "y" : 0.0, "z" : 3680.0 },
+			"incPosition" : { "x" : 0.0, "y" : 0.0, "z" : 12.0 },
+			"n" : 10
 		}
 	]
 }

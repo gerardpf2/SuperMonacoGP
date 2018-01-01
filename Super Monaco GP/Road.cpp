@@ -342,6 +342,9 @@ void Road::addCurves(const Value& value) const
 			float length = value[i]["length"].GetFloat();
 			float angle = value[i]["angle"].GetFloat();
 
+			/* zStart *= this->length; //
+			length *= this->length; // */
+
 			addCurve(zStart, length, angle);
 		}
 		else
@@ -351,6 +354,11 @@ void Road::addCurves(const Value& value) const
 			float holdLength = value[i]["holdLength"].GetFloat();
 			float leaveLength = value[i]["leaveLength"].GetFloat();
 			float val = value[i]["value"].GetFloat();
+
+			/* zStart *= length; //
+			enterLength *= length; //
+			holdLength *= length; //
+			leaveLength *= length; // */
 
 			addCurve(zStart, enterLength, holdLength, leaveLength, val);
 		}
@@ -420,7 +428,8 @@ void Road::addCurveLeave(uint indexStart, uint indexEnd, float leaveLength, floa
 		i = getSegment(i + 1)->getIndex();
 	}
 }
-
+#include <iostream>
+using namespace std;
 void Road::setRumbleColors(const Value& value)
 {
 	uint color0 = RGBAToUint(value[0]["r"].GetUint(), value[0]["g"].GetUint(), value[0]["b"].GetUint(), value[0]["a"].GetUint());
@@ -451,6 +460,12 @@ void Road::setRumbleColors(const Value& value)
 		colorsIndex = (colorsIndex + 1) % 2;
 	}
 
+	if(!rumbleColors.empty())
+	{
+		RumbleColors* lastRumbleColors = rumbleColors[rumbleColors.size() - 1];
+		lastRumbleColors->b = lastRumbleColors->c = lastRumbleColors->d = lastRumbleColors->e = color3;
+	}
+
 	uint rumbleColorsIndex = 0;
 	uint currentSegmentPerRumble = 0;
 	uint segmentsPerRumble = (uint)(ROAD_RUMBLE_HEIGHT / SEGMENT_LENGTH);
@@ -459,7 +474,7 @@ void Road::setRumbleColors(const Value& value)
 	{
 		segments[i]->setRumbleColors(rumbleColors[rumbleColorsIndex]);
 
-		if(currentSegmentPerRumble++ == segmentsPerRumble)
+		if(++currentSegmentPerRumble == segmentsPerRumble)
 		{
 			++rumbleColorsIndex;
 			currentSegmentPerRumble = 0;
@@ -473,7 +488,36 @@ void Road::addGameObjectDefinitions(const rapidjson::Value& value)
 
 	for(SizeType i = 0; i < value.Size(); ++i)
 	{
-		// id, offsetX, position
+		// id, offsetX, initialPosition, incPosition, n
+
+		uint id = value[i]["id"].GetUint();
+		float offsetX = value[i]["offsetX"].GetFloat();
+		const Value& initialPositionJson = value[i]["initialPosition"];
+		const Value& incPositionJson = value[i]["incPosition"];
+		uint n = value[i]["n"].GetUint();
+
+		// initial x, y, z
+
+		float x0 = initialPositionJson["x"].GetFloat();
+		float y0 = initialPositionJson["y"].GetFloat();
+		float z0 = initialPositionJson["z"].GetFloat();
+
+		// inc x, y, z
+
+		float x1 = incPositionJson["x"].GetFloat();
+		float y1 = incPositionJson["y"].GetFloat();
+		float z1 = incPositionJson["z"].GetFloat();
+
+		for(uint i = 0; i < n; ++i)
+		{
+			gameObjectDefinitions.push_back(new RoadGameObjectDefinition{ id, offsetX, WorldPosition{ x0, y0, z0 } });
+
+			x0 += x1;
+			y0 += y1;
+			z0 += z1;
+		}
+
+		/* // id, offsetX, position
 
 		uint id = value[i]["id"].GetUint();
 		float offsetX = value[i]["offsetX"].GetFloat();
@@ -485,7 +529,7 @@ void Road::addGameObjectDefinitions(const rapidjson::Value& value)
 		float y = positionJson["y"].GetFloat();
 		float z = positionJson["z"].GetFloat();
 
-		gameObjectDefinitions.push_back(new RoadGameObjectDefinition{ id, offsetX, WorldPosition{ x, y, z } });
+		gameObjectDefinitions.push_back(new RoadGameObjectDefinition{ id, offsetX, WorldPosition{ x, y, z } }); */
 	}
 }
 

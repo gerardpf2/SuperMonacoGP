@@ -32,13 +32,15 @@ class GameObject
 
 		void setPosition(const WorldPosition& position);
 
-		const Collider* getCollider() const;
+		// const Collider* getCollider() const;
 
-		void setColliderBox(const Box& box);
+		const Box* getBox() const;
 
-		void defineColliderBox(float mW, float d);
+		void setBox(const Box& box);
 
-		void enableCollider();
+		void defineBox(float mW, float d);
+
+		// void enableCollider();
 
 		// const Road* getRoad() const;
 
@@ -78,7 +80,9 @@ class GameObject
 
 		Size size;
 
-		Collider collider;
+		Box box;
+
+		// Collider collider;
 
 		WorldPosition position;
 

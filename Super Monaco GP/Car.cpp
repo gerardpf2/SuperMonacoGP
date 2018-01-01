@@ -264,20 +264,20 @@ void Car::checkCollision()
 	
 	*/
 
-	const Collider* mainCollider = nullptr;
-	const list<const Collider*>* colliding = nullptr;
+	list<const GameObject*> colliding;
+	const GameObject* mainCollider = nullptr;
 	
-	if(getModuleWorld()->getGameEngine()->getModuleCollision()->getColliding(&collider, colliding))
+	if(getModuleWorld()->getGameEngine()->getModuleCollision()->getColliding(this, colliding))
 	{
-		for(list<const Collider*>::const_iterator it = colliding->begin(); it != colliding->end(); ++it)
+		for(list<const GameObject*>::const_iterator it = colliding.begin(); it != colliding.end(); ++it)
 		{
-			const Collider* currentCollider = *it;
+			const GameObject* currentCollider = *it;
 
 			// float z0 = mod0L(position.z + collider.b.d, getModuleWorld()->getRoad()->getLength());
 			// float z1 = mod0L(currentCollider->g->getPosition()->z + currentCollider->b.d, getModuleWorld()->getRoad()->getLength());
 
-			float z0 = position.z + collider.b.d; // mod0L(position.z + collider.b.d, getModuleWorld()->getRoad()->getLength());
-			float z1 = currentCollider->g->getPosition()->z + currentCollider->b.d; // mod0L(currentCollider->g->getPosition()->z + currentCollider->b.d, getModuleWorld()->getRoad()->getLength());
+			float z0 = position.z + box.d; // mod0L(position.z + collider.b.d, getModuleWorld()->getRoad()->getLength());
+			float z1 = currentCollider->getPosition()->z + currentCollider->getBox()->d; // mod0L(currentCollider->g->getPosition()->z + currentCollider->b.d, getModuleWorld()->getRoad()->getLength());
 
 			if(z1 < z0) continue;
 			// if(currentCollider->g->getPosition()->z < position.z) continue;
@@ -285,18 +285,18 @@ void Car::checkCollision()
 			if(!mainCollider) mainCollider = currentCollider;
 			else
 			{
-				switch(mainCollider->g->getType())
+				switch(mainCollider->getType())
 				{
 					case GameObjectType::STATIC:
 					case GameObjectType::ANIMATED:
-						if(currentCollider->g->getType() == GameObjectType::STATIC || currentCollider->g->getType() == GameObjectType::ANIMATED)
-							if(currentCollider->b.w > mainCollider->b.w)
+						if(currentCollider->getType() == GameObjectType::STATIC || currentCollider->getType() == GameObjectType::ANIMATED)
+							if(currentCollider->getBox()->w > mainCollider->getBox()->w)
 								mainCollider = currentCollider;
 
 						break;
 					case GameObjectType::CAR:
 					case GameObjectType::PLAYER:
-						if(currentCollider->g->getType() == GameObjectType::STATIC || currentCollider->g->getType() == GameObjectType::ANIMATED)
+						if(currentCollider->getType() == GameObjectType::STATIC || currentCollider->getType() == GameObjectType::ANIMATED)
 							mainCollider = currentCollider;
 				}
 			}
@@ -310,18 +310,18 @@ void Car::checkCollision()
 
 		globalZ -= SEGMENT_LENGTH;
 
-		if(mainCollider->g->getType() == GameObjectType::STATIC || mainCollider->g->getType() == GameObjectType::ANIMATED)
+		if(mainCollider->getType() == GameObjectType::STATIC || mainCollider->getType() == GameObjectType::ANIMATED)
 		{
-			float maxW = fmaxf(mainCollider->b.w, collider.b.w);
+			float maxW = fmaxf(mainCollider->getBox()->w, box.w);
 
-			if(mainCollider->g->getPosition()->x >= ROAD_MAX_X)
+			if(mainCollider->getPosition()->x >= ROAD_MAX_X)
 				position.x = ROAD_MAX_X - maxW;
-			else if(mainCollider->g->getPosition()->x <= ROAD_MIN_X)
+			else if(mainCollider->getPosition()->x <= ROAD_MIN_X)
 				position.x = ROAD_MIN_X + maxW;
-			else if(mainCollider->g->getPosition()->x >= position.x)
-				position.x -= mainCollider->b.w;
+			else if(mainCollider->getPosition()->x >= position.x)
+				position.x -= mainCollider->getBox()->w;
 			else
-				position.x += mainCollider->b.w;
+				position.x += mainCollider->getBox()->w;
 		}
 	}
 }

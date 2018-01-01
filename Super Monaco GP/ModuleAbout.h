@@ -5,6 +5,8 @@
 #include "Module.h"
 #include <SDL_rect.h>
 
+class Animation;
+
 class ModuleAbout : public Module
 {
 	public:
@@ -13,19 +15,31 @@ class ModuleAbout : public Module
 
 		virtual ~ModuleAbout();
 
+		virtual bool setUp() override;
+
 		virtual bool update(float deltaTimeS) override;
+
+		virtual void cleanUp() override;
 
 	private:
 
 		void checkGoStart() const;
 
+		void updateCar(float deltaTimeS);
+
 		void render() const;
+
+		void renderCar() const;
 
 		void renderInfo() const;
 
 	private:
 
-		SDL_Rect baseAllRect;
+		uint carAnimationGroupId = -1;
+
+		Animation* carAnimation = nullptr;
+
+		SDL_Rect baseAllRect, carRect;
 
 		WindowPosition aboutPosition;
 

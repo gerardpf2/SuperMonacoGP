@@ -42,26 +42,33 @@ void GameObject::setPosition(const WorldPosition& position)
 	globalZ = position.z;
 }
 
-const Collider* GameObject::getCollider() const
+const Box* GameObject::getBox() const
+{
+	return &box;
+}
+
+/* const Collider* GameObject::getCollider() const
 {
 	return &collider;
-}
+} */
 
-void GameObject::setColliderBox(const Box& box)
+void GameObject::setBox(const Box& box)
 {
-	collider.b = box;
+	// collider.b = box;
+	this->box = box;
 }
 
-void GameObject::defineColliderBox(float mW, float d)
+void GameObject::defineBox(float mW, float d)
 {
-	collider.b = Box{ mW * size.w, size.h, d };
+	// collider.b = Box{ mW * size.w, size.h, d };
+	box = Box{ mW * size.w, size.h, d };
 }
 
-void GameObject::enableCollider()
+/* void GameObject::enableCollider()
 {
 	collider.g = this;
 	getModuleWorld()->getGameEngine()->getModuleCollision()->addCollider(&collider);
-}
+} */
 
 ModuleWorld* GameObject::getModuleWorld() const
 {
@@ -162,14 +169,14 @@ void GameObject::limitZ()
 
 void GameObject::_DEBUG_renderCollider_DEBUG_(float xOffset, float zOffset, short clipY, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
-	float xnl = position.x - collider.b.w / 2.0f + xOffset;
-	float xnr = xnl + collider.b.w;
+	float xnl = position.x - box.w / 2.0f + xOffset;
+	float xnr = xnl + box.w;
 	
 	float ynb = position.y - 5.0f;
-	float ynt = position.y + collider.b.h;
+	float ynt = position.y + box.h;
 
 	float zn = position.z + zOffset;
-	float zf = zn + collider.b.d;
+	float zf = zn + box.d;
 
 	WorldTrapezoid face0{ WorldPosition{ xnl, ynb, zn }, WorldPosition{ xnr, ynb, zn }, WorldPosition{ xnr, ynt, zn }, WorldPosition{ xnl, ynt, zn } };
 	WorldTrapezoid face1{ WorldPosition{ xnr, ynb, zn }, WorldPosition{ xnr, ynb, zf }, WorldPosition{ xnr, ynt, zf }, WorldPosition{ xnr, ynt, zn } };
@@ -203,7 +210,7 @@ void GameObject::_DEBUG_renderColliderFace_DEBUG_(const WorldTrapezoid& worldTra
 	WindowTrapezoid windowTrapezoid;
 	camera->project(worldTrapezoid, windowTrapezoid);
 
-	bool toBeRendered = !camera->isBehind(worldTrapezoid.fl.z + collider.b.d);
+	bool toBeRendered = !camera->isBehind(worldTrapezoid.fl.z + box.d);
 	toBeRendered &= !(windowTrapezoid.fl.y >= clipY);
 	toBeRendered &= !(windowTrapezoid.nl.y <= windowTrapezoid.fl.y);
 	toBeRendered &= !(windowTrapezoid.nl.y <= 0 || windowTrapezoid.fl.y >= WINDOW_HEIGHT);

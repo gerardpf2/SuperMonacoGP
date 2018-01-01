@@ -1,16 +1,20 @@
 #include "ModuleAbout.h"
 
+#include "Animation.h"
 #include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
 #include "ModuleSwitch.h"
 #include "ModuleAboutUI.h"
 #include "ModuleRenderer.h"
+#include "ModuleAnimation.h"
 
 ModuleAbout::ModuleAbout(GameEngine* gameEngine) :
 	Module(gameEngine)
 {
 	baseAllRect = BASE_ALL_RECT;
+
+	carRect = CAR_RECT;
 
 	aboutPosition = ABOUT_POSITION;
 
@@ -35,13 +39,34 @@ ModuleAbout::ModuleAbout(GameEngine* gameEngine) :
 ModuleAbout::~ModuleAbout()
 { }
 
+bool ModuleAbout::setUp()
+{
+	carAnimationGroupId = getGameEngine()->getModuleAnimation()->load("Resources/Configurations/Animations/About.json");
+
+	carAnimation = getGameEngine()->getModuleAnimation()->getAnimation(carAnimationGroupId, 0);
+
+	return true;
+}
+
 bool ModuleAbout::update(float deltaTimeS)
 {
-	if(!getBlocked()) checkGoStart();
+	if(!getBlocked())
+	{
+		checkGoStart();
+
+		updateCar(deltaTimeS);
+	}
 
 	render();
 
 	return true;
+}
+
+void ModuleAbout::cleanUp()
+{
+	getGameEngine()->getModuleAnimation()->unload(carAnimationGroupId);
+
+	carAnimation = nullptr;
 }
 
 void ModuleAbout::checkGoStart() const
@@ -50,11 +75,25 @@ void ModuleAbout::checkGoStart() const
 		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::START);
 }
 
+void ModuleAbout::updateCar(float deltaTimeS)
+{
+	carAnimation->update(deltaTimeS);
+}
+
 void ModuleAbout::render() const
 {
 	getGameEngine()->getModuleRenderer()->renderRect(&baseAllRect, 0, 0, 0);
 
+	renderCar();
+
 	renderInfo();
+}
+
+void ModuleAbout::renderCar() const
+{
+	const Texture* carT = carAnimation->getCurrentFrame();
+
+	getGameEngine()->getModuleRenderer()->renderTexture(carT->t, carT->r, &carRect, carT->hFlipped);
 }
 
 void ModuleAbout::renderInfo() const

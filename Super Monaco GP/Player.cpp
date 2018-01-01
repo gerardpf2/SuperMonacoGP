@@ -61,8 +61,13 @@ void Player::updateDirection(float deltaTimeS)
 	if(moduleInput->isKeyPressed(SDL_SCANCODE_S)) direction.z -= 1.0f;
 }
 
+// #include <iostream>
+// using namespace std;
+
 void Player::updateCurrentAnimation(float deltaTimeS) const
 {
+	// cout << getPosition()->z << endl;
+
 	animationGrid->advance(getVelocityPercent(), direction.x, deltaTimeS);
 	animationContainer->setCurrentAnimation(animationGrid->getCurrentAnimation()->getId());
 }

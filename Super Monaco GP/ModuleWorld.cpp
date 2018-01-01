@@ -159,7 +159,10 @@ void ModuleWorld::registerLapTime(const Car* car)
 
 void ModuleWorld::addPlayer()
 {
-	player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, 0.0f });
+	// float z = 2700.0f;
+	// player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, z });
+
+	player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, -SEGMENT_LENGTH });
 }
 
 void ModuleWorld::addCars()
@@ -231,7 +234,7 @@ GameObject* ModuleWorld::addGameObject(uint id, const WorldPosition& worldPositi
 	GameObject* gameObject = getGameEngine()->getModuleGameObject()->getGameObject(id);
 
 	gameObject->setModuleWorld(this);
-	gameObject->enableCollider();
+	// gameObject->enableCollider();
 
 	// Adjust game object's position
 
@@ -331,7 +334,7 @@ void ModuleWorld::addAllGameObjects()
 
 void ModuleWorld::removeAllGameObjects()
 {
-	getGameEngine()->getModuleCollision()->removeColliders();
+	// getGameEngine()->getModuleCollision()->removeColliders();
 
 	player = nullptr;
 

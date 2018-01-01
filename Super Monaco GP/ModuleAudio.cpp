@@ -90,6 +90,12 @@ void ModuleAudio::unload(uint idAudioGroup)
 
 void ModuleAudio::playFx(uint idAudioGroup, uint idFx, int loops) const
 {
+	/* uint left = 20;
+	uint distance = 100;
+
+	Mix_SetPanning(MIX_CHANNEL_POST, left, 254 - left);
+	Mix_SetDistance(MIX_CHANNEL_POST, distance); */
+
 	Mix_PlayChannel(-1, audioGroups.at(idAudioGroup).second->at(idFx), loops);
 }
 

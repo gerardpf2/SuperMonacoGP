@@ -38,7 +38,7 @@
 #define N_LAPS 3
 
 static const char* COURSE_NAMES[N_COURSES]{ "ITALY", "PORTUGAL" };
-static const float COURSE_LENGHTS[N_COURSES]{ 3000.0f, 4000.0f };
+static const float COURSE_LENGHTS[N_COURSES]{ 3808.0f, 3296.0f };
 // static const float PLAYER_BEST_LAP_TIMES[N_COURSES]{ 300.0f, 400.0f };
 
 /* #define CAR_STEP (1.0f / 60.0f)
