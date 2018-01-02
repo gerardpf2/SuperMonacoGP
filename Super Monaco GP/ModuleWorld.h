@@ -24,6 +24,8 @@ class ModuleWorld : public Module
 
 		const Road* getRoad() const;
 
+		const Player* getPlayer() const;
+
 		const Camera* getCamera() const;
 
 		const Camera* getCameraMirror() const;
@@ -79,6 +81,8 @@ class ModuleWorld : public Module
 		void checkPauseMode();
 
 		void checkGoMenu() const;
+
+		void checkRenderCollisionBoxes() const;
 
 		void updatePaused(float deltaTimeS);
 

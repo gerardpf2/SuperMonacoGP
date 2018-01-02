@@ -3,6 +3,7 @@
 #include "Road.h"
 #include "Utils.h"
 #include "Camera.h"
+#include "Player.h"
 #include "Segment.h"
 #include "Animation.h"
 #include "GameEngine.h"
@@ -25,6 +26,13 @@ GameObjectType Car::getType() const
 	return GameObjectType::CAR;
 }
 
+void Car::setPosition(const WorldPosition& position)
+{
+	GameObject::setPosition(position);
+
+	initialX = position.x;
+}
+
 uint Car::getSpecificId() const
 {
 	return specificId;
@@ -33,6 +41,8 @@ uint Car::getSpecificId() const
 void Car::setSpecificId(uint specificId)
 {
 	this->specificId = specificId;
+
+	computeVelocityAccelerationMultipliersMultiplier();
 }
 
 float Car::getVelocity() const
@@ -88,7 +98,13 @@ void Car::update(float deltaTimeS)
 		deaccelerationFrictionExtra = CAR_DEACCELERATION_FRICTION_EXTRA_GRASS;
 	}
 
+	maxVelocity *= velocityMultiplier;
+	acceleration *= accelerationMultiplier;
+
 	updateDirection(deltaTimeS);
+	
+	updateVelocityCurve(deltaTimeS);
+	
 	// updateCurrentAnimation(deltaTimeS);
 
 	Segment* segment = getModuleWorld()->getRoad()->getSegmentAtZ(position.z);
@@ -166,8 +182,79 @@ void Car::update(float deltaTimeS)
 
 void Car::updateDirection(float deltaTimeS)
 {
+	const float farZ = 30.0f; //
+	const float closeZ = 7.5f; //
+
 	direction.x = 0.0f;
 	direction.z = 1.0f;
+
+	float w = box.w;
+	float x = position.x;
+	float collisionLeftX = x - 0.5f * w;
+	float collisionRightX = x + 0.5f * w;
+
+	list<const GameObject*> obstaclesFront;
+	getModuleWorld()->getRoad()->findGameObjectsFront(position.z, farZ, obstaclesFront);
+
+	for(const GameObject* obstacle : obstaclesFront)
+	{
+		if(obstacle == this) continue;
+
+		if(obstacle->getType() == GameObjectType::CAR || obstacle->getType() == GameObjectType::PLAYER)
+			if(((Car*)obstacle)->getVelocityPercent() > getVelocityPercent()) continue;
+
+		float obstacleW = obstacle->getBox()->w;
+		float obstacleX = obstacle->getPosition()->x;
+		float obstacleCollisionLeftX = obstacleX - 0.75f * obstacleW;
+		float obstacleCollisionRightX = obstacleX + 0.75f * obstacleW;
+
+		bool mayCollide = !(obstacleCollisionLeftX > collisionRightX || obstacleCollisionRightX < collisionLeftX);
+
+		if(mayCollide)
+		{
+			float remainingSpaceObstacleLeftX = fabsf(ROAD_MIN_X - obstacleCollisionLeftX);
+			float remainingSpaceObstacleRightX = fabsf(ROAD_MAX_X - obstacleCollisionRightX);
+
+			float diffZ = fabsf(obstacle->getPosition()->z - position.z);
+			float directionLeftX = interpolate(diffZ, 0.0f, farZ, -1.0f, 0.0f);
+			float directionRightX = interpolate(diffZ, 0.0f, farZ, 1.0f, 0.0f);
+
+			if(x <= obstacleX && remainingSpaceObstacleLeftX > w) direction.x = directionLeftX;
+			else if(x > obstacleX && remainingSpaceObstacleRightX > w) direction.x = directionRightX;
+			else
+			{
+				if(remainingSpaceObstacleLeftX >= remainingSpaceObstacleRightX)
+					direction.x = directionLeftX;
+				else
+					direction.x = directionRightX;
+			}
+
+			if(obstacle->getType() == GameObjectType::PLAYER)
+			{
+				if(diffZ < closeZ) direction.z = 0.0f;
+			}
+
+			break;
+		}
+	}
+
+	direction.x = clamp(direction.x, -1.0f, 1.0f);
+	direction.z = clamp(direction.z, -1.0f, 1.0f);
+}
+
+void Car::updateVelocityCurve(float deltaTimeS)
+{
+	Segment* segment = getModuleWorld()->getRoad()->getSegmentAtZ(position.z);
+	
+	float curve = segment->getCurve();
+
+	float multiplier = interpolate(fabsf(curve), 0.0f, 0.02f, 0.0f, 10.0f);
+
+	velocity -= multiplier * deltaTimeS;
+
+	float multiplier2 = getVelocityPercent() * interpolate(fabsf(direction.x), 0.0f, 1.0f, 0.0f, 2.0f);
+
+	velocity -= multiplier2 * deltaTimeS;
 }
 
 void Car::updateCurrentAnimation(float deltaTimeS) const
@@ -248,6 +335,14 @@ const Texture* Car::getCurrentTexture(bool mirror) const
 	}
 
 	return currentFrame;
+}
+
+void Car::computeVelocityAccelerationMultipliersMultiplier()
+{
+	// changeDirectionXTime *= interpolate((float)specificId, 0.0f, N_CARS - 1.0f, 1.0f, 2.0f);
+
+	velocityMultiplier = interpolate((float)specificId, 0.0f, N_CARS - 1.0f, 1.0f, 0.7f);
+	accelerationMultiplier = interpolate((float)specificId, 0.0f, N_CARS - 1.0f, 1.0f, 0.8f);
 }
 
 void Car::checkCollision()

@@ -65,6 +65,11 @@ const Road* ModuleWorld::getRoad() const
 	return road;
 }
 
+const Player* ModuleWorld::getPlayer() const
+{
+	return player;
+}
+
 const Camera* ModuleWorld::getCamera() const
 {
 	return camera;
@@ -120,6 +125,8 @@ bool ModuleWorld::update(float deltaTimeS)
 	if(!getBlocked())
 	{
 		checkPauseMode();
+
+		checkRenderCollisionBoxes();
 
 		if(!paused) updateNotPaused(deltaTimeS);
 		else updatePaused(deltaTimeS);
@@ -345,6 +352,9 @@ void ModuleWorld::removeAllGameObjects()
 
 void ModuleWorld::addCameras()
 {
+	// camera = new CameraFollow(true, road, gameObjects[5]->getPosition());
+	// cameraMirror = new CameraFollow(false, road, gameObjects[5]->getPosition(), 1.1f, 11.0f, WorldPosition{ 0.0f, 0.0f, -CAMERA_Y });
+
 	camera = new CameraFollow(true, road, player->getPosition());
 	cameraMirror = new CameraFollow(false, road, player->getPosition(), 1.1f, 11.0f, WorldPosition{ 0.0f, 0.0f, -CAMERA_Y });
 }
@@ -404,6 +414,13 @@ void ModuleWorld::checkGoMenu() const
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
 		// getGameEngine()->setGameModule(GameModule::START);
 		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::START);
+}
+
+void ModuleWorld::checkRenderCollisionBoxes() const
+{
+	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_F1) == KeyState::DOWN)
+		for(GameObject* gameObject : gameObjects)
+			gameObject->setRenderCollisionBox(!gameObject->getRenderCollisionBox());
 }
 
 void ModuleWorld::updatePaused(float deltaTimeS)

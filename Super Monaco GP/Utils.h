@@ -61,7 +61,7 @@ static bool isOutsideWindowX(const WindowTrapezoid& windowTrapezoid)
 
 static uint kmh(float value)
 {
-	return (uint)interpolate(value, 0.0f, CAR_MAX_VELOCITY, 0.0f, 350.0f);
+	return (uint)interpolate(value, 0.0f, CAR_MAX_VELOCITY, 0.0f, 400.0f);
 }
 
 static void time(float time, std::string& timeText)

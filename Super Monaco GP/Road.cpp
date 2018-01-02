@@ -7,6 +7,7 @@
 #include "ModuleJson.h"
 #include "ModuleTexture.h"
 
+using namespace std;
 using namespace rapidjson;
 
 Road::Road()
@@ -99,6 +100,20 @@ const std::vector<RoadGameObjectDefinition*>* Road::getGameObjectDefinitions() c
 const RoadBackgroundDefinition* Road::getRoadBackgroundDefinition() const
 {
 	return roadBackgroundDefinition;
+}
+
+void Road::findGameObjectsFront(float z, float distance, list<const GameObject*>& gameObjects) const
+{
+	int index = getSegmentAtZ(z)->getIndex();
+	int nSegments = (int)(distance / SEGMENT_LENGTH);
+
+	for(int i = 0; i < nSegments; ++i)
+	{
+		Segment* segment = getSegment(index + i);
+
+		for(const GameObject* gameObject : *segment->getGameObjects())
+			gameObjects.push_back(gameObject);
+	}
 }
 
 void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const

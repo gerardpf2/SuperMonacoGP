@@ -24,6 +24,8 @@ class Player : public Car
 
 		virtual void updateDirection(float deltaTimeS) override;
 
+		virtual void updateVelocityCurve(float deltaTimeS) override;
+
 		virtual void updateCurrentAnimation(float deltaTimeS) const override;
 		
 		virtual void updateOffsetX(float dX, float velocityPercent, float curve) override;

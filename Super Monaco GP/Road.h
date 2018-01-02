@@ -1,6 +1,7 @@
 #ifndef _ROAD_
 #define _ROAD_
 
+#include <list>
 #include <vector>
 #include "Types.h"
 #include "rapidjson/document.h"
@@ -32,6 +33,8 @@ class Road
 		const std::vector<RoadGameObjectDefinition*>* getGameObjectDefinitions() const;
 
 		const RoadBackgroundDefinition* getRoadBackgroundDefinition() const;
+
+		void findGameObjectsFront(float z, float distance, std::list<const GameObject*>& gameObjects) const;
 
 		void render(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 

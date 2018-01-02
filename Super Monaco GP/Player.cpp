@@ -1,5 +1,6 @@
 #include "Player.h"
 
+#include "Utils.h"
 #include "Globals.h"
 #include "Animation.h"
 #include "ModuleInput.h"
@@ -59,6 +60,13 @@ void Player::updateDirection(float deltaTimeS)
 
 	if(moduleInput->isKeyPressed(SDL_SCANCODE_W)) direction.z += 1.0f;
 	if(moduleInput->isKeyPressed(SDL_SCANCODE_S)) direction.z -= 1.0f;
+}
+
+void Player::updateVelocityCurve(float deltaTimeS)
+{
+	float multiplier = getVelocityPercent() * interpolate(fabsf(direction.x), 0.0f, 1.0f, 0.0f, 1.0f);
+
+	velocity -= multiplier * deltaTimeS;
 }
 
 // #include <iostream>

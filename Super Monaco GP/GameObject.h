@@ -30,7 +30,7 @@ class GameObject
 
 		const WorldPosition* getPosition() const;
 
-		void setPosition(const WorldPosition& position);
+		virtual void setPosition(const WorldPosition& position);
 
 		// const Collider* getCollider() const;
 
@@ -56,6 +56,10 @@ class GameObject
 
 		void move(const WorldPosition& offset);
 
+		bool getRenderCollisionBox() const;
+
+		void setRenderCollisionBox(bool renderCollisionBox);
+
 		virtual void update(float deltaTimeS);
 
 		void render(const Camera* camera, const ModuleRenderer* moduleRenderer) const;
@@ -72,9 +76,9 @@ class GameObject
 
 	private:
 
-		void _DEBUG_renderCollider_DEBUG_(float xOffset, float zOffset, short clipY, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+		void renderCollisionBox(float xOffset, float zOffset, short clipY, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
-		void _DEBUG_renderColliderFace_DEBUG_(const WorldTrapezoid& worldTrapezoid, short clipY, uint color, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
+		void renderCollisionBoxFace(const WorldTrapezoid& worldTrapezoid, short clipY, uint color, const Camera* camera, const ModuleRenderer* moduleRenderer) const;
 
 	protected:
 
@@ -93,6 +97,8 @@ class GameObject
 		// uint id;
 
 		// const Road* road = nullptr;
+
+		bool renderBox = false;
 
 		ModuleWorld* moduleWorld = nullptr;
 };

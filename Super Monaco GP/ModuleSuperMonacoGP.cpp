@@ -122,10 +122,16 @@ void ModuleSuperMonacoGP::addPlayer()
 	float sidePositionX = (PLAYER_POSITION % 2 == 0) ? 1.0f : -1.0f;
 	
 	player = (Player*)addGameObject(0, WorldPosition{ sidePositionX * CARS_X, 0.0f, z });
+
+	// player = (Player*)addGameObject(0, WorldPosition{ 7.5f, 0.0f, 300.0f });
 }
 
 void ModuleSuperMonacoGP::addCars()
 {
+	// enemyCars.push_back((Car*)addGameObject(1, WorldPosition{ 7.5f, 0.0f, 0.0f }));
+
+	// return;
+
 	float z = -SEGMENT_LENGTH;
 	float sidePositionX = 1.0f;
 

@@ -96,6 +96,16 @@ void GameObject::move(const WorldPosition& offset)
 	globalZ += offset.z;
 }
 
+bool GameObject::getRenderCollisionBox() const
+{
+	return renderBox;
+}
+
+void GameObject::setRenderCollisionBox(bool renderCollisionBox)
+{
+	renderBox = renderCollisionBox;
+}
+
 void GameObject::update(float deltaTimeS)
 { }
 
@@ -156,7 +166,7 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 
 	moduleRenderer->renderTexture(texture->t, &src, &dst, texture->hFlipped);
 
-	// _DEBUG_renderCollider_DEBUG_(xOffset, zOffset, clipY, camera, moduleRenderer);
+	if(renderBox) renderCollisionBox(xOffset, zOffset, clipY, camera, moduleRenderer);
 }
 
 void GameObject::cleanUp()
@@ -167,12 +177,12 @@ void GameObject::limitZ()
 	position.z = mod0L(position.z, moduleWorld->getRoad()->getLength());
 }
 
-void GameObject::_DEBUG_renderCollider_DEBUG_(float xOffset, float zOffset, short clipY, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+void GameObject::renderCollisionBox(float xOffset, float zOffset, short clipY, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
 	float xnl = position.x - box.w / 2.0f + xOffset;
 	float xnr = xnl + box.w;
 	
-	float ynb = position.y - 5.0f;
+	float ynb = position.y; // - 5.0f;
 	float ynt = position.y + box.h;
 
 	float zn = position.z + zOffset;
@@ -187,25 +197,25 @@ void GameObject::_DEBUG_renderCollider_DEBUG_(float xOffset, float zOffset, shor
 
 	if(camera->getForward())
 	{
-		_DEBUG_renderColliderFace_DEBUG_(face5, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face3, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face2, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face1, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face0, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face4, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face5, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face3, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face2, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face1, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face0, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face4, clipY, 0x55FFFFFF, camera, moduleRenderer);
 	}
 	else
 	{
-		_DEBUG_renderColliderFace_DEBUG_(face4, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face0, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face1, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face2, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face3, clipY, 0x55FFFFFF, camera, moduleRenderer);
-		_DEBUG_renderColliderFace_DEBUG_(face5, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face4, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face0, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face1, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face2, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face3, clipY, 0x55FFFFFF, camera, moduleRenderer);
+		renderCollisionBoxFace(face5, clipY, 0x55FFFFFF, camera, moduleRenderer);
 	}
 }
 
-void GameObject::_DEBUG_renderColliderFace_DEBUG_(const WorldTrapezoid& worldTrapezoid, short clipY, uint color, const Camera* camera, const ModuleRenderer* moduleRenderer) const
+void GameObject::renderCollisionBoxFace(const WorldTrapezoid& worldTrapezoid, short clipY, uint color, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
 	WindowTrapezoid windowTrapezoid;
 	camera->project(worldTrapezoid, windowTrapezoid);

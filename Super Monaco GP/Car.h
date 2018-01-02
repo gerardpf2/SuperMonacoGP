@@ -13,6 +13,8 @@ class Car : public Animated
 
 		virtual GameObjectType getType() const override;
 
+		virtual void setPosition(const WorldPosition& position) override;
+
 		uint getSpecificId() const;
 
 		void setSpecificId(uint specificId);
@@ -37,6 +39,8 @@ class Car : public Animated
 
 		virtual void updateDirection(float deltaTimeS);
 
+		virtual void updateVelocityCurve(float deltaTimeS);
+
 		virtual void updateCurrentAnimation(float deltaTimeS) const override;
 
 		virtual void updateOffsetX(float dX, float velocityPercent, float curve);
@@ -44,6 +48,8 @@ class Car : public Animated
 		virtual const Texture* getCurrentTexture(bool mirror) const override;
 
 	private:
+
+		void computeVelocityAccelerationMultipliersMultiplier();
 
 		void checkCollision();
 
@@ -55,11 +61,11 @@ class Car : public Animated
 
 		Direction direction;
 
+		float velocity = 0.0f;
+
 	private:
 
 		uint specificId = 0;
-
-		float velocity = 0.0f;
 
 		uint currentLap = 0;
 
@@ -72,6 +78,18 @@ class Car : public Animated
 		bool ignoreCurrentLap = true;
 
 		bool movementEnabled = false;
+
+		float velocityMultiplier = 1.0f;
+
+		float accelerationMultiplier = 1.0f;
+
+		float initialX;
+
+		// float changeDirectionXTime = 10.0f;
+
+		// float changeDirectionXCurrentTime = 0.0f;
+
+		// float desiredDirectionX = 0.0f;
 };
 
 #endif
