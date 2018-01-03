@@ -13,7 +13,7 @@ class Car : public Animated
 
 		virtual GameObjectType getType() const override;
 
-		virtual void setPosition(const WorldPosition& position) override;
+		// virtual void setPosition(const WorldPosition& position) override;
 
 		uint getSpecificId() const;
 
@@ -83,7 +83,7 @@ class Car : public Animated
 
 		float accelerationMultiplier = 1.0f;
 
-		float initialX;
+		// float initialX;
 
 		// float changeDirectionXTime = 10.0f;
 

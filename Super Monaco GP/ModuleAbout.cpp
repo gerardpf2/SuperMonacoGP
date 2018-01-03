@@ -115,5 +115,5 @@ void ModuleAbout::renderInfo() const
 	getGameEngine()->getModuleFont()->renderText("WASD - DRIVE", controlsValuePosition0, HAlignment::LEFT, VAlignment::CENTER, VALUE_POSITION_SCALE, VALUE_POSITION_SCALE, 248, 252, 248);
 	getGameEngine()->getModuleFont()->renderText("ESCAPE - GO BACK", controlsValuePosition1, HAlignment::LEFT, VAlignment::CENTER, VALUE_POSITION_SCALE, VALUE_POSITION_SCALE, 248, 252, 248);
 	getGameEngine()->getModuleFont()->renderText("ENTER - SELECT OPTION", controlsValuePosition2, HAlignment::LEFT, VAlignment::CENTER, VALUE_POSITION_SCALE, VALUE_POSITION_SCALE, 248, 252, 248);
-	getGameEngine()->getModuleFont()->renderText("ARROWS - CHANGE OPTION", controlsValuePosition3, HAlignment::LEFT, VAlignment::CENTER, VALUE_POSITION_SCALE, VALUE_POSITION_SCALE, 248, 252, 248);
+	getGameEngine()->getModuleFont()->renderText("ARROWS - DRIVE AND CHANGE OPTION", controlsValuePosition3, HAlignment::LEFT, VAlignment::CENTER, VALUE_POSITION_SCALE, VALUE_POSITION_SCALE, 248, 252, 248);
 }

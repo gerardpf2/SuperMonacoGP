@@ -38,6 +38,10 @@ class ModuleWorld : public Module
 
 		virtual void registerLapTime(const Car* car);
 
+		void playFxOutRoad();
+
+		void playFxCollision() const;
+
 	protected:
 
 		ModuleWorld(GameEngine* gameEngine);
@@ -92,7 +96,15 @@ class ModuleWorld : public Module
 
 		void updateCurrentLapTimeNotificationCounter(float deltaTimeS);
 
+		void updateLightAnimationFx(float deltaTimeS);
+
+		void updateLightAnimationMusic(float deltaTimeS);
+
 		void updateLightAnimation(float deltaTimeS) const;
+
+		void updateOutRoadFxWaitTime(float deltaTimeS);
+
+		// void updateCollisionFxWaitTime(float deltaTimeS);
 
 		void render() const;
 
@@ -123,6 +135,22 @@ class ModuleWorld : public Module
 		float pauseCounter = 0.0;
 
 		const Texture* kmhT = nullptr;
+
+		uint audioGroupId = -1;
+
+		bool lightSFX0Done = false;
+
+		bool lightSFX1Done = false;
+
+		bool lightMusicDone = false;
+
+		bool outRoadFxPlayed = false;
+
+		// bool collisionFxPlayed = false;
+
+		float fxOutRoadCurrentWaitTime = 0.0f;
+
+		// float fxCollisionCurrentWaitTime = 0.0f;
 
 		// float currentLapTime = 0.0f;
 

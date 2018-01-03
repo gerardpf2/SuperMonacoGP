@@ -88,7 +88,7 @@ void ModuleAudio::unload(uint idAudioGroup)
 	loadedAudioGroups.remove(pair<pair<string, uint>, uint>(pair<string, uint>(tmpJsonPath, idAudioGroup), 0));
 }
 
-void ModuleAudio::playFx(uint idAudioGroup, uint idFx, int loops) const
+void ModuleAudio::playFx(uint idAudioGroup, uint idFx, float volume, int loops) const
 {
 	/* uint left = 20;
 	uint distance = 100;
@@ -96,11 +96,15 @@ void ModuleAudio::playFx(uint idAudioGroup, uint idFx, int loops) const
 	Mix_SetPanning(MIX_CHANNEL_POST, left, 254 - left);
 	Mix_SetDistance(MIX_CHANNEL_POST, distance); */
 
-	Mix_PlayChannel(-1, audioGroups.at(idAudioGroup).second->at(idFx), loops);
+	Mix_Chunk* fx = audioGroups.at(idAudioGroup).second->at(idFx);
+
+	Mix_VolumeChunk(fx, (int)(volume * MIX_MAX_VOLUME));
+	Mix_PlayChannel(-1, fx, loops);
 }
 
-void ModuleAudio::playMusic(uint idAudioGroup, uint idMusic, int loops) const
+void ModuleAudio::playMusic(uint idAudioGroup, uint idMusic, float volume, int loops) const
 {
+	Mix_VolumeMusic((int)(volume * MIX_MAX_VOLUME));
 	Mix_PlayMusic(audioGroups.at(idAudioGroup).first->at(idMusic), loops);
 }
 
@@ -111,7 +115,7 @@ bool ModuleAudio::setUp()
 		return false;
 	}
 
-	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0)
 	{
 		return false;
 	}

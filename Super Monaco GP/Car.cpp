@@ -26,12 +26,12 @@ GameObjectType Car::getType() const
 	return GameObjectType::CAR;
 }
 
-void Car::setPosition(const WorldPosition& position)
+/* void Car::setPosition(const WorldPosition& position)
 {
 	GameObject::setPosition(position);
 
 	initialX = position.x;
-}
+} */
 
 uint Car::getSpecificId() const
 {
@@ -96,6 +96,9 @@ void Car::update(float deltaTimeS)
 		deacceleration = CAR_DEACCELERATION_GRASS;
 		deaccelerationFriction = CAR_DEACCELERATION_FRICTION_GRASS;
 		deaccelerationFrictionExtra = CAR_DEACCELERATION_FRICTION_EXTRA_GRASS;
+
+		if(getType() == GameObjectType::PLAYER && velocity > 0.0f)
+			getModuleWorld()->playFxOutRoad();
 	}
 
 	maxVelocity *= velocityMultiplier;
@@ -103,7 +106,7 @@ void Car::update(float deltaTimeS)
 
 	updateDirection(deltaTimeS);
 	
-	updateVelocityCurve(deltaTimeS);
+	// updateVelocityCurve(deltaTimeS);
 	
 	// updateCurrentAnimation(deltaTimeS);
 
@@ -151,6 +154,8 @@ void Car::update(float deltaTimeS)
 
 	if(velocity > CAR_DEACCELERATION_FRICTION_LIMIT_VELOCITY)
 		velocity -= deaccelerationFrictionExtra * deltaTimeS;
+
+	updateVelocityCurve(deltaTimeS);
 
 	velocity = clamp(velocity, 0.0f, maxVelocity);
 
@@ -228,11 +233,8 @@ void Car::updateDirection(float deltaTimeS)
 				else
 					direction.x = directionRightX;
 			}
-
-			if(obstacle->getType() == GameObjectType::PLAYER)
-			{
-				if(diffZ < closeZ) direction.z = 0.0f;
-			}
+			
+			if(diffZ < closeZ) direction.z = -1.0;
 
 			break;
 		}
@@ -400,6 +402,9 @@ void Car::checkCollision()
 
 	if(mainCollider)
 	{
+		if(getType() == GameObjectType::PLAYER || mainCollider->getType() == GameObjectType::PLAYER)
+			getModuleWorld()->playFxCollision();
+
 		velocity *= 0.5f;
 		position.z -= /* getVelocityPercent() * */ SEGMENT_LENGTH; limitZ();
 

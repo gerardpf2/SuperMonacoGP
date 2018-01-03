@@ -22,9 +22,9 @@ class ModuleAudio : public Module
 
 		void unload(uint idAudioGroup);
 
-		void playFx(uint idAudioGroup, uint idFx, int loops = 0) const;
+		void playFx(uint idAudioGroup, uint idFx, float volume = 1.0f, int loops = 0) const;
 
-		void playMusic(uint idAudioGroup, uint idMusic, int loops = -1) const;
+		void playMusic(uint idAudioGroup, uint idMusic, float volume = 1.0f, int loops = -1) const;
 
 		virtual bool setUp() override;
 

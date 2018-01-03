@@ -55,11 +55,11 @@ void Player::updateDirection(float deltaTimeS)
 	direction.x = 0.0f;
 	direction.z = 0.0f;
 
-	if(moduleInput->isKeyPressed(SDL_SCANCODE_D)) direction.x += 1.0f;
-	if(moduleInput->isKeyPressed(SDL_SCANCODE_A)) direction.x -= 1.0f;
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_D) || moduleInput->isKeyPressed(SDL_SCANCODE_RIGHT)) direction.x += 1.0f;
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_A) || moduleInput->isKeyPressed(SDL_SCANCODE_LEFT)) direction.x -= 1.0f;
 
-	if(moduleInput->isKeyPressed(SDL_SCANCODE_W)) direction.z += 1.0f;
-	if(moduleInput->isKeyPressed(SDL_SCANCODE_S)) direction.z -= 1.0f;
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_W) || moduleInput->isKeyPressed(SDL_SCANCODE_UP)) direction.z += 1.0f;
+	if(moduleInput->isKeyPressed(SDL_SCANCODE_S) || moduleInput->isKeyPressed(SDL_SCANCODE_DOWN)) direction.z -= 1.0f;
 }
 
 void Player::updateVelocityCurve(float deltaTimeS)

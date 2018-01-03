@@ -30,7 +30,7 @@ class GameObject
 
 		const WorldPosition* getPosition() const;
 
-		virtual void setPosition(const WorldPosition& position);
+		void setPosition(const WorldPosition& position);
 
 		// const Collider* getCollider() const;
 

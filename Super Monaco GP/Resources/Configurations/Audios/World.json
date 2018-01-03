@@ -1,0 +1,18 @@
+{
+	"_WARNING" : "",
+	"_info" : "",
+	
+	"audioGroupId" : 0,
+	"musics" :
+	[
+		"Resources/Audios/WorldMusic.wav"
+	],
+	"fxs" :
+	[
+		"Resources/Audios/WorldFx0.wav",
+		"Resources/Audios/WorldFx1.wav",
+		"Resources/Audios/WorldFx2.wav",
+		"Resources/Audios/WorldFx3.wav",
+		"Resources/Audios/WorldFx4.wav"
+	]
+}

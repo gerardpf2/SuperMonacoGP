@@ -10,6 +10,7 @@
 #include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleStart.h"
 #include "ModuleSwitch.h"
 #include "CameraFollow.h"
@@ -94,6 +95,8 @@ bool ModuleWorld::setUp()
 
 	addRenderingLayers();
 
+	audioGroupId = getGameEngine()->getModuleAudio()->load("Resources/Configurations/Audios/World.json");
+
 	kmhT = getGameEngine()->getModuleTexture()->get(2, 16);
 
 	lightIdAnimationGroup = getGameEngine()->getModuleAnimation()->load("Resources/Configurations/Animations/Light.json");
@@ -139,6 +142,8 @@ bool ModuleWorld::update(float deltaTimeS)
 
 void ModuleWorld::cleanUp()
 {
+	getGameEngine()->getModuleAudio()->unload(audioGroupId);
+
 	getGameEngine()->getModuleAnimation()->unload(lightIdAnimationGroup);
 	
 	lightAnimation = nullptr;
@@ -161,7 +166,30 @@ void ModuleWorld::cleanUp()
 void ModuleWorld::registerLapTime(const Car* car)
 {
 	if(car->getType() == GameObjectType::PLAYER)
+	{
 		currentLapTimeNotificate = true;
+		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 3, 1.0f, 4);
+	}
+}
+
+void ModuleWorld::playFxOutRoad()
+{
+	if(!outRoadFxPlayed)
+	{
+		outRoadFxPlayed = true;
+		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 2);
+	}
+}
+
+void ModuleWorld::playFxCollision() const
+{
+	getGameEngine()->getModuleAudio()->playFx(audioGroupId, 4);
+
+	/* if(!collisionFxPlayed)
+	{
+		collisionFxPlayed = true;
+		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 4);
+	} */
 }
 
 void ModuleWorld::addPlayer()
@@ -434,6 +462,14 @@ void ModuleWorld::updateNotPaused(float deltaTimeS)
 {
 	updateLightAnimation(deltaTimeS);
 
+	updateLightAnimationFx(deltaTimeS);
+
+	updateLightAnimationMusic(deltaTimeS);
+
+	updateOutRoadFxWaitTime(deltaTimeS);
+
+	// updateCollisionFxWaitTime(deltaTimeS);
+
 	if(currentLapTimeNotificate)
 		updateCurrentLapTimeNotificationCounter(deltaTimeS);
 
@@ -463,6 +499,30 @@ void ModuleWorld::updateCurrentLapTimeNotificationCounter(float deltaTimeS)
 	}
 }
 
+void ModuleWorld::updateLightAnimationFx(float deltaTimeS)
+{
+	if(!lightSFX0Done && lightAnimation->getTimePercent() >= 0.2f)
+	{
+		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 0);
+		lightSFX0Done = true;
+	}
+
+	if(!lightSFX1Done && lightAnimation->getTimePercent() >= 0.6f)
+	{
+		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 1);
+		lightSFX1Done = true;
+	}
+}
+
+void ModuleWorld::updateLightAnimationMusic(float deltaTimeS)
+{
+	if(!lightMusicDone && lightAnimation->hasEnded())
+	{
+		getGameEngine()->getModuleAudio()->playMusic(audioGroupId, 0, 0.75f);
+		lightMusicDone = true;
+	}
+}
+
 void ModuleWorld::updateLightAnimation(float deltaTimeS) const
 {
 	if(!lightAnimation->hasEnded())
@@ -477,6 +537,24 @@ void ModuleWorld::updateLightAnimation(float deltaTimeS) const
 		}
 	}
 }
+
+void ModuleWorld::updateOutRoadFxWaitTime(float deltaTimeS)
+{
+	if(outRoadFxPlayed && (fxOutRoadCurrentWaitTime += deltaTimeS) >= 0.25f)
+	{
+		outRoadFxPlayed = false;
+		fxOutRoadCurrentWaitTime = 0.0f;
+	}
+}
+
+/* void ModuleWorld::updateCollisionFxWaitTime(float deltaTimeS)
+{
+	if(collisionFxPlayed && (fxCollisionCurrentWaitTime += deltaTimeS) >= 0.0f)
+	{
+		collisionFxPlayed = false;
+		fxCollisionCurrentWaitTime = 0.0f;
+	}
+} */
 
 void ModuleWorld::render() const
 {

@@ -63,7 +63,7 @@ bool ModuleStart::setUp()
 
 	audioGroupId = getGameEngine()->getModuleAudio()->load("Resources/Configurations/Audios/Start.json");
 
-	getGameEngine()->getModuleAudio()->playMusic(audioGroupId, 0, 0);
+	getGameEngine()->getModuleAudio()->playMusic(audioGroupId, 0, 1.0f, 0);
 
 	return true;
 }
