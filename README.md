@@ -1,24 +1,23 @@
-# Super Monaco GP
+# SUPER MONACO GP
 
 Tribute to Super Monaco GP (Mega Drive / Genesis, 1990).
 
 ## PROJECT
 
-This project is a Super Monaco GP (Mega Drive / Genesis) Clone.
+This project is a Super Monaco GP (Mega Drive / Genesis, 1990) clone.
 
 It has been built using C++ and SDL.  
 All the graphics (except for the backgrounds) and all the sounds have been manually ripped.
 
 #### GAMEPLAY VIDEO
 
-[![](http://img.youtube.com/vi/T66nmvh3OMs/0.jpg)](http://www.youtube.com/watch?v=T66nmvh3OMs)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/T66nmvh3OMs" frameborder="0" allowfullscreen></iframe>
 
-You can watch it directly on **[YouTube](https://youtu.be/T66nmvh3OMs)**.
-
-## LINKS
+#### LINKS
 
 **[Source](https://github.com/gerardpf2/SuperMonacoGP)**  
 **[Release](https://github.com/gerardpf2/SuperMonacoGP/releases)**  
+**[YouTube](https://youtu.be/T66nmvh3OMs)**  
 **[Webpage](https://gerardpf2.github.io/SuperMonacoGP/)**
 
 ## HOW TO PLAY
@@ -46,9 +45,9 @@ There are two different courses for this modes, Italy and Portugal.
 
 #### SUPER MONACO GP MODE
 
-- The current course loops between Italy and Portugal
+- The current course alternates between Italy and Portugal
 - There are opponents (15)
-- There is lap limit (3)
+- There is a lap limit (3)
 - The results are shown at the end
 
 ## AUTHOR
