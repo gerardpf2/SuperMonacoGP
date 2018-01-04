@@ -11,13 +11,13 @@ All the graphics (except for the backgrounds) and all the sounds have been manua
 
 #### GAMEPLAY VIDEO
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/T66nmvh3OMs" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/QmTnS4AiaXg" frameborder="0" allowfullscreen></iframe>
 
 #### LINKS
 
 **[Source](https://github.com/gerardpf2/SuperMonacoGP)**  
 **[Release](https://github.com/gerardpf2/SuperMonacoGP/releases)**  
-**[YouTube](https://youtu.be/T66nmvh3OMs)**  
+**[YouTube](https://youtu.be/QmTnS4AiaXg)**  
 **[Webpage](https://gerardpf2.github.io/SuperMonacoGP/)**
 
 ## HOW TO PLAY
@@ -35,7 +35,7 @@ Download the .zip from **[Release](https://github.com/gerardpf2/SuperMonacoGP/re
 ## GAME MODES
 
 There are two main modes, Free Practice and Super Monaco GP.  
-There are two different courses for this modes, Italy and Portugal.
+There are two different courses for these modes, Italy and Portugal.
 
 #### FREE PRACTICE MODE
 

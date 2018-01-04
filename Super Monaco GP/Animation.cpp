@@ -8,10 +8,6 @@ using namespace std;
 Animation::Animation(uint id, float endTime, bool loop, const vector<const Texture*>* textures) :
 	id(id), endTime(endTime), loop(loop), textures(textures)
 {
-	assert(endTime > 0.0f);
-	assert(textures);
-	assert(textures->size() > 0);
-
 	// "textures" is the pointer to the shared data
 	// All the animations of the same type will share the same shared data
 
@@ -21,10 +17,6 @@ Animation::Animation(uint id, float endTime, bool loop, const vector<const Textu
 Animation::Animation(const Animation& animation) :
 	id(animation.id), endTime(animation.endTime), loop(animation.loop), textures(animation.textures)
 {
-	assert(endTime > 0.0f);
-	assert(textures);
-	assert(textures->size() > 0);
-
 	// "textures" is the pointer to the shared data
 	// All the animations of the same type will share the same shared data
 
@@ -54,11 +46,6 @@ const vector<const Texture*>* Animation::getTextures() const
 	return textures;
 }
 
-float Animation::getTimePercent() const
-{
-	return currentTime / endTime;
-}
-
 bool Animation::hasEnded() const
 {
 	return ended;
@@ -66,24 +53,22 @@ bool Animation::hasEnded() const
 
 uint Animation::getCurrentFrameIndex() const
 {
-	return (uint)(textures->size() * (currentTime / endTime));
+	assert(textures);
+
+	return (uint)(textures->size() * getTimePercent());
 }
 
 const Texture* Animation::getCurrentFrame() const
 {
-	assert(endTime > 0.0f);
-	assert(currentTime >= 0.0f);
-	assert(currentTime < endTime);
-	assert(textures);
-	assert(textures->size() > 0);
-
-	uint index = (uint)(textures->size() * (currentTime / endTime));
-	return (*textures)[index];
+	return getFrame(getCurrentFrameIndex());
 }
 
 const Texture* Animation::getFrame(uint frameIndex) const
 {
-	return (*textures)[frameIndex];
+	assert(textures);
+	assert(textures->size() > frameIndex);
+
+	return textures->at(frameIndex);
 }
 
 float Animation::getTimeMultiplier() const
@@ -93,27 +78,29 @@ float Animation::getTimeMultiplier() const
 
 void Animation::setTimeMultiplier(float timeMultiplier)
 {
-	assert(timeMultiplier >= 0.0f);
-
 	this->timeMultiplier = timeMultiplier;
+}
+
+float Animation::getTimePercent() const
+{
+	assert(endTime != 0.0f);
+
+	return currentTime / endTime;
+}
+
+void Animation::setTimePercent(float timePercent)
+{
+	currentTime = timePercent * endTime;
 }
 
 void Animation::synchronize(const Animation& animation)
 {
-	float percent = animation.currentTime / animation.endTime;
-	currentTime = percent * endTime;
+	setTimePercent(animation.getTimePercent());
 }
 
 void Animation::synchronizeInverse(const Animation& animation)
 {
-	float percent = mod0L((1.0f - animation.currentTime / animation.endTime), 1.0f);
-	currentTime = percent * endTime;
-}
-
-void Animation::advancePercent(float percent)
-{
-	currentTime += percent * endTime;
-	currentTime = mod0L(currentTime, endTime);
+	setTimePercent(mod0L(1.0f - animation.getTimePercent(), 1.0f));
 }
 
 void Animation::reset()
@@ -125,11 +112,6 @@ void Animation::reset()
 
 void Animation::update(float deltaTimeS)
 {
-	assert(endTime > 0.0f);
-	assert(currentTime >= 0.0f);
-	assert(currentTime < endTime);
-	assert(timeMultiplier >= 0.0f);
-
 	float newTime = currentTime + timeMultiplier * deltaTimeS;
 
 	if((ended = ended || newTime >= endTime) && !loop) return;
