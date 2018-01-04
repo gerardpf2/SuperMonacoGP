@@ -74,8 +74,8 @@ void ModuleAudio::unload(uint idAudioGroup)
 
 	pair<vector<Mix_Music*>*, vector<Mix_Chunk*>*>& audioGroup = audioGroups[idAudioGroup];
 
-	for(Mix_Music* music : *audioGroup.first) unloadMusic(music);
-	for(Mix_Chunk* fx : *audioGroup.second) unloadFx(fx);
+	for(Mix_Music*& music : *audioGroup.first) unloadMusic(music);
+	for(Mix_Chunk*& fx : *audioGroup.second) unloadFx(fx);
 
 	audioGroup.first->clear();
 	delete audioGroup.first; audioGroup.first = nullptr;
