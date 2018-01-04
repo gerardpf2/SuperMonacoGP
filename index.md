@@ -9,6 +9,10 @@ This project is a Super Monaco GP (Mega Drive / Genesis, 1990) clone.
 It has been built using C++ and SDL.  
 All the graphics (except for the backgrounds) and all the sounds have been manually ripped.
 
+#### GAMEPLAY VIDEO
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/T66nmvh3OMs" frameborder="0" allowfullscreen></iframe>
+
 #### LINKS
 
 **[Source](https://github.com/gerardpf2/SuperMonacoGP)**  
