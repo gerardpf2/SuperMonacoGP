@@ -9,7 +9,7 @@ class Static : public GameObject
 {
 	public:
 
-		Static(/* uint id, */ const Texture* texture);
+		Static(const Texture* texture);
 
 		virtual ~Static();
 
@@ -25,7 +25,7 @@ class Static : public GameObject
 
 	private:
 
-		const Texture* texture = nullptr;
+		const Texture* texture = nullptr; // Constructor
 };
 
 #endif

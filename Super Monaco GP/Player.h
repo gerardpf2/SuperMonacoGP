@@ -10,7 +10,7 @@ class Player : public Car
 {
 	public:
 
-		Player(/* uint id, */ AnimationContainer* animationContainer, const ModuleInput* moduleInput);
+		Player(AnimationContainer* animationContainer, const ModuleInput* moduleInput);
 
 		virtual ~Player();
 
@@ -36,7 +36,7 @@ class Player : public Car
 
 	private:
 
-		const ModuleInput* moduleInput = nullptr;
+		const ModuleInput* moduleInput = nullptr; // Constructor
 
 		AnimationGrid* animationGrid = nullptr;
 };

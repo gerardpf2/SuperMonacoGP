@@ -1,11 +1,15 @@
 #include "Static.h"
 
+#include <assert.h>
 #include "Globals.h"
 #include <SDL_rect.h>
 
-Static::Static(/* uint id, */ const Texture* texture) :
-	/* GameObject(id), */ texture(texture)
+Static::Static(const Texture* texture) :
+	texture(texture)
 {
+	assert(texture);
+	assert(texture->r);
+
 	size.w = (float)texture->r->w * SPRITE_SIZE_RATIO;
 	size.h = (float)texture->r->h * SPRITE_SIZE_RATIO;
 }

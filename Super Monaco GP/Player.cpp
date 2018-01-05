@@ -1,15 +1,16 @@
 #include "Player.h"
 
 #include "Utils.h"
-#include "Globals.h"
 #include "Animation.h"
 #include "ModuleInput.h"
 #include "AnimationGrid.h"
 #include "AnimationContainer.h"
 
-Player::Player(/* uint id, */ AnimationContainer* animationContainer, const ModuleInput* moduleInput) :
-	Car(/* id, */ animationContainer), moduleInput(moduleInput)
+Player::Player(AnimationContainer* animationContainer, const ModuleInput* moduleInput) :
+	Car(animationContainer), moduleInput(moduleInput)
 {
+	assert(animationContainer);
+
 	animationGrid = new AnimationGrid(animationContainer->getAnimation(0));
 
 	animationGrid->addRightV(animationContainer->getAnimation(1));
@@ -44,14 +45,17 @@ const ModuleInput* Player::getModuleInput() const
 
 void Player::cleanUp()
 {
+	assert(animationGrid);
+
 	animationGrid->cleanUp();
 
-	delete animationGrid;
-	animationGrid = nullptr;
+	delete animationGrid; animationGrid = nullptr;
 }
 
 void Player::updateDirection(float deltaTimeS)
 {
+	assert(moduleInput);
+
 	direction.x = 0.0f;
 	direction.z = 0.0f;
 
@@ -64,20 +68,24 @@ void Player::updateDirection(float deltaTimeS)
 
 void Player::updateVelocityCurve(float deltaTimeS)
 {
-	float multiplier = getVelocityPercent() * interpolate(fabsf(direction.x), 0.0f, 1.0f, 0.0f, 1.0f);
+	// Reduce the velocity because of the direction x
 
+	float multiplier = getVelocityPercent() * interpolate(fabsf(direction.x), 0.0f, 1.0f, 0.0f, 1.0f);
 	velocity -= multiplier * deltaTimeS;
 }
 
-// #include <iostream>
-// using namespace std;
-
 void Player::updateCurrentAnimation(float deltaTimeS) const
 {
-	// cout << getPosition()->z << endl;
+	assert(animationGrid);
 
 	animationGrid->advance(getVelocityPercent(), direction.x, deltaTimeS);
-	animationContainer->setCurrentAnimation(animationGrid->getCurrentAnimation()->getId());
+
+	Animation* animation = animationGrid->getCurrentAnimation();
+
+	assert(animation);
+	assert(animationContainer);
+
+	animationContainer->setCurrentAnimation(animation->getId());
 }
 
 void Player::updateOffsetX(float dX, float velocityPercent, float curve)

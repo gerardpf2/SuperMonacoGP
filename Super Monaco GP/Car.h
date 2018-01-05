@@ -1,19 +1,26 @@
 #ifndef _CAR_
 #define _CAR_
 
+#define DIRECTION_Z_FAR 30.0f
+#define DIRECTION_Z_CLOSE 7.5f
+
+#define MIN_VELOCITY_MULTIPLIER 0.7f
+#define MAX_VELOCITY_MULTIPLIER 1.0f
+
+#define MIN_ACCELERATION_MULTIPLIER 0.8f
+#define MAX_ACCELERATION_MULTIPLIER 1.0f
+
 #include "Animated.h"
 
 class Car : public Animated
 {
 	public:
 
-		Car(/* uint id, */ AnimationContainer* animationContainer);
+		Car(AnimationContainer* animationContainer);
 
 		virtual ~Car();
 
 		virtual GameObjectType getType() const override;
-
-		// virtual void setPosition(const WorldPosition& position) override;
 
 		uint getSpecificId() const;
 
@@ -82,14 +89,6 @@ class Car : public Animated
 		float velocityMultiplier = 1.0f;
 
 		float accelerationMultiplier = 1.0f;
-
-		// float initialX;
-
-		// float changeDirectionXTime = 10.0f;
-
-		// float changeDirectionXCurrentTime = 0.0f;
-
-		// float desiredDirectionX = 0.0f;
 };
 
 #endif

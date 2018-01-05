@@ -11,7 +11,6 @@ enum class GameObjectType
 	ANIMATED,
 };
 
-class Road;
 class Camera;
 class ModuleWorld;
 class ModuleRenderer;
@@ -22,8 +21,6 @@ class GameObject
 
 		virtual ~GameObject();
 
-		// uint getId() const;
-
 		virtual GameObjectType getType() const = 0;
 
 		float getGlobalZ() const;
@@ -32,27 +29,17 @@ class GameObject
 
 		void setPosition(const WorldPosition& position);
 
-		// const Collider* getCollider() const;
-
 		const Box* getBox() const;
 
 		void setBox(const Box& box);
 
 		void defineBox(float mW, float d);
 
-		// void enableCollider();
-
-		// const Road* getRoad() const;
-
-		// void setRoad(const Road* road);
-
 		ModuleWorld* getModuleWorld() const;
 
 		void setModuleWorld(ModuleWorld* moduleWorld);
 		
 		void elevate();
-
-		// void moveX(float incX);
 
 		void move(const WorldPosition& offset);
 
@@ -68,7 +55,7 @@ class GameObject
 
 	protected:
 
-		GameObject(/* uint id */);
+		GameObject();
 
 		void limitZ();
 
@@ -82,21 +69,15 @@ class GameObject
 
 	protected:
 
-		Size size;
-
 		Box box;
 
-		// Collider collider;
+		Size size;
 
 		WorldPosition position;
 
 		float globalZ = 0.0f;
 
 	private:
-
-		// uint id;
-
-		// const Road* road = nullptr;
 
 		bool renderBox = false;
 

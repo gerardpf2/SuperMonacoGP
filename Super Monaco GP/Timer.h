@@ -17,7 +17,7 @@ class Timer
 
 	private:
 
-		uint lastTimeMs;
+		uint lastTimeMs = 0;
 };
 
 #endif

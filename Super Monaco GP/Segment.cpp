@@ -2,8 +2,6 @@
 
 #include "Utils.h"
 #include "Camera.h"
-#include "Globals.h"
-#include "GameObject.h"
 #include "ModuleRenderer.h"
 
 using namespace std;
@@ -113,7 +111,7 @@ void Segment::setRumbleColors(const RumbleColors* rumbleColors)
 	this->rumbleColors = rumbleColors;
 }
 
-const set<const GameObject* /* , GameObjectPositionZComparer */ >* Segment::getGameObjects() const
+const set<const GameObject*>* Segment::getGameObjects() const
 {
 	return &gameObjects;
 }
@@ -130,6 +128,9 @@ void Segment::eraseGameObject(const GameObject* gameObject)
 
 void Segment::render(const Camera* camera, const ModuleRenderer* moduleRenderer, short& maxWindowY, bool enableClip, bool mirror) const
 {
+	assert(camera);
+	assert(moduleRenderer);
+
 	// Check if this segment is behind the camera
 
 	if(camera->isBehind(zOffset + zFar)) return;

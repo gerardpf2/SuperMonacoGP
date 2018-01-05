@@ -3,19 +3,17 @@
 #include "Road.h"
 #include "Utils.h"
 #include "Camera.h"
-#include "Player.h"
 #include "Segment.h"
 #include "Animation.h"
 #include "GameEngine.h"
 #include "ModuleWorld.h"
-#include "ModuleRegistry.h"
 #include "ModuleCollision.h"
 #include "AnimationContainer.h"
 
 using namespace std;
 
-Car::Car(/* uint id, */ AnimationContainer* animationContainer) :
-	Animated(/* id, */ animationContainer)
+Car::Car(AnimationContainer* animationContainer) :
+	Animated(animationContainer)
 { }
 
 Car::~Car()
@@ -26,13 +24,6 @@ GameObjectType Car::getType() const
 	return GameObjectType::CAR;
 }
 
-/* void Car::setPosition(const WorldPosition& position)
-{
-	GameObject::setPosition(position);
-
-	initialX = position.x;
-} */
-
 uint Car::getSpecificId() const
 {
 	return specificId;
@@ -41,6 +32,8 @@ uint Car::getSpecificId() const
 void Car::setSpecificId(uint specificId)
 {
 	this->specificId = specificId;
+
+	// Both velocity and acceleration multipliers depend on its specificId
 
 	computeVelocityAccelerationMultipliersMultiplier();
 }
@@ -82,7 +75,13 @@ void Car::setMovementEnabled(bool movementEnabled)
 
 void Car::update(float deltaTimeS)
 {
+	ModuleWorld* moduleWorld = getModuleWorld();
+
+	assert(moduleWorld);
+
 	Animated::update(deltaTimeS);
+
+	// Compute all the current movement related variables
 
 	float maxVelocity = CAR_MAX_VELOCITY;
 	float acceleration = CAR_ACCELERATION_ROAD;
@@ -98,58 +97,69 @@ void Car::update(float deltaTimeS)
 		deaccelerationFrictionExtra = CAR_DEACCELERATION_FRICTION_EXTRA_GRASS;
 
 		if(getType() == GameObjectType::PLAYER && velocity > 0.0f)
-			getModuleWorld()->playFxOutRoad();
+			moduleWorld->playFxOutRoad();
 	}
 
 	maxVelocity *= velocityMultiplier;
 	acceleration *= accelerationMultiplier;
 
-	updateDirection(deltaTimeS);
-	
-	// updateVelocityCurve(deltaTimeS);
-	
-	// updateCurrentAnimation(deltaTimeS);
+	// Compute the direction x and z
 
-	Segment* segment = getModuleWorld()->getRoad()->getSegmentAtZ(position.z);
+	updateDirection(deltaTimeS);
+
+	const Road* road = moduleWorld->getRoad();
+
+	assert(road);
+
+	Segment* segment = road->getSegmentAtZ(position.z);
+
+	assert(segment);
+
+	// Update the z coordinate
 
 	position.z += velocity * deltaTimeS;
 	
 	globalZ += velocity * deltaTimeS;
 
+	// Check and resolve collisions
+
 	checkCollision();
 
 	limitZ();
 
-	Segment* newSegment = getModuleWorld()->getRoad()->getSegmentAtZ(position.z);
+	// Update the x coordinate
 
 	float velocityPercent = getVelocityPercent();
-
-	// animationContainer->getCurrentAnimation()->setTimeMultiplier(0.0f);
-	// animationContainer->getCurrentAnimation()->advancePercent(2.0f * speedPercent);
-
-	// animationContainer->getCurrentAnimation()->setTimeMultiplier(0.0f);
-	// animationContainer->getCurrentAnimation()->setTimeMultiplier(speedPercent);
 
 	float dX = 0.75f * ROAD_WIDTH * velocityPercent * deltaTimeS;
 
 	position.x += direction.x * dX;
 
+	Segment* newSegment = road->getSegmentAtZ(position.z);
+
+	assert(newSegment);
+
 	updateOffsetX(dX, velocityPercent, newSegment->getCurve());
 
-	// position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
+	// Update the y coordinate
 
 	position.y = interpolate(position.z, newSegment->getZNear(), newSegment->getZFar(), newSegment->getYNear(), newSegment->getYFar());
 
+	// Update the acceleration
+	// The fastest the car goes, the more difficult to reach higher accelerations
+
 	acceleration *= (1.0f - powf(velocityPercent, 2.0f));
 
-	velocity -= deaccelerationFriction * deltaTimeS;
+	// Update the velocity
 
-	// direction.z = 1.0f; //
+	velocity -= deaccelerationFriction * deltaTimeS;
 
 	if(movementEnabled)
 	{
 		if(direction.z == 1.0f) velocity += acceleration * deltaTimeS;
 		else if(direction.z == -1.0f) velocity -= deacceleration * deltaTimeS;
+
+		currentLapTime += deltaTimeS;
 	}
 
 	if(velocity > CAR_DEACCELERATION_FRICTION_LIMIT_VELOCITY)
@@ -159,17 +169,18 @@ void Car::update(float deltaTimeS)
 
 	velocity = clamp(velocity, 0.0f, maxVelocity);
 
+	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
+
+	// The car has been moved
+	// Check if it lies on a different segment
+
 	if(segment != newSegment)
 	{
 		segment->eraseGameObject(this);
 		newSegment->addGameObject(this);
 	}
 
-	// checkCollision();
-
-	position.x = clamp(position.x, CAR_MIN_X, CAR_MAX_X);
-
-	if(movementEnabled) currentLapTime += deltaTimeS;
+	// Check if the car has completed a lap
 
 	if(lapCompleted())
 	{
@@ -177,9 +188,9 @@ void Car::update(float deltaTimeS)
 		{
 			registerLapTime();
 
-			++currentLap;
 			currentLapTimeStored = currentLapTime;
 			currentLapTime = 0.0f;
+			++currentLap;
 		}
 		else ignoreCurrentLap = false;
 	}
@@ -187,26 +198,34 @@ void Car::update(float deltaTimeS)
 
 void Car::updateDirection(float deltaTimeS)
 {
-	const float farZ = 30.0f; //
-	const float closeZ = 7.5f; //
+	// AI Collision avoidance
+	// Check for imminent collisions and try to avoid them
 
-	direction.x = 0.0f;
-	direction.z = 1.0f;
+	direction.x = 0.0f; // Default direction x
+	direction.z = 1.0f; // Default direction z
 
 	float w = box.w;
 	float x = position.x;
 	float collisionLeftX = x - 0.5f * w;
 	float collisionRightX = x + 0.5f * w;
 
+	assert(getModuleWorld());
+	assert(getModuleWorld()->getRoad());
+
 	list<const GameObject*> obstaclesFront;
-	getModuleWorld()->getRoad()->findGameObjectsFront(position.z, farZ, obstaclesFront);
+	getModuleWorld()->getRoad()->findGameObjectsFront(position.z, DIRECTION_Z_FAR, obstaclesFront);
 
 	for(const GameObject* obstacle : obstaclesFront)
 	{
+		assert(obstacle);
+
 		if(obstacle == this) continue;
 
 		if(obstacle->getType() == GameObjectType::CAR || obstacle->getType() == GameObjectType::PLAYER)
 			if(((Car*)obstacle)->getVelocityPercent() > getVelocityPercent()) continue;
+
+		assert(obstacle->getBox());
+		assert(obstacle->getPosition());
 
 		float obstacleW = obstacle->getBox()->w;
 		float obstacleX = obstacle->getPosition()->x;
@@ -217,24 +236,28 @@ void Car::updateDirection(float deltaTimeS)
 
 		if(mayCollide)
 		{
+			// Collision can happen
+			// Check if it is better to move to the left or to the right
+
 			float remainingSpaceObstacleLeftX = fabsf(ROAD_MIN_X - obstacleCollisionLeftX);
 			float remainingSpaceObstacleRightX = fabsf(ROAD_MAX_X - obstacleCollisionRightX);
 
 			float diffZ = fabsf(obstacle->getPosition()->z - position.z);
-			float directionLeftX = interpolate(diffZ, 0.0f, farZ, -1.0f, 0.0f);
-			float directionRightX = interpolate(diffZ, 0.0f, farZ, 1.0f, 0.0f);
+			
+			float directionLeftX = interpolate(diffZ, 0.0f, DIRECTION_Z_FAR, -1.0f, 0.0f);
+			float directionRightX = -directionLeftX;
 
 			if(x <= obstacleX && remainingSpaceObstacleLeftX > w) direction.x = directionLeftX;
 			else if(x > obstacleX && remainingSpaceObstacleRightX > w) direction.x = directionRightX;
-			else
-			{
-				if(remainingSpaceObstacleLeftX >= remainingSpaceObstacleRightX)
-					direction.x = directionLeftX;
-				else
-					direction.x = directionRightX;
-			}
+			else direction.x = (remainingSpaceObstacleLeftX >= remainingSpaceObstacleRightX) ? directionLeftX : directionRightX;
 			
-			if(diffZ < closeZ) direction.z = -1.0;
+			// If the collider is really close, break
+
+			if(diffZ < DIRECTION_Z_CLOSE) direction.z = -1.0;
+
+			// When building the possible collisions list, the closest ones go first
+			// If it has been found a collision to avoid, that is the most imminent one
+			// and there is no need to keep checking for more collisions
 
 			break;
 		}
@@ -246,22 +269,33 @@ void Car::updateDirection(float deltaTimeS)
 
 void Car::updateVelocityCurve(float deltaTimeS)
 {
+	assert(getModuleWorld());
+	assert(getModuleWorld()->getRoad());
+
 	Segment* segment = getModuleWorld()->getRoad()->getSegmentAtZ(position.z);
 	
-	float curve = segment->getCurve();
+	assert(segment);
 
-	float multiplier = interpolate(fabsf(curve), 0.0f, 0.02f, 0.0f, 10.0f);
+	// Reduce the velocity because of the curve
 
-	velocity -= multiplier * deltaTimeS;
+	float multiplier0 = interpolate(fabsf(segment->getCurve()), 0.0f, 0.02f, 0.0f, 10.0f);
+	velocity -= multiplier0 * deltaTimeS;
 
-	float multiplier2 = getVelocityPercent() * interpolate(fabsf(direction.x), 0.0f, 1.0f, 0.0f, 2.0f);
+	// Reduce the velocity because of the direction x
 
-	velocity -= multiplier2 * deltaTimeS;
+	float multiplier1 = getVelocityPercent() * interpolate(fabsf(direction.x), 0.0f, 1.0f, 0.0f, 2.0f);
+	velocity -= multiplier1 * deltaTimeS;
 }
 
 void Car::updateCurrentAnimation(float deltaTimeS) const
 {
-	animationContainer->getCurrentAnimation()->setTimeMultiplier(getVelocityPercent());
+	assert(animationContainer);
+
+	Animation* currentAnimation = animationContainer->getCurrentAnimation();
+
+	assert(currentAnimation);
+
+	currentAnimation->setTimeMultiplier(getVelocityPercent());
 
 	Animated::updateCurrentAnimation(deltaTimeS);
 
@@ -275,14 +309,28 @@ void Car::updateCurrentAnimation(float deltaTimeS) const
 	
 	*/
 
-	Animation* currentAnimation = animationContainer->getCurrentAnimation();
+	assert(getModuleWorld());
+
+	const Road* road = getModuleWorld()->getRoad();
+	const Camera* camera = getModuleWorld()->getCamera();
+
+	assert(road);
+	assert(camera);
+	assert(camera->getPosition());
+
 	Animation* nextAnimation = currentAnimation;
 
 	float x = position.x;
-	float cameraX = getModuleWorld()->getCamera()->getPosition()->x;
+	float cameraX = camera->getPosition()->x;
 
-	x -= getModuleWorld()->getRoad()->getSegmentAtZ(position.z)->getXOffsetNear();
-	cameraX -= getModuleWorld()->getRoad()->getSegmentAtZ(getModuleWorld()->getCamera()->getBasePositionZ())->getXOffsetNear();
+	Segment* carSegment = road->getSegmentAtZ(position.z);
+	Segment* cameraSegment = road->getSegmentAtZ(camera->getBasePositionZ());
+
+	assert(carSegment);
+	assert(cameraSegment);
+
+	x -= carSegment->getXOffsetNear();
+	cameraX -= cameraSegment->getXOffsetNear();
 
 	float threshold0 = 5.0f;
 	float threshold1 = 20.0f;
@@ -298,7 +346,9 @@ void Car::updateCurrentAnimation(float deltaTimeS) const
 
 	if(nextAnimation != currentAnimation)
 	{
-		nextAnimation->synchronize(*animationContainer->getCurrentAnimation());
+		assert(nextAnimation);
+
+		nextAnimation->synchronize(*currentAnimation);
 		animationContainer->setCurrentAnimation(nextAnimation->getId());
 	}
 }
@@ -308,7 +358,12 @@ void Car::updateOffsetX(float dX, float velocityPercent, float curve)
 
 const Texture* Car::getCurrentTexture(bool mirror) const
 {
+	assert(animationContainer);
+
 	Animation* currentAnimation = animationContainer->getCurrentAnimation();
+
+	assert(currentAnimation);
+
 	const Texture* currentFrame = currentAnimation->getCurrentFrame();
 
 	if(mirror)
@@ -341,43 +396,41 @@ const Texture* Car::getCurrentTexture(bool mirror) const
 
 void Car::computeVelocityAccelerationMultipliersMultiplier()
 {
-	// changeDirectionXTime *= interpolate((float)specificId, 0.0f, N_CARS - 1.0f, 1.0f, 2.0f);
-
-	velocityMultiplier = interpolate((float)specificId, 0.0f, N_CARS - 1.0f, 1.0f, 0.7f);
-	accelerationMultiplier = interpolate((float)specificId, 0.0f, N_CARS - 1.0f, 1.0f, 0.8f);
+	velocityMultiplier = interpolate((float)specificId, 0.0f, N_CARS - 1.0f, MAX_VELOCITY_MULTIPLIER, MIN_VELOCITY_MULTIPLIER);
+	accelerationMultiplier = interpolate((float)specificId, 0.0f, N_CARS - 1.0f, MAX_ACCELERATION_MULTIPLIER, MIN_ACCELERATION_MULTIPLIER);
 }
 
 void Car::checkCollision()
 {
-	/*
-	
-	Priority: Static = Animated > Car = Player
+	assert(getModuleWorld());
+	assert(getModuleWorld()->getGameEngine());
+	assert(getModuleWorld()->getGameEngine()->getModuleCollision());
 
-	Find biggest static / animated
-	If found, solve collision and end
-
-	Find first car / player
-	If found, solve collision
-	
-	*/
+	// Find all the game objects that are colliding to this car at this moment
+	// Decide which one of these colliders is the most relevant
+	// Priority: Static = Animated > Car = Player
 
 	list<const GameObject*> colliding;
 	const GameObject* mainCollider = nullptr;
 	
 	if(getModuleWorld()->getGameEngine()->getModuleCollision()->getColliding(this, colliding))
 	{
-		for(list<const GameObject*>::const_iterator it = colliding.begin(); it != colliding.end(); ++it)
+		// Some colliders have been found
+		// Find the most relevant one
+
+		for(const GameObject* currentCollider : colliding)
 		{
-			const GameObject* currentCollider = *it;
+			assert(currentCollider);
+			assert(currentCollider->getBox());
+			assert(currentCollider->getPosition());
 
-			// float z0 = mod0L(position.z + collider.b.d, getModuleWorld()->getRoad()->getLength());
-			// float z1 = mod0L(currentCollider->g->getPosition()->z + currentCollider->b.d, getModuleWorld()->getRoad()->getLength());
+			float z0 = position.z + box.d;
+			float z1 = currentCollider->getPosition()->z + currentCollider->getBox()->d;
 
-			float z0 = position.z + box.d; // mod0L(position.z + collider.b.d, getModuleWorld()->getRoad()->getLength());
-			float z1 = currentCollider->getPosition()->z + currentCollider->getBox()->d; // mod0L(currentCollider->g->getPosition()->z + currentCollider->b.d, getModuleWorld()->getRoad()->getLength());
+			// Ignore all the colliders that are behind this car
+			// They will resolve their collision with this one
 
 			if(z1 < z0) continue;
-			// if(currentCollider->g->getPosition()->z < position.z) continue;
 
 			if(!mainCollider) mainCollider = currentCollider;
 			else
@@ -402,16 +455,21 @@ void Car::checkCollision()
 
 	if(mainCollider)
 	{
+		// The most relevant collider has been found
+
 		if(getType() == GameObjectType::PLAYER || mainCollider->getType() == GameObjectType::PLAYER)
 			getModuleWorld()->playFxCollision();
 
 		velocity *= 0.5f;
-		position.z -= /* getVelocityPercent() * */ SEGMENT_LENGTH; limitZ();
+		position.z -= SEGMENT_LENGTH; limitZ();
 
 		globalZ -= SEGMENT_LENGTH;
 
 		if(mainCollider->getType() == GameObjectType::STATIC || mainCollider->getType() == GameObjectType::ANIMATED)
 		{
+			assert(mainCollider->getBox());
+			assert(mainCollider->getPosition());
+
 			float maxW = fmaxf(mainCollider->getBox()->w, box.w);
 
 			if(mainCollider->getPosition()->x >= ROAD_MAX_X)
@@ -426,14 +484,10 @@ void Car::checkCollision()
 	}
 }
 
-void Car::registerLapTime() const
-{
-	getModuleWorld()->registerLapTime(this);
-}
-
 bool Car::lapCompleted()
 {
-	// bool previousCountingLap = countingLap;
+	assert(getModuleWorld());
+	assert(getModuleWorld()->getRoad());
 
 	float z0 = (1.0f / 3.0f) * getModuleWorld()->getRoad()->getLength();
 	float z1 = (2.0f / 3.0f) * getModuleWorld()->getRoad()->getLength();
@@ -449,6 +503,11 @@ bool Car::lapCompleted()
 		countingLap = true;
 
 	return false;
+}
 
-	// return previousCountingLap != countingLap && previousCountingLap;
+void Car::registerLapTime() const
+{
+	assert(getModuleWorld());
+
+	getModuleWorld()->registerLapTime(this);
 }

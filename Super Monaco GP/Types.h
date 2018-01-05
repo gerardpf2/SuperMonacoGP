@@ -1,6 +1,8 @@
 #ifndef _TYPES_
 #define _TYPES_
 
+// Simple and useful structures that improve the code readability
+
 struct SDL_Rect;
 struct SDL_Texture;
 
@@ -31,7 +33,5 @@ struct RoadBackgroundDefinition { uint textureGroupId, textureId, textureSkyId, 
 struct Layer { uint id; SDL_Texture* t; const SDL_Rect* tr; const SDL_Rect* v; };
 
 struct Box { float w, h, d; };
-
-// struct Collider { const GameObject* g; Box b; };
 
 #endif

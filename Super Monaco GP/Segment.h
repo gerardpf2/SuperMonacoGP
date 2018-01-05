@@ -3,16 +3,6 @@
 
 #include <set>
 #include "Types.h"
-// #include "GameObject.h"
-
-/* struct GameObjectPositionZComparer
-{
-	// Compare using game objects' z position
-	bool operator() (const GameObject* gO0, const GameObject* gO1) const
-	{
-		return gO0->getPosition()->z > gO1->getPosition()->z;
-	}
-}; */
 
 class Camera;
 class GameObject;
@@ -64,7 +54,7 @@ class Segment
 
 		void setRumbleColors(const RumbleColors* rumbleColors);
 
-		const std::set<const GameObject* /* , GameObjectPositionZComparer */ >* getGameObjects() const;
+		const std::set<const GameObject*>* getGameObjects() const;
 
 		void addGameObject(const GameObject* gameObject);
 
@@ -74,9 +64,9 @@ class Segment
 
 	private:
 
-		uint index;
+		uint index; // Constructor
 
-		float zNear, zFar;
+		float zNear = 0.0f, zFar = 0.0f;
 
 		float curve = 0.0f;
 
@@ -84,13 +74,13 @@ class Segment
 
 		const RumbleColors* rumbleColors = nullptr;
 
-		std::set<const GameObject* /* , GameObjectPositionZComparer */ > gameObjects;
+		std::set<const GameObject*> gameObjects;
 
-		float xOffsetNear, xOffsetFar;
+		float xOffsetNear = 0.0f, xOffsetFar = 0.0f;
 
-		float zOffset;
+		float zOffset = 0.0f;
 
-		short clipY;
+		short clipY = 0;
 };
 
 #endif

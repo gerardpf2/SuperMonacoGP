@@ -4,24 +4,14 @@
 #include "Utils.h"
 #include "Camera.h"
 #include "Segment.h"
-#include <SDL_rect.h>
 #include "ModuleWorld.h"
 #include "ModuleRenderer.h"
 
-#include "GameEngine.h"
-#include "ModuleCollision.h"
-
-GameObject::GameObject(/* uint id */) // :
-	// id(id)
+GameObject::GameObject()
 { }
 
 GameObject::~GameObject()
 { }
-
-/* uint GameObject::getId() const
-{
-	return id;
-} */
 
 float GameObject::getGlobalZ() const
 {
@@ -47,28 +37,15 @@ const Box* GameObject::getBox() const
 	return &box;
 }
 
-/* const Collider* GameObject::getCollider() const
-{
-	return &collider;
-} */
-
 void GameObject::setBox(const Box& box)
 {
-	// collider.b = box;
 	this->box = box;
 }
 
 void GameObject::defineBox(float mW, float d)
 {
-	// collider.b = Box{ mW * size.w, size.h, d };
 	box = Box{ mW * size.w, size.h, d };
 }
-
-/* void GameObject::enableCollider()
-{
-	collider.g = this;
-	getModuleWorld()->getGameEngine()->getModuleCollision()->addCollider(&collider);
-} */
 
 ModuleWorld* GameObject::getModuleWorld() const
 {
@@ -82,7 +59,12 @@ void GameObject::setModuleWorld(ModuleWorld* moduleWorld)
 
 void GameObject::elevate()
 {
+	assert(moduleWorld);
+	assert(moduleWorld->getRoad());
+
 	Segment* segment = moduleWorld->getRoad()->getSegmentAtZ(position.z);
+
+	assert(segment);
 
 	position.y += interpolate(position.z, segment->getZNear(), segment->getZFar(), segment->getYNear(), segment->getYFar());
 }
@@ -111,7 +93,14 @@ void GameObject::update(float deltaTimeS)
 
 void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
+	assert(camera);
+	assert(moduleWorld);
+	assert(moduleRenderer);
+	assert(moduleWorld->getRoad());
+
 	Segment* segment = moduleWorld->getRoad()->getSegmentAtZ(position.z);
+
+	assert(segment);
 
 	float xOffset;
 
@@ -151,6 +140,9 @@ void GameObject::render(const Camera* camera, const ModuleRenderer* moduleRender
 
 	const Texture* texture = getCurrentTexture(!camera->getForward());
 
+	assert(texture);
+	assert(texture->r);
+
 	SDL_Rect src = *texture->r;
 
 	if(dst.y + dst.h > clipY)
@@ -174,15 +166,20 @@ void GameObject::cleanUp()
 
 void GameObject::limitZ()
 {
+	assert(moduleWorld);
+	assert(moduleWorld->getRoad());
+
 	position.z = mod0L(position.z, moduleWorld->getRoad()->getLength());
 }
 
 void GameObject::renderCollisionBox(float xOffset, float zOffset, short clipY, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
+	assert(camera);
+
 	float xnl = position.x - box.w / 2.0f + xOffset;
 	float xnr = xnl + box.w;
 	
-	float ynb = position.y; // - 5.0f;
+	float ynb = position.y;
 	float ynt = position.y + box.h;
 
 	float zn = position.z + zOffset;
@@ -217,6 +214,9 @@ void GameObject::renderCollisionBox(float xOffset, float zOffset, short clipY, c
 
 void GameObject::renderCollisionBoxFace(const WorldTrapezoid& worldTrapezoid, short clipY, uint color, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
+	assert(camera);
+	assert(moduleRenderer);
+
 	WindowTrapezoid windowTrapezoid;
 	camera->project(worldTrapezoid, windowTrapezoid);
 

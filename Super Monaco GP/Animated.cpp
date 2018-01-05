@@ -1,15 +1,27 @@
 #include "Animated.h"
 
+#include <assert.h>
 #include "Globals.h"
 #include <SDL_rect.h>
 #include "Animation.h"
 #include "AnimationContainer.h"
 
-Animated::Animated(/* uint id, */ AnimationContainer* animationContainer) :
-	/* GameObject(id), */ animationContainer(animationContainer)
+Animated::Animated(AnimationContainer* animationContainer) :
+	animationContainer(animationContainer)
 {
-	size.w = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->w * SPRITE_SIZE_RATIO;
-	size.h = (float)animationContainer->getCurrentAnimation()->getCurrentFrame()->r->h * SPRITE_SIZE_RATIO;
+	assert(animationContainer);
+
+	Animation* animation = animationContainer->getCurrentAnimation();
+
+	assert(animation);
+
+	const Texture* texture = animation->getCurrentFrame();
+
+	assert(texture);
+	assert(texture->r);
+
+	size.w = (float)texture->r->w * SPRITE_SIZE_RATIO;
+	size.h = (float)texture->r->h * SPRITE_SIZE_RATIO;
 }
 
 Animated::~Animated()
@@ -37,10 +49,18 @@ void Animated::cleanUp()
 
 void Animated::updateCurrentAnimation(float deltaTimeS) const
 {
+	assert(animationContainer);
+
 	animationContainer->update(deltaTimeS);
 }
 
 const Texture* Animated::getCurrentTexture(bool mirror) const
 {
-	return animationContainer->getCurrentAnimation()->getCurrentFrame();
+	assert(animationContainer);
+
+	Animation* animation = animationContainer->getCurrentAnimation();
+
+	assert(animation);
+
+	return animation->getCurrentFrame();
 }
