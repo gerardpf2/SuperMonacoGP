@@ -6,6 +6,8 @@
 
 class Animation;
 
+// This class simplifies the management of the set of animations that the player game object uses
+
 class AnimationGrid
 {
 	public:
@@ -30,7 +32,7 @@ class AnimationGrid
 
 	private:
 
-		Animation* animationCenterV = nullptr;
+		Animation* animationCenterV = nullptr; // Constructor
 
 		std::vector<Animation*> animationsLeftV;
 
@@ -44,9 +46,11 @@ class AnimationGrid
 
 		Animation* currentAnimationH = nullptr;
 
-		uint currentAnimationHIndex;
+		uint currentAnimationHIndex = -1;
 
-		bool toSide, isRight;
+		bool toSide = false;
+
+		bool isRight = false;
 };
 
 #endif

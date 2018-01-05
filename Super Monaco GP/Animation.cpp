@@ -1,7 +1,6 @@
 #include "Animation.h"
 
 #include "Utils.h"
-#include <assert.h>
 
 using namespace std;
 

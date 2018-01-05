@@ -22,7 +22,7 @@ class AnimationContainer
 
 		const std::map<uint, Animation*>* getAnimations() const;
 
-		void add(Animation* animation);
+		void add(Animation* animation) const;
 
 		Animation* getAnimation(uint animationId) const;
 

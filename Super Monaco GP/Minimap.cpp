@@ -3,6 +3,7 @@
 #include "Car.h"
 #include "Road.h"
 #include "Utils.h"
+#include "MinimapUI.h"
 #include "ModuleJson.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
@@ -31,6 +32,10 @@ void Minimap::registerCar(const Car* car)
 
 void Minimap::load(const char* jsonPath, const ModuleJson* moduleJson, ModuleTexture* moduleTexture)
 {
+	assert(jsonPath);
+	assert(moduleJson);
+	assert(moduleTexture);
+
 	Document jsonDocument;
 	moduleJson->read(jsonPath, jsonDocument);
 
@@ -52,6 +57,8 @@ void Minimap::load(const char* jsonPath, const ModuleJson* moduleJson, ModuleTex
 
 void Minimap::unload(ModuleTexture* moduleTexture)
 {
+	assert(moduleTexture);
+
 	road = nullptr;
 
 	points.clear();
@@ -69,6 +76,9 @@ void Minimap::unload(ModuleTexture* moduleTexture)
 
 void Minimap::render(const ModuleRenderer* moduleRenderer) const
 {
+	assert(course);
+	assert(moduleRenderer);
+
 	moduleRenderer->renderTexture(course->t, course->r, &courseRect);
 
 	renderCarIcons(moduleRenderer);
@@ -116,7 +126,7 @@ void Minimap::addPoints(const Value& pointsJson)
 			int y = point["y"].GetInt();
 
 			float distance = sqrtf(powf((float)(x - previousX), 2.0f) + powf((float)(y - previousY), 2.0f));
-			
+
 			accumulatedDistance += distance;
 			points[accumulatedDistance / minimapTotalLength] = pair<int, int>(x, y);
 
@@ -151,6 +161,8 @@ void Minimap::renderCarIcons(const ModuleRenderer* moduleRenderer) const
 
 	for(const Car* car : registeredCars)
 	{
+		assert(car);
+
 		if(car->getType() == GameObjectType::PLAYER) player = car;
 		else renderCarIcon(car, moduleRenderer);
 	}
@@ -160,6 +172,10 @@ void Minimap::renderCarIcons(const ModuleRenderer* moduleRenderer) const
 
 void Minimap::renderCarIcon(const Car* car, const ModuleRenderer* moduleRenderer) const
 {
+	assert(car);
+	assert(road);
+	assert(moduleRenderer);
+
 	int w, h;
 	const Texture* t;
 
@@ -180,6 +196,8 @@ void Minimap::renderCarIcon(const Car* car, const ModuleRenderer* moduleRenderer
 
 	int x, y; findPoint(carPositionZPercent, x, y);
 	SDL_Rect carRect{ (int)(x - w / 2), (int)(y - h / 2), w, h };
+
+	assert(t);
 
 	moduleRenderer->renderTexture(t->t, t->r, &carRect);
 }

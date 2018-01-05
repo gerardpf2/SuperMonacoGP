@@ -1,5 +1,6 @@
 #include "CameraFollow.h"
 
+#include <assert.h>
 #include "Globals.h"
 
 CameraFollow::CameraFollow(bool forward, const Road* road, const WorldPosition* followPosition, float projectionY0, float projectionY1, const WorldPosition& offsetPosition) :
@@ -16,6 +17,8 @@ const WorldPosition* CameraFollow::getFollowPosition() const
 
 void CameraFollow::update(float deltaTimeS)
 {
+	assert(followPosition);
+
 	position.x = followPosition->x + offsetPosition.x;
 	position.y = followPosition->y + CAMERA_Y + offsetPosition.y;
 	position.z = followPosition->z + getOffsetZ() + offsetPosition.z;

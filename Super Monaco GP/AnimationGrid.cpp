@@ -1,5 +1,6 @@
 #include "AnimationGrid.h"
 
+#include <assert.h>
 #include "Animation.h"
 
 using namespace std;
@@ -38,16 +39,10 @@ void AnimationGrid::addRightH(Animation* animationCenterRightH, Animation* anima
 	animationsRightH.push_back(pair<Animation*, Animation*>(animationCenterRightH, animationRightCenterH));
 }
 
-// #include <iostream>
-
 void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 {
-	// cout << currentAnimationV->getId();
-	// if(currentAnimationH) cout << ", " << currentAnimationH->getId() << " . . . " << currentAnimationH->getTimePercent();
-	// cout << endl;
-
 	/*
-	
+
 	Manage v animation and h animation
 
 	Possible situations:
@@ -76,8 +71,16 @@ void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 		// Start move to side, find h animation
 		if(inc1 > 0.0f)
 		{
+			assert(currentAnimationV);
+
 			uint index = (uint)(currentAnimationV->getTimePercent() * animationsRightH.size());
+			
+			assert(animationsRightH.size() > index);
+			
 			currentAnimationH = animationsRightH[index].first;
+
+			assert(currentAnimationH);
+
 			currentAnimationH->reset();
 
 			currentAnimationHIndex = index;
@@ -88,8 +91,16 @@ void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 		}
 		else if(inc1 < 0.0f)
 		{
+			assert(currentAnimationV);
+
 			uint index = (uint)(currentAnimationV->getTimePercent() * animationsLeftH.size());
+
+			assert(animationsLeftH.size() > index);
+
 			currentAnimationH = animationsLeftH[index].first;
+
+			assert(currentAnimationH);
+
 			currentAnimationH->reset();
 
 			currentAnimationHIndex = index;
@@ -109,9 +120,17 @@ void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 			// Start move to center
 			if(inc1 == 0.0f || isRight && inc1 < 0.0f || !isRight && inc1 > 0.0f)
 			{
-				Animation* currentAnimationInverseH = isRight ? animationsRightH[currentAnimationHIndex].second : animationsLeftH[currentAnimationHIndex].second;
-
+				assert(currentAnimationH);
+				
 				if(currentAnimationH->hasEnded()) currentAnimationH->reset();
+
+				assert(animationsLeftH.size() > currentAnimationHIndex);
+				assert(animationsRightH.size() > currentAnimationHIndex);
+
+				Animation* currentAnimationInverseH = isRight ? animationsRightH[currentAnimationHIndex].second : animationsLeftH[currentAnimationHIndex].second;
+				
+				assert(currentAnimationInverseH);
+				
 				currentAnimationInverseH->synchronizeInverse(*currentAnimationH);
 				currentAnimationH = currentAnimationInverseH;
 
@@ -121,6 +140,8 @@ void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 		// 2) Car side to center
 		else
 		{
+			assert(currentAnimationH);
+
 			// Car center, end move
 			if(currentAnimationH->hasEnded())
 			{
@@ -134,7 +155,11 @@ void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 				// Start move to side, moving from center to right side before ending side to center move
 				if(isRight && inc1 > 0.0f)
 				{
+					assert(animationsRightH.size() > currentAnimationHIndex);
+
 					Animation* currentAnimationInverseH = animationsRightH[currentAnimationHIndex].first;
+
+					assert(currentAnimationInverseH);
 
 					currentAnimationInverseH->synchronizeInverse(*currentAnimationH);
 					currentAnimationH = currentAnimationInverseH;
@@ -144,7 +169,11 @@ void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 				// Start move to side, moving from center to left side before ending side to center move
 				else if(!isRight && inc1 < 0.0f)
 				{
+					assert(animationsLeftH.size() > currentAnimationHIndex);
+
 					Animation* currentAnimationInverseH = animationsLeftH[currentAnimationHIndex].first;
+
+					assert(currentAnimationInverseH);
 
 					currentAnimationInverseH->synchronizeInverse(*currentAnimationH);
 					currentAnimationH = currentAnimationInverseH;
@@ -165,10 +194,15 @@ void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 			uint index = (uint)(currentAnimationH->getTimePercent() * animationsV.size());
 			if(!toSide) index = animationsV.size() - index - 1;
 
+			assert(animationsV.size() > index);
+			assert(animationsV[index]);
+
 			animationsV[index]->synchronize(*currentAnimationV);
 			currentAnimationV = animationsV[index];
 		}
 	}
+
+	assert(currentAnimationV);
 
 	currentAnimationV->setTimeMultiplier(inc0);
 	currentAnimationV->update(deltaTimeS);

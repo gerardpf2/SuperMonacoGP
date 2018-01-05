@@ -33,11 +33,11 @@ class Background
 
 	private:
 
-		const Texture* texture = nullptr;
+		const Texture* texture = nullptr; // Constructor
 
-		const Texture* textureSky = nullptr;
+		const Texture* textureSky = nullptr; // Constructor
 
-		const Texture* textureGround = nullptr;
+		const Texture* textureGround = nullptr; // Constructor
 
 		SDL_Rect textureRect;
 

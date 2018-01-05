@@ -17,9 +17,9 @@ class CameraFollow : public Camera
 
 	private:
 
-		const WorldPosition* followPosition = nullptr;
+		const WorldPosition* followPosition = nullptr; // Constructor
 
-		WorldPosition offsetPosition;
+		WorldPosition offsetPosition; // Constructor
 };
 
 #endif

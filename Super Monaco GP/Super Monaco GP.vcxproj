@@ -185,6 +185,7 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="MemLeaks.h" />
     <ClInclude Include="Minimap.h" />
+    <ClInclude Include="MinimapUI.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleAbout.h" />
     <ClInclude Include="ModuleAboutUI.h" />

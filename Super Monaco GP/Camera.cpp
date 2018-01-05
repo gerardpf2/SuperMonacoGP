@@ -86,5 +86,7 @@ void Camera::update(float deltaTimeS)
 
 void Camera::limitZ()
 {
+	assert(road);
+
 	position.z = mod0L(position.z, road->getLength());
 }

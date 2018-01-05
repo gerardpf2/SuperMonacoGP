@@ -284,5 +284,8 @@
     <ClInclude Include="ModuleAudio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MinimapUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

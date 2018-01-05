@@ -1,5 +1,6 @@
 #include "AnimationContainer.h"
 
+#include <assert.h>
 #include "Animation.h"
 
 using namespace std;
@@ -31,19 +32,28 @@ const map<uint, Animation*>* AnimationContainer::getAnimations() const
 	return animations;
 }
 
-void AnimationContainer::add(Animation* animation)
+void AnimationContainer::add(Animation* animation) const
 {
+	assert(animation);
+	assert(animations);
+
 	(*animations)[animation->getId()] = animation;
 }
 
 Animation* AnimationContainer::getAnimation(uint animationId) const
 {
-	return (*animations)[animationId];
+	assert(animations);
+
+	map<uint, Animation*>::iterator it = animations->find(animationId);
+
+	assert(it != animations->end());
+
+	return it->second;
 }
 
 Animation* AnimationContainer::getCurrentAnimation() const
 {
-	return animations->at(currentAnimationId);
+	return getAnimation(currentAnimationId);
 }
 
 void AnimationContainer::setCurrentAnimation(uint currentAnimationId)
@@ -53,11 +63,17 @@ void AnimationContainer::setCurrentAnimation(uint currentAnimationId)
 
 void AnimationContainer::update(float deltaTimeS) const
 {
-	getCurrentAnimation()->update(deltaTimeS);
+	Animation* animation = getCurrentAnimation();
+
+	assert(animation);
+
+	animation->update(deltaTimeS);
 }
 
 void AnimationContainer::cleanUp()
 {
+	assert(animations);
+
 	animations->clear();
 
 	delete animations; animations = nullptr;

@@ -8,7 +8,6 @@
 #include "ModuleAudio.h"
 #include "ModuleStart.h"
 #include "ModuleAbout.h"
-#include "ModuleWorld.h"
 #include "ModuleWindow.h"
 #include "ModuleSwitch.h"
 #include "ModuleTexture.h"
@@ -31,6 +30,11 @@ GameEngine::GameEngine()
 GameEngine::~GameEngine()
 { }
 
+Module* GameEngine::getGameModule() const
+{
+	return gameModule;
+}
+
 ModuleJson* GameEngine::getModuleJson() const
 {
 	return moduleJson;
@@ -50,11 +54,6 @@ ModuleAudio* GameEngine::getModuleAudio() const
 {
 	return moduleAudio;
 }
-
-/* ModuleWorld* GameEngine::getModuleWorld() const
-{
-	return moduleWorld;
-} */
 
 ModuleWindow* GameEngine::getModuleWindow() const
 {
@@ -101,11 +100,6 @@ ModulePerformance* GameEngine::getModulePerformance() const
 	return modulePerformance;
 }
 
-Module* GameEngine::getGameModule() const
-{
-	return gameModule;
-}
-
 void GameEngine::setGameModule(GameModule gameModule, bool blocked)
 {
 	switch(gameModule)
@@ -140,6 +134,8 @@ void GameEngine::setGameModule(GameModule gameModule, bool blocked)
 			break;
 	}
 
+	assert(tmpGameModule);
+
 	tmpGameModule->setBlocked(blocked);
 }
 
@@ -173,7 +169,6 @@ void GameEngine::addInitialModules()
 	// modules.push_back(modulePerformance = new ModulePerformance(this));
 
 	modules.push_back(gameModule = nullptr);
-	// modules.push_back(moduleWorld = new ModuleWorld(this));
 }
 
 bool GameEngine::setUp()
@@ -217,8 +212,11 @@ bool GameEngine::setUpNewGameModule()
 		if(gameModule)
 		{
 			gameModule->cleanUp();
+
 			delete gameModule; gameModule = nullptr;
 		}
+
+		assert(!modules.empty());
 
 		modules[modules.size() - 1] = gameModule = tmpGameModule;
 		
@@ -237,6 +235,7 @@ void GameEngine::cleanUp()
 		if(modules[i])
 		{
 			modules[i]->cleanUp();
+
 			delete modules[i]; modules[i] = nullptr;
 		}
 	}
@@ -247,7 +246,6 @@ void GameEngine::cleanUp()
 	moduleFont = nullptr;
 	moduleInput = nullptr;
 	moduleAudio = nullptr;
-	// moduleWorld = nullptr;
 	moduleWindow = nullptr;
 	moduleSwitch = nullptr;
 	moduleTexture = nullptr;
@@ -257,6 +255,5 @@ void GameEngine::cleanUp()
 	moduleCollision = nullptr;
 	moduleGameObject = nullptr;
 	modulePerformance = nullptr;
-
 	gameModule = tmpGameModule = nullptr;
 }

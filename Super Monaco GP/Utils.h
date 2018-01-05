@@ -1,9 +1,9 @@
 #ifndef _UTILS_
 #define _UTILS_
 
-#include <math.h>
 #include <string>
 #include "Types.h"
+#include <assert.h>
 #include "Globals.h"
 #include <SDL_rect.h>
 
@@ -14,12 +14,16 @@ static float degToRad(float d)
 
 static int mod0L(int v, int l)
 {
+	assert(l != 0);
+
 	if((v %= l) < 0) v += l;
 	return v;
 }
 
 static float mod0L(float v, float l)
 {
+	assert(l != 0.0f);
+
 	if((v = fmodf(v, l)) < 0.0f) v += l;
 	return v;
 }
@@ -82,6 +86,12 @@ static void time(float time, std::string& timeText)
 
 static bool getRectsEndlessTexture(const Texture* texture, const SDL_Rect& textureRect, const SDL_Rect& renderRect, bool mirror, float offsetX, SDL_Rect& rect0, SDL_Rect& renderRect0, SDL_Rect& rect1, SDL_Rect& renderRect1)
 {
+	// The resulting texture rect can be splitted into two rects, and the same for its corresponding rendering rect
+	// This function returns true if the they have been splitted
+
+	assert(texture);
+	assert(texture->r);
+
 	rect0 = textureRect;
 	rect0.x += (!mirror ? (int)offsetX : (int)mod0L(offsetX + texture->r->w / 2.0f, (float)texture->r->w));
 

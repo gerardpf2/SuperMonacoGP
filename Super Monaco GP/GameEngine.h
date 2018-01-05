@@ -20,8 +20,6 @@ class ModuleJson;
 class ModuleFont;
 class ModuleInput;
 class ModuleAudio;
-// class ModuleStart;
-// class ModuleWorld;
 class ModuleWindow;
 class ModuleSwitch;
 class ModuleTexture;
@@ -40,6 +38,8 @@ class GameEngine
 
 		virtual ~GameEngine();
 
+		Module* getGameModule() const;
+
 		ModuleJson* getModuleJson() const;
 
 		ModuleFont* getModuleFont() const;
@@ -47,8 +47,6 @@ class GameEngine
 		ModuleInput* getModuleInput() const;
 
 		ModuleAudio* getModuleAudio() const;
-
-		// ModuleWorld* getModuleWorld() const;
 
 		ModuleWindow* getModuleWindow() const;
 
@@ -67,8 +65,6 @@ class GameEngine
 		ModuleGameObject* getModuleGameObject() const;
 
 		ModulePerformance* getModulePerformance() const;
-
-		Module* getGameModule() const;
 
 		void setGameModule(GameModule gameModule, bool blocked = false);
 
@@ -92,6 +88,10 @@ class GameEngine
 
 		std::vector<Module*> modules;
 
+		Module* gameModule = nullptr;
+
+		Module* tmpGameModule = nullptr;
+
 		ModuleJson* moduleJson = nullptr;
 
 		ModuleFont* moduleFont = nullptr;
@@ -99,8 +99,6 @@ class GameEngine
 		ModuleInput* moduleInput = nullptr;
 
 		ModuleAudio* moduleAudio = nullptr;
-
-		// ModuleWorld* moduleWorld = nullptr;
 
 		ModuleWindow* moduleWindow = nullptr;
 
@@ -119,10 +117,6 @@ class GameEngine
 		ModuleGameObject* moduleGameObject = nullptr;
 
 		ModulePerformance* modulePerformance = nullptr;
-
-		Module* gameModule = nullptr;
-
-		Module* tmpGameModule = nullptr;
 };
 
 #endif

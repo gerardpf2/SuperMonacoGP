@@ -47,13 +47,13 @@ class Camera
 
 	private:
 
-		bool forward;
+		bool forward; // Constructor
 
-		const Road* road = nullptr;
+		const Road* road = nullptr; // Constructor
 
-		float projectionY0, projectionY1;
+		float projectionY0, projectionY1; // Constructor
 
-		float depth;
+		float depth = 1.0f;
 };
 
 #endif

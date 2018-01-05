@@ -18,6 +18,9 @@ Road::~Road()
 
 void Road::load(const char* jsonPath, const ModuleJson* moduleJson, ModuleTexture* moduleTexture)
 {
+	assert(jsonPath);
+	assert(moduleJson);
+
 	unload(moduleTexture);
 
 	Document jsonDocument;
@@ -46,34 +49,32 @@ void Road::unload(ModuleTexture* moduleTexture)
 {
 	for(int i = (int)segments.size() - 1; i >= 0; --i)
 	{
-		delete segments[i];
-		segments[i] = nullptr;
+		delete segments[i]; segments[i] = nullptr;
 	}
 
 	segments.clear();
 
 	for(int i = (int)rumbleColors.size() - 1; i >= 0; --i)
 	{
-		delete rumbleColors[i];
-		rumbleColors[i] = nullptr;
+		delete rumbleColors[i]; rumbleColors[i] = nullptr;
 	}
 
 	rumbleColors.clear();
 
 	for(int i = (int)gameObjectDefinitions.size() - 1; i >= 0; --i)
 	{
-		delete gameObjectDefinitions[i];
-		gameObjectDefinitions[i] = nullptr;
+		delete gameObjectDefinitions[i]; gameObjectDefinitions[i] = nullptr;
 	}
 
 	gameObjectDefinitions.clear();
 
 	if(roadBackgroundDefinition)
 	{
+		assert(moduleTexture);
+
 		moduleTexture->unload(roadBackgroundDefinition->textureGroupId);
 
-		delete roadBackgroundDefinition;
-		roadBackgroundDefinition = nullptr;
+		delete roadBackgroundDefinition; roadBackgroundDefinition = nullptr;
 	}
 }
 
@@ -104,12 +105,19 @@ const RoadBackgroundDefinition* Road::getRoadBackgroundDefinition() const
 
 void Road::findGameObjectsFront(float z, float distance, list<const GameObject*>& gameObjects) const
 {
-	int index = getSegmentAtZ(z)->getIndex();
+	Segment* initialSegment = getSegmentAtZ(z);
+
+	assert(initialSegment);
+
+	int index = initialSegment->getIndex();
 	int nSegments = (int)(distance / SEGMENT_LENGTH);
 
 	for(int i = 0; i < nSegments; ++i)
 	{
 		Segment* segment = getSegment(index + i);
+
+		assert(segment);
+		assert(segment->getGameObjects());
 
 		for(const GameObject* gameObject : *segment->getGameObjects())
 			gameObjects.push_back(gameObject);
@@ -118,9 +126,13 @@ void Road::findGameObjectsFront(float z, float distance, list<const GameObject*>
 
 void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
+	assert(camera);
+
 	if(!camera->getForward()) renderMirror(camera, moduleRenderer);
 	else
 	{
+		assert(camera->getPosition());
+
 		float zRender0 = camera->getBasePositionZ();
 		float zRender1 = camera->getBasePositionZ() - SEGMENT_LENGTH;
 
@@ -139,18 +151,30 @@ void Road::render(const Camera* camera, const ModuleRenderer* moduleRenderer) co
 		// Render from player segment (excluded) to first segment (excluded)
 		renderBackward(zBase1, base1, first, zRender1, camera, moduleRenderer);
 
+		assert(first);
+
 		for(int i = N_SEGMENTS_DRAW - 1; i > 0; --i)
 		{
 			Segment* segment = getSegment(first->getIndex() + i);
 
+			assert(segment);
+			assert(segment->getGameObjects());
+
 			for(const GameObject* gameObject : *segment->getGameObjects())
+			{
+				assert(gameObject);
+
 				gameObject->render(camera, moduleRenderer);
+			}
 		}
 	}
 }
 
 void Road::renderMirror(const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
+	assert(camera);
+	assert(camera->getPosition());
+
 	float zRender0 = camera->getBasePositionZ() + SEGMENT_LENGTH;
 	float zRender1 = camera->getBasePositionZ();
 
@@ -169,12 +193,21 @@ void Road::renderMirror(const Camera* camera, const ModuleRenderer* moduleRender
 	// Render from player segment (included) to first segment (excluded)
 	renderForwardMirror(zBase0, base0, first, zRender0, camera, moduleRenderer);
 
+	assert(last);
+
 	for(int i = 1; i < N_SEGMENTS_DRAW; ++i)
 	{
 		Segment* segment = getSegment(last->getIndex() + i);
 
+		assert(segment);
+		assert(segment->getGameObjects());
+
 		for(const GameObject* gameObject : *segment->getGameObjects())
+		{
+			assert(gameObject);
+
 			gameObject->render(camera, moduleRenderer);
+		}
 	}
 }
 
@@ -200,15 +233,21 @@ void Road::renderBackwardMirror(float z, const Segment* first, const Segment* la
 
 void Road::render(float z, const Segment* first, const Segment* last, float renderZ, float initialCurveMultiplier, float initialCurveDXMultiplier, bool invertZNearZFar, int increment, bool clip, bool mirror, const Camera* camera, const ModuleRenderer* moduleRenderer) const
 {
+	assert(first);
+
 	short maxWindowY = WINDOW_HEIGHT;
 	float accZOffset = -z + first->getZNear();
 	Segment* current = getSegment(first->getIndex());
+
+	assert(current);
 
 	float x = 0.0f;
 	float dX = initialCurveMultiplier * current->getCurve() + initialCurveDXMultiplier * current->getCurve() * interpolate01(z, current->getZNear(), current->getZFar());
 
 	while(current != last)
 	{
+		assert(current);
+
 		current->setXOffsetNear(invertZNearZFar ? x + dX : x);
 		current->setXOffsetFar(invertZNearZFar ? x : x + dX);
 
@@ -229,7 +268,11 @@ void Road::render(float z, const Segment* first, const Segment* last, float rend
 
 Segment* Road::getSegment(int index) const
 {
-	return segments[mod0L(index, segments.size())];
+	index = mod0L(index, segments.size());
+
+	assert((int)segments.size() > index);
+
+	return segments[index];
 }
 
 void Road::setLength(float length)
@@ -289,10 +332,20 @@ void Road::addHill(float zStart, float enterLength, float holdLength, float leav
 	float zLeave = zHold + holdLength;
 	float zExit = zLeave + leaveLength;
 
-	uint indexEnter = getSegmentAtZ(zEnter)->getIndex();
-	uint indexHold = getSegmentAtZ(zHold)->getIndex();
-	uint indexLeave = getSegmentAtZ(zLeave)->getIndex();
-	uint indexExit = getSegmentAtZ(zExit)->getIndex();
+	Segment* segmentEnter = getSegmentAtZ(zEnter);
+	Segment* segmentHold = getSegmentAtZ(zHold);
+	Segment* segmentLeave = getSegmentAtZ(zLeave);
+	Segment* segmentExit = getSegmentAtZ(zExit);
+
+	assert(segmentEnter);
+	assert(segmentHold);
+	assert(segmentLeave);
+	assert(segmentExit);
+
+	uint indexEnter = segmentEnter->getIndex();
+	uint indexHold = segmentHold->getIndex();
+	uint indexLeave = segmentLeave->getIndex();
+	uint indexExit = segmentExit->getIndex();
 
 	addHillEnter(indexEnter, indexHold, enterLength, value);
 	addHillHold(indexHold, indexLeave, holdLength, value);
@@ -308,10 +361,20 @@ void Road::addHillEnter(uint indexStart, uint indexEnd, float enterLength, float
 	{
 		Segment* segment = getSegment(i);
 
-		segment->setYNear(getSegment((int)segment->getIndex() - 1)->getYFar());
+		assert(segment);
+
+		Segment* previousSegment = getSegment((int)segment->getIndex() - 1);
+
+		assert(previousSegment);
+
+		segment->setYNear(previousSegment->getYFar());
 		segment->setYFar(ease(0.0f, value, c / nSegments));
 
-		i = getSegment(i + 1)->getIndex();
+		Segment* nextSegment = getSegment(i + 1);
+
+		assert(nextSegment);
+
+		i = nextSegment->getIndex();
 	}
 }
 
@@ -324,10 +387,20 @@ void Road::addHillHold(uint indexStart, uint indexEnd, float holdLength, float v
 	{
 		Segment* segment = getSegment(i);
 
-		segment->setYNear(getSegment((int)segment->getIndex() - 1)->getYFar());
+		assert(segment);
+
+		Segment* previousSegment = getSegment((int)segment->getIndex() - 1);
+
+		assert(previousSegment);
+
+		segment->setYNear(previousSegment->getYFar());
 		segment->setYFar(ease(segment->getYNear(), value, c / nSegments));
 
-		i = getSegment(i + 1)->getIndex();
+		Segment* nextSegment = getSegment(i + 1);
+
+		assert(nextSegment);
+
+		i = nextSegment->getIndex();
 	}
 }
 
@@ -340,10 +413,20 @@ void Road::addHillLeave(uint indexStart, uint indexEnd, float leaveLength, float
 	{
 		Segment* segment = getSegment(i);
 
-		segment->setYNear(getSegment((int)segment->getIndex() - 1)->getYFar());
+		assert(segment);
+
+		Segment* previousSegment = getSegment((int)segment->getIndex() - 1);
+
+		assert(previousSegment);
+
+		segment->setYNear(previousSegment->getYFar());
 		segment->setYFar(ease(value, 0.0f, c / nSegments));
 
-		i = getSegment(i + 1)->getIndex();
+		Segment* nextSegment = getSegment(i + 1);
+
+		assert(nextSegment);
+
+		i = nextSegment->getIndex();
 	}
 }
 
@@ -357,9 +440,6 @@ void Road::addCurves(const Value& value) const
 			float length = value[i]["length"].GetFloat();
 			float angle = value[i]["angle"].GetFloat();
 
-			/* zStart *= this->length; //
-			length *= this->length; // */
-
 			addCurve(zStart, length, angle);
 		}
 		else
@@ -369,11 +449,6 @@ void Road::addCurves(const Value& value) const
 			float holdLength = value[i]["holdLength"].GetFloat();
 			float leaveLength = value[i]["leaveLength"].GetFloat();
 			float val = value[i]["value"].GetFloat();
-
-			/* zStart *= length; //
-			enterLength *= length; //
-			holdLength *= length; //
-			leaveLength *= length; // */
 
 			addCurve(zStart, enterLength, holdLength, leaveLength, val);
 		}
@@ -398,10 +473,20 @@ void Road::addCurve(float zStart, float enterLength, float holdLength, float lea
 	float zLeave = zHold + holdLength;
 	float zExit = zLeave + leaveLength;
 
-	uint indexEnter = getSegmentAtZ(zEnter)->getIndex();
-	uint indexHold = getSegmentAtZ(zHold)->getIndex();
-	uint indexLeave = getSegmentAtZ(zLeave)->getIndex();
-	uint indexExit = getSegmentAtZ(zExit)->getIndex();
+	Segment* segmentEnter = getSegmentAtZ(zEnter);
+	Segment* segmentHold = getSegmentAtZ(zHold);
+	Segment* segmentLeave = getSegmentAtZ(zLeave);
+	Segment* segmentExit = getSegmentAtZ(zExit);
+
+	assert(segmentEnter);
+	assert(segmentHold);
+	assert(segmentLeave);
+	assert(segmentExit);
+
+	uint indexEnter = segmentEnter->getIndex();
+	uint indexHold = segmentHold->getIndex();
+	uint indexLeave = segmentLeave->getIndex();
+	uint indexExit = segmentExit->getIndex();
 
 	addCurveEnter(indexEnter, indexHold, enterLength, value);
 	addCurveHold(indexHold, indexLeave, holdLength, value);
@@ -415,9 +500,17 @@ void Road::addCurveEnter(uint indexStart, uint indexEnd, float enterLength, floa
 
 	for(uint i = indexStart; i != indexEnd; ++c)
 	{
-		getSegment(i)->setCurve(ease(0.0f, value, c / nSegments));
+		Segment* segment = getSegment(i);
 
-		i = getSegment(i + 1)->getIndex();
+		assert(segment);
+
+		segment->setCurve(ease(0.0f, value, c / nSegments));
+
+		Segment* nextSegment = getSegment(i + 1);
+
+		assert(nextSegment);
+
+		i = nextSegment->getIndex();
 	}
 }
 
@@ -425,9 +518,17 @@ void Road::addCurveHold(uint indexStart, uint indexEnd, float holdLength, float 
 {
 	for(uint i = indexStart; i != indexEnd;)
 	{
-		getSegment(i)->setCurve(value);
+		Segment* segment = getSegment(i);
 
-		i = getSegment(i + 1)->getIndex();
+		assert(segment);
+
+		segment->setCurve(value);
+
+		Segment* nextSegment = getSegment(i + 1);
+
+		assert(nextSegment);
+
+		i = nextSegment->getIndex();
 	}
 }
 
@@ -438,13 +539,20 @@ void Road::addCurveLeave(uint indexStart, uint indexEnd, float leaveLength, floa
 
 	for(uint i = indexStart; i != indexEnd; ++c)
 	{
-		getSegment(i)->setCurve(ease(value, 0.0f, c / nSegments));
+		Segment* segment = getSegment(i);
 
-		i = getSegment(i + 1)->getIndex();
+		assert(segment);
+
+		segment->setCurve(ease(value, 0.0f, c / nSegments));
+
+		Segment* nextSegment = getSegment(i + 1);
+
+		assert(nextSegment);
+
+		i = nextSegment->getIndex();
 	}
 }
-#include <iostream>
-using namespace std;
+
 void Road::setRumbleColors(const Value& value)
 {
 	uint color0 = RGBAToUint(value[0]["r"].GetUint(), value[0]["g"].GetUint(), value[0]["b"].GetUint(), value[0]["a"].GetUint());
@@ -458,11 +566,13 @@ void Road::setRumbleColors(const Value& value)
 	uint color8 = RGBAToUint(value[8]["r"].GetUint(), value[8]["g"].GetUint(), value[8]["b"].GetUint(), value[8]["a"].GetUint());
 	uint color9 = RGBAToUint(value[9]["r"].GetUint(), value[9]["g"].GetUint(), value[9]["b"].GetUint(), value[9]["a"].GetUint());
 
-	uint colors0[2]{ color0, color1 };
-	uint colors1[2]{ color2, color3 };
-	uint colors2[2]{ color4, color5 };
-	uint colors3[2]{ color6, color7 };
-	uint colors4[2]{ color8, color9 };
+	const int nColors = 2;
+
+	uint colors0[nColors]{ color0, color1 };
+	uint colors1[nColors]{ color2, color3 };
+	uint colors2[nColors]{ color4, color5 };
+	uint colors3[nColors]{ color6, color7 };
+	uint colors4[nColors]{ color8, color9 };
 
 	uint colorsIndex = 0;
 
@@ -471,13 +581,20 @@ void Road::setRumbleColors(const Value& value)
 
 	for(uint i = 0; i < nRumbleColors; ++i)
 	{
+		assert(nColors > colorsIndex);
+
 		rumbleColors.push_back(new RumbleColors{ colors0[colorsIndex], colors1[colorsIndex], colors2[colorsIndex], colors3[colorsIndex], colors4[colorsIndex] });
-		colorsIndex = (colorsIndex + 1) % 2;
+		colorsIndex = (colorsIndex + 1) % nColors;
 	}
 
 	if(!rumbleColors.empty())
 	{
+		assert(!rumbleColors.empty());
+
 		RumbleColors* lastRumbleColors = rumbleColors[rumbleColors.size() - 1];
+
+		assert(lastRumbleColors);
+
 		lastRumbleColors->b = lastRumbleColors->c = lastRumbleColors->d = lastRumbleColors->e = color3;
 	}
 
@@ -485,9 +602,12 @@ void Road::setRumbleColors(const Value& value)
 	uint currentSegmentPerRumble = 0;
 	uint segmentsPerRumble = (uint)(ROAD_RUMBLE_HEIGHT / SEGMENT_LENGTH);
 
-	for(uint i = 0; i < (uint)segments.size(); ++i)
+	for(Segment* segment : segments)
 	{
-		segments[i]->setRumbleColors(rumbleColors[rumbleColorsIndex]);
+		assert(segment);
+		assert(rumbleColors.size() > rumbleColorsIndex);
+
+		segment->setRumbleColors(rumbleColors[rumbleColorsIndex]);
 
 		if(++currentSegmentPerRumble == segmentsPerRumble)
 		{
@@ -531,25 +651,13 @@ void Road::addGameObjectDefinitions(const rapidjson::Value& value)
 			y0 += y1;
 			z0 += z1;
 		}
-
-		/* // id, offsetX, position
-
-		uint id = value[i]["id"].GetUint();
-		float offsetX = value[i]["offsetX"].GetFloat();
-		const Value& positionJson = value[i]["position"];
-
-		// x, y, z
-
-		float x = positionJson["x"].GetFloat();
-		float y = positionJson["y"].GetFloat();
-		float z = positionJson["z"].GetFloat();
-
-		gameObjectDefinitions.push_back(new RoadGameObjectDefinition{ id, offsetX, WorldPosition{ x, y, z } }); */
 	}
 }
 
 void Road::setBackgroundDefinition(const rapidjson::Value& value, ModuleTexture* moduleTexture)
 {
+	assert(moduleTexture);
+
 	const char* textureGroupPath = value["textureGroupPath"].GetString();
 	uint textureId = value["textureId"].GetUint();
 	uint textureSkyId = value["textureSkyId"].GetUint();
