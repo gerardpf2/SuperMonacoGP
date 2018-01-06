@@ -1,5 +1,7 @@
 #include "ModuleInput.h"
 
+#include <SDL.h>
+
 ModuleInput::ModuleInput(GameEngine* gameEngine) :
 	Module(gameEngine)
 { }
@@ -26,9 +28,14 @@ KeyState ModuleInput::getKeyState(uint scancode) const
 
 bool ModuleInput::setUp()
 {
-	// Init SubSystem
+	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
+	{
+		printf("ModuleInput::setUp -> ERROR: %s\n", SDL_GetError());
 
-	keyStates.resize(300, KeyState::IDLE); // 300 ¿?
+		return false;
+	}
+
+	keyStates.resize(300, KeyState::IDLE);
 
 	return true;
 }
@@ -47,7 +54,7 @@ bool ModuleInput::preUpdate(float deltaTimeS)
 
 void ModuleInput::cleanUp()
 {
-	// Quit SubSystem
+	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 
 	keyStates.clear();
 }

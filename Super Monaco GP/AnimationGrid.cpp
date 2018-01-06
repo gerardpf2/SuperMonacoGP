@@ -192,7 +192,7 @@ void AnimationGrid::advance(float inc0, float inc1, float deltaTimeS)
 			vector<Animation*>& animationsV = isRight ? animationsRightV : animationsLeftV;
 
 			uint index = (uint)(currentAnimationH->getTimePercent() * animationsV.size());
-			if(!toSide) index = animationsV.size() - index - 1;
+			if(!toSide) index = (uint)animationsV.size() - index - 1;
 
 			assert(animationsV.size() > index);
 			assert(animationsV[index]);

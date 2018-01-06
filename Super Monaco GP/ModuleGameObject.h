@@ -24,10 +24,8 @@ class ModuleGameObject : public Module
 		GameObject* getGameObject(uint idGameObject);
 
 		bool load();
-		// virtual bool setUp() override;
 
 		void unload();
-		// virtual void cleanUp() override;
 
 	private:
 

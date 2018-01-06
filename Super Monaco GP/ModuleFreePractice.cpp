@@ -2,12 +2,12 @@
 
 #include "Car.h"
 #include "Utils.h"
-#include "Globals.h"
 #include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleTexture.h"
 #include "ModuleRenderer.h"
 #include "ModuleRegistry.h"
+#include "ModuleFreePracticeUI.h"
 
 ModuleFreePractice::ModuleFreePractice(GameEngine* gameEngine) :
 	ModuleWorld(gameEngine)
@@ -22,6 +22,9 @@ ModuleFreePractice::~ModuleFreePractice()
 
 bool ModuleFreePractice::setUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleTexture());
+
 	bool ret = ModuleWorld::setUp();
 
 	flag0 = getGameEngine()->getModuleTexture()->get(2, 14);
@@ -49,10 +52,17 @@ void ModuleFreePractice::cleanUp()
 
 void ModuleFreePractice::registerLapTime(const Car* car)
 {
+	assert(car);
+
 	ModuleWorld::registerLapTime(car);
 
 	if(car->getType() == GameObjectType::PLAYER)
+	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleRegistry());
+
 		getGameEngine()->getModuleRegistry()->updatePlayerBestLapTimeIfBetter(car->getCurrentLapTime());
+	}
 }
 
 void ModuleFreePractice::renderUI() const
@@ -61,6 +71,12 @@ void ModuleFreePractice::renderUI() const
 
 	if(freePracticeCounter <= 0.5f)
 	{
+		assert(flag0);
+		assert(flag1);
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleFont());
+		assert(getGameEngine()->getModuleRenderer());
+
 		getGameEngine()->getModuleRenderer()->renderTexture(flag0->t, flag0->r, &freePracticeFlag0Rect, flag0->hFlipped);
 		getGameEngine()->getModuleRenderer()->renderTexture(flag1->t, flag1->r, &freePracticeFlag1Rect, flag1->hFlipped);
 		getGameEngine()->getModuleFont()->renderText("FREE PRACTICE", freePracticePosition, HAlignment::RIGHT, VAlignment::BOTTOM, FREE_PRACTICE_POSITION_SCALE, FREE_PRACTICE_POSITION_SCALE, 248, 36, 32);

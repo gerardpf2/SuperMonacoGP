@@ -1,8 +1,6 @@
 #ifndef _MODULE_ABOUT_UI_
 #define _MODULE_ABOUT_UI_
 
-#include "Globals.h"
-
 #define BASE_ALL_RECT_X 0
 #define BASE_ALL_RECT_Y 0
 #define BASE_ALL_RECT_W WINDOW_WIDTH

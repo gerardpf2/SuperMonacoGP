@@ -1,7 +1,8 @@
 #include "ModuleAbout.h"
 
+#include <assert.h>
+#include "Globals.h"
 #include "Animation.h"
-#include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
 #include "ModuleSwitch.h"
@@ -41,6 +42,9 @@ ModuleAbout::~ModuleAbout()
 
 bool ModuleAbout::setUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAnimation());
+
 	carAnimationGroupId = getGameEngine()->getModuleAnimation()->load("Resources/Configurations/Animations/About.json");
 
 	carAnimation = getGameEngine()->getModuleAnimation()->getAnimation(carAnimationGroupId, 0);
@@ -64,6 +68,9 @@ bool ModuleAbout::update(float deltaTimeS)
 
 void ModuleAbout::cleanUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAnimation());
+
 	getGameEngine()->getModuleAnimation()->unload(carAnimationGroupId);
 
 	carAnimation = nullptr;
@@ -71,17 +78,26 @@ void ModuleAbout::cleanUp()
 
 void ModuleAbout::checkGoStart() const
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleInput());
+	assert(getGameEngine()->getModuleSwitch());
+
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN || getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
 		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::START);
 }
 
 void ModuleAbout::updateCar(float deltaTimeS)
 {
+	assert(carAnimation);
+
 	carAnimation->update(deltaTimeS);
 }
 
 void ModuleAbout::render() const
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
+
 	getGameEngine()->getModuleRenderer()->renderRect(&baseAllRect, 0, 0, 0);
 
 	renderCar();
@@ -91,13 +107,22 @@ void ModuleAbout::render() const
 
 void ModuleAbout::renderCar() const
 {
+	assert(carAnimation);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
+
 	const Texture* carT = carAnimation->getCurrentFrame();
+
+	assert(carT);
 
 	getGameEngine()->getModuleRenderer()->renderTexture(carT->t, carT->r, &carRect, carT->hFlipped);
 }
 
 void ModuleAbout::renderInfo() const
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleFont());
+
 	getGameEngine()->getModuleFont()->renderText("ABOUT", aboutPosition, HAlignment::CENTER, VAlignment::BOTTOM, ABOUT_POSITION_SCALE, ABOUT_POSITION_SCALE, 224, 160, 0);
 
 	getGameEngine()->getModuleFont()->renderText("PROJECT", projectPosition, HAlignment::LEFT, VAlignment::CENTER, POSITION_SCALE, POSITION_SCALE, 224, 160, 0);

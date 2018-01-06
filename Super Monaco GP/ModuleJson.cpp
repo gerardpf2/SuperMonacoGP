@@ -13,6 +13,8 @@ ModuleJson::~ModuleJson()
 
 void ModuleJson::read(const char* path, Document& document) const
 {
+	assert(path);
+
 	FILE* file;
 	fopen_s(&file, path, "rb");
 	

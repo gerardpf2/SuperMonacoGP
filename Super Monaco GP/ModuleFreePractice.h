@@ -2,7 +2,6 @@
 #define _MODULE_FREE_PRACTICE_
 
 #include "ModuleWorld.h"
-#include "ModuleFreePracticeUI.h"
 
 class ModuleFreePractice : public ModuleWorld
 {
@@ -33,6 +32,8 @@ class ModuleFreePractice : public ModuleWorld
 		const Texture* flag0 = nullptr;
 
 		const Texture* flag1 = nullptr;
+
+		// UI
 
 		WindowPosition freePracticePosition;
 

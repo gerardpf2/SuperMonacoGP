@@ -42,7 +42,7 @@ class ModuleFont : public Module
 
 	private:
 
-		uint textureGroupId;
+		uint textureGroupId = -1;
 
 		std::vector<const Texture*> characters;
 };

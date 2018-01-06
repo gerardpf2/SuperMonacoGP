@@ -1,7 +1,6 @@
 #include "ModuleSwitch.h"
 
 #include "Utils.h"
-#include "GameEngine.h"
 #include "ModuleRenderer.h"
 
 ModuleSwitch::ModuleSwitch(GameEngine* gameEngine) :
@@ -13,6 +12,9 @@ ModuleSwitch::~ModuleSwitch()
 
 void ModuleSwitch::setNewGameModule(GameModule gameModule, float time)
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getGameModule());
+
 	on = true;
 	switched = false;
 	this->time = time;
@@ -25,8 +27,13 @@ bool ModuleSwitch::update(float deltaTimeS)
 {
 	if(on)
 	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleRenderer());
+
 		if((time -= deltaTimeS) <= 0.0f)
 		{
+			assert(getGameEngine()->getGameModule());
+
 			on = false;
 			getGameEngine()->getGameModule()->setBlocked(false);
 		}

@@ -4,7 +4,6 @@
 #include <vector>
 #include "Types.h"
 #include "Module.h"
-#include "Globals.h"
 
 class ModuleRegistry : public Module
 {
@@ -40,7 +39,7 @@ class ModuleRegistry : public Module
 
 	private:
 
-		uint currentCourseId = 0;
+		uint currentCourseId = 0; // Italy
 
 		/*
 		

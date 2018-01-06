@@ -90,7 +90,7 @@ Segment* Road::getSegmentAtZ(float z) const
 
 uint Road::getGameObjectsCount() const
 {
-	return gameObjectDefinitions.size();
+	return (uint)gameObjectDefinitions.size();
 }
 
 const std::vector<RoadGameObjectDefinition*>* Road::getGameObjectDefinitions() const
@@ -268,7 +268,7 @@ void Road::render(float z, const Segment* first, const Segment* last, float rend
 
 Segment* Road::getSegment(int index) const
 {
-	index = mod0L(index, segments.size());
+	index = mod0L(index, (int)segments.size());
 
 	assert((int)segments.size() > index);
 

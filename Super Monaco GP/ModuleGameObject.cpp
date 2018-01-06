@@ -1,12 +1,9 @@
 #include "ModuleGameObject.h"
 
-#include "Car.h"
 #include "Player.h"
 #include "Static.h"
-#include "Animated.h"
 #include "ModuleJson.h"
 #include "GameEngine.h"
-#include "GameObject.h"
 #include "ModuleTexture.h"
 #include "ModuleAnimation.h"
 #include "AnimationContainer.h"
@@ -23,7 +20,11 @@ ModuleGameObject::~ModuleGameObject()
 
 GameObject* ModuleGameObject::getGameObject(uint idGameObject)
 {
+	assert(gameObjects.size() > idGameObject);
+
 	const GameObject* baseGameObject = gameObjects[idGameObject].first;
+
+	assert(baseGameObject);
 
 	GameObject* gameObject = nullptr;
 
@@ -54,6 +55,9 @@ GameObject* ModuleGameObject::getGameObject(uint idGameObject)
 
 bool ModuleGameObject::load()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleJson());
+
 	const char* jsonPath = "Resources/Configurations/GameObjects.json";
 
 	Document jsonDocument;
@@ -75,43 +79,29 @@ bool ModuleGameObject::load()
 
 	return true;
 }
-
-/* bool ModuleGameObject::setUp()
-{
-	const char* jsonPath = "Resources/Configurations/GameObjects.json";
-
-	Document jsonDocument;
-	getGameEngine()->getModuleJson()->read(jsonPath, jsonDocument);
-
-	// gameObjects
-
-	const Value& gameObjectsJson = jsonDocument["gameObjects"];
-
-	gameObjects.reserve(gameObjectsJson.Size());
-
-	for(SizeType i = 0; i < gameObjectsJson.Size(); ++i)
-	{
-		uint resourceGroupId;
-
-		GameObject* gameObject = createGameObject(gameObjectsJson[i], resourceGroupId);
-		gameObjects.push_back(pair<GameObject*, uint>(gameObject, resourceGroupId));
-	}
-
-	return true;
-} */
 
 void ModuleGameObject::unload()
 {
+	assert(getGameEngine());
+
+	ModuleTexture* moduleTexture = getGameEngine()->getModuleTexture();
+	ModuleAnimation* moduleAnimation = getGameEngine()->getModuleAnimation();
+
+	assert(moduleTexture);
+	assert(moduleAnimation);
+
 	for(int i = (int)gameObjects.size() - 1; i >= 0; --i)
 	{
 		GameObject*& gameObject = gameObjects[i].first;
 
+		assert(gameObject);
+
 		gameObject->cleanUp();
 
 		if(gameObject->getType() == GameObjectType::STATIC)
-			getGameEngine()->getModuleTexture()->unload(gameObjects[i].second);
+			moduleTexture->unload(gameObjects[i].second);
 		else
-			getGameEngine()->getModuleAnimation()->unload(gameObjects[i].second);
+			moduleAnimation->unload(gameObjects[i].second);
 
 		delete gameObject; gameObject = nullptr;
 	}
@@ -120,6 +110,8 @@ void ModuleGameObject::unload()
 
 	for(list<GameObject*>::reverse_iterator it = usedGameObjects.rbegin(); it != usedGameObjects.rend(); ++it)
 	{
+		assert(*it);
+
 		(*it)->cleanUp();
 
 		delete *it; *it = nullptr;
@@ -128,43 +120,24 @@ void ModuleGameObject::unload()
 	usedGameObjects.clear();
 }
 
-/* void ModuleGameObject::cleanUp()
-{
-	for(int i = (int)gameObjects.size() - 1; i >= 0; --i)
-	{
-		GameObject*& gameObject = gameObjects[i].first;
-
-		gameObject->cleanUp();
-
-		if(gameObject->getType() == GameObjectType::STATIC)
-			getGameEngine()->getModuleTexture()->unload(gameObjects[i].second);
-		else
-			getGameEngine()->getModuleAnimation()->unload(gameObjects[i].second);
-
-		delete gameObject; gameObject = nullptr;
-	}
-
-	gameObjects.clear();
-
-	for(list<GameObject*>::reverse_iterator it = usedGameObjects.rbegin(); it != usedGameObjects.rend(); ++it)
-	{
-		(*it)->cleanUp();
-
-		delete *it; *it = nullptr;
-	}
-
-	usedGameObjects.clear();
-} */
-
 Car* ModuleGameObject::getCar(uint idGameObject) const
 {
+	assert(getGameEngine());
+	assert(gameObjects.size() > idGameObject);
+	assert(getGameEngine()->getModuleAnimation());
+
 	const Car* baseCar = (Car*)gameObjects[idGameObject].first;
+
+	assert(baseCar);
+	assert(baseCar->getBox());
 
 	const AnimationContainer* baseAnimationContainer = baseCar->getAnimationContainer();
 
+	assert(baseAnimationContainer);
+
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getId());
 
-	Car* car = new Car(/* baseCar->getId(), */ animationContainer);
+	Car* car = new Car(animationContainer);
 	car->setBox(*baseCar->getBox());
 
 	return car;
@@ -172,13 +145,22 @@ Car* ModuleGameObject::getCar(uint idGameObject) const
 
 Player* ModuleGameObject::getPlayer(uint idGameObject) const
 {
+	assert(getGameEngine());
+	assert(gameObjects.size() > idGameObject);
+	assert(getGameEngine()->getModuleAnimation());
+
 	const Player* basePlayer = (Player*)gameObjects[idGameObject].first;
+
+	assert(basePlayer);
+	assert(basePlayer->getBox());
 
 	const AnimationContainer* baseAnimationContainer = basePlayer->getAnimationContainer();
 
+	assert(baseAnimationContainer);
+
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getId());
 
-	Player* player = new Player(/* basePlayer->getId(), */ animationContainer, basePlayer->getModuleInput());
+	Player* player = new Player(animationContainer, basePlayer->getModuleInput());
 	player->setBox(*basePlayer->getBox());
 
 	return player;
@@ -186,18 +168,29 @@ Player* ModuleGameObject::getPlayer(uint idGameObject) const
 
 Static* ModuleGameObject::getStatic(uint idGameObject) const
 {
+	assert(gameObjects.size() > idGameObject);
+
 	return new Static(*(Static*)gameObjects[idGameObject].first);
 }
 
 Animated* ModuleGameObject::getAnimated(uint idGameObject) const
 {
+	assert(getGameEngine());
+	assert(gameObjects.size() > idGameObject);
+	assert(getGameEngine()->getModuleAnimation());
+
 	const Animated* baseAnimated = (Animated*)gameObjects[idGameObject].first;
+
+	assert(baseAnimated);
+	assert(baseAnimated->getBox());
 
 	const AnimationContainer* baseAnimationContainer = baseAnimated->getAnimationContainer();
 
+	assert(baseAnimationContainer);
+
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getId());
 
-	Animated* animated = new Animated(/* baseAnimated->getId(), */ animationContainer);
+	Animated* animated = new Animated(animationContainer);
 	animated->setBox(*baseAnimated->getBox());
 
 	return animated;
@@ -226,9 +219,11 @@ GameObject* ModuleGameObject::createGameObject(const Value& gameObjectJson, uint
 
 Car* ModuleGameObject::createCar(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
 {
-	// gameObjectId, animationGroupPath, animationContainerId
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAnimation());
 
-	uint gameObjectId = gameObjects.size();
+	// animationGroupPath, animationContainerId
+
 	const char* animationGroupPath = gameObjectJson["animationGroupPath"].GetString();
 	uint animationContainerId = gameObjectJson["animationContainerId"].GetInt();
 	const Value& colliderJson = gameObjectJson["collider"];
@@ -240,7 +235,7 @@ Car* ModuleGameObject::createCar(const rapidjson::Value& gameObjectJson, uint &r
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
-	Car* car = new Car(/* gameObjectId, */ animationContainer);
+	Car* car = new Car(animationContainer);
 	car->defineBox(mW, d);
 
 	return car;
@@ -248,9 +243,11 @@ Car* ModuleGameObject::createCar(const rapidjson::Value& gameObjectJson, uint &r
 
 Player* ModuleGameObject::createPlayer(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
 {
-	// gameObjectId, animationGroupPath, animationContainerId
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAnimation());
 
-	uint gameObjectId = gameObjects.size();
+	// animationGroupPath, animationContainerId
+
 	const char* animationGroupPath = gameObjectJson["animationGroupPath"].GetString();
 	uint animationContainerId = gameObjectJson["animationContainerId"].GetInt();
 	const Value& colliderJson = gameObjectJson["collider"];
@@ -262,7 +259,7 @@ Player* ModuleGameObject::createPlayer(const rapidjson::Value& gameObjectJson, u
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
-	Player* player = new Player(/* gameObjectId, */ animationContainer, getGameEngine()->getModuleInput());
+	Player* player = new Player(animationContainer, getGameEngine()->getModuleInput());
 	player->defineBox(mW, d);
 
 	return player;
@@ -270,9 +267,11 @@ Player* ModuleGameObject::createPlayer(const rapidjson::Value& gameObjectJson, u
 
 Static* ModuleGameObject::createStatic(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
 {
-	// gameObjectId, textureGroupPath, textureId
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleTexture());
 
-	uint gameObjectId = gameObjects.size();
+	// textureGroupPath, textureId
+
 	const char* textureGroupPath = gameObjectJson["textureGroupPath"].GetString();
 	uint textureId = gameObjectJson["textureId"].GetInt();
 	const Value& colliderJson = gameObjectJson["collider"];
@@ -284,7 +283,7 @@ Static* ModuleGameObject::createStatic(const rapidjson::Value& gameObjectJson, u
 
 	const Texture* texture = getGameEngine()->getModuleTexture()->get(resourceGroupId, textureId);
 
-	Static* static_ = new Static(/* gameObjectId, */ texture);
+	Static* static_ = new Static(texture);
 	static_->defineBox(mW, d);
 
 	return static_;
@@ -292,9 +291,11 @@ Static* ModuleGameObject::createStatic(const rapidjson::Value& gameObjectJson, u
 
 Animated* ModuleGameObject::createAnimated(const rapidjson::Value& gameObjectJson, uint &resourceGroupId) const
 {
-	// gameObjectId, animationGroupPath, animationContainerId
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAnimation());
 
-	uint gameObjectId = gameObjects.size();
+	// animationGroupPath, animationContainerId
+
 	const char* animationGroupPath = gameObjectJson["animationGroupPath"].GetString();
 	uint animationContainerId = gameObjectJson["animationContainerId"].GetInt();
 	const Value& colliderJson = gameObjectJson["collider"];
@@ -306,7 +307,7 @@ Animated* ModuleGameObject::createAnimated(const rapidjson::Value& gameObjectJso
 
 	AnimationContainer* animationContainer = getGameEngine()->getModuleAnimation()->getAnimationContainer(resourceGroupId, animationContainerId);
 
-	Animated* animated = new Animated(/* gameObjectId, */ animationContainer);
+	Animated* animated = new Animated(animationContainer);
 	animated->defineBox(mW, d);
 
 	return animated;

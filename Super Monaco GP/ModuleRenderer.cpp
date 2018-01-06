@@ -1,11 +1,10 @@
 #include "ModuleRenderer.h"
 
+#include <assert.h>
 #include "Globals.h"
 #include "GameEngine.h"
 #include "ModuleWindow.h"
 #include <SDL2_gfxPrimitives.h>
-
-using namespace std;
 
 ModuleRenderer::ModuleRenderer(GameEngine* gameEngine) :
 	Module(gameEngine)
@@ -24,16 +23,20 @@ SDL_Renderer* ModuleRenderer::getRenderer() const
 void ModuleRenderer::setLayer(uint id) const
 {
 	for(Layer* layer : layers)
+	{
+		assert(layer);
+
 		if(layer->id == id)
 		{
 			SDL_SetRenderTarget(renderer, layer->t);
 			break;
 		}
+	}
 }
 
 uint ModuleRenderer::addLayer(const SDL_Rect* textureRect, const SDL_Rect* viewport)
 {
-	uint id = layers.size();
+	uint id = (uint)layers.size();
 	SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	layers.push_back(new Layer{ id, texture, textureRect, viewport });
@@ -44,19 +47,23 @@ uint ModuleRenderer::addLayer(const SDL_Rect* textureRect, const SDL_Rect* viewp
 void ModuleRenderer::removeLayer(uint id)
 {
 	for(Layer* layer : layers)
+	{
+		assert(layer);
+
 		if(layer->id == id)
 		{
-			SDL_DestroyTexture(layer->t);
-			layer->t = nullptr;
+			SDL_DestroyTexture(layer->t); layer->t = nullptr;
 
 			layer->v = nullptr;
 			layer->tr = nullptr;
 
 			layers.remove(layer);
+
 			delete layer; layer = nullptr;
 
 			break;
 		}
+	}
 }
 
 void ModuleRenderer::setColorAtTop(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
@@ -71,6 +78,8 @@ void ModuleRenderer::setColorAtTop(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 
 void ModuleRenderer::renderRect(const SDL_Rect* dstRect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled) const
 {
+	assert(dstRect);
+
 	if(filled) boxRGBA(renderer, dstRect->x, dstRect->y, dstRect->x + dstRect->w, dstRect->y + dstRect->h, r, g, b, a);
 	else rectangleRGBA(renderer, dstRect->x, dstRect->y, dstRect->x + dstRect->w, dstRect->y + dstRect->h, r, g, b, a);
 }
@@ -89,20 +98,16 @@ void ModuleRenderer::renderTrapezoid(const WindowTrapezoid& windowTrapezoid, uin
 	short positionsX[4]{ windowTrapezoid.nl.x, windowTrapezoid.nr.x, windowTrapezoid.fr.x, windowTrapezoid.fl.x };
 	short positionsY[4]{ windowTrapezoid.nl.y, windowTrapezoid.nr.y, windowTrapezoid.fr.y, windowTrapezoid.fl.y };
 
-	// O.o ReportMemoryLeaks() o.O
-
 	if(filled) filledPolygonColor(renderer, positionsX, positionsY, 4, color);
 	else polygonColor(renderer, positionsX, positionsY, 4, color);
 }
 
 bool ModuleRenderer::setUp()
 {
-	renderer = SDL_CreateRenderer(getGameEngine()->getModuleWindow()->getWindow(), -1, SDL_RENDERER_PRESENTVSYNC);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleWindow());
 
-	if(!renderer)
-	{
-		return false;
-	}
+	renderer = SDL_CreateRenderer(getGameEngine()->getModuleWindow()->getWindow(), -1, SDL_RENDERER_PRESENTVSYNC);
 
 	return true;
 }
@@ -114,6 +119,8 @@ bool ModuleRenderer::preUpdate(float deltaTimeS)
 
 	for(Layer* layer : layers)
 	{
+		assert(layer);
+
 		SDL_SetRenderTarget(renderer, layer->t);
 		SDL_RenderClear(renderer);
 	}
@@ -130,7 +137,11 @@ bool ModuleRenderer::postUpdate(float deltaTimeS)
 	SDL_SetRenderTarget(renderer, nullptr);
 
 	for(Layer* layer : layers)
+	{
+		assert(layer);
+
 		SDL_RenderCopy(renderer, layer->t, layer->tr, layer->v);
+	}
 
 	if(renderColorAtTop)
 		renderRect(&windowRect, colorAtTopR, colorAtTopG, colorAtTopB, colorAtTopA);
@@ -144,8 +155,7 @@ void ModuleRenderer::cleanUp()
 {
 	if(renderer)
 	{
-		SDL_DestroyRenderer(renderer);
-		renderer = nullptr;
+		SDL_DestroyRenderer(renderer); renderer = nullptr;
 	}
 
 	layers.clear();

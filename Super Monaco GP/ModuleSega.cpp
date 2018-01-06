@@ -1,7 +1,8 @@
 #include "ModuleSega.h"
 
+#include <assert.h>
+#include "Globals.h"
 #include "Animation.h"
-#include "GameEngine.h"
 #include "ModuleInput.h"
 #include "ModuleSegaUI.h"
 #include "ModuleSwitch.h"
@@ -21,6 +22,9 @@ ModuleSega::~ModuleSega()
 
 bool ModuleSega::setUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAnimation());
+
 	logoAnimationGroupId = getGameEngine()->getModuleAnimation()->load("Resources/Configurations/Animations/Sega.json");
 
 	logoAnimation = getGameEngine()->getModuleAnimation()->getAnimation(logoAnimationGroupId, 0);
@@ -44,6 +48,9 @@ bool ModuleSega::update(float deltaTimeS)
 
 void ModuleSega::cleanUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAnimation());
+
 	getGameEngine()->getModuleAnimation()->unload(logoAnimationGroupId);
 
 	logoAnimation = nullptr;
@@ -51,20 +58,33 @@ void ModuleSega::cleanUp()
 
 void ModuleSega::updateLogo(float deltaTimeS) const
 {
+	assert(logoAnimation);
+
 	logoAnimation->update(deltaTimeS);
 }
 
 void ModuleSega::checkGoStart() const
 {
+	assert(logoAnimation);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleInput());
+	assert(getGameEngine()->getModuleSwitch());
+
 	if(logoAnimation->hasEnded() || getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
 		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::START);
 }
 
 void ModuleSega::render() const
 {
+	assert(logoAnimation);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
+
 	getGameEngine()->getModuleRenderer()->renderRect(&baseAllRect, 0, 0, 0);
 
 	const Texture* logoT = logoAnimation->getCurrentFrame();
+
+	assert(logoT);
 
 	getGameEngine()->getModuleRenderer()->renderTexture(logoT->t, logoT->r, &logoRect, logoT->hFlipped);
 }

@@ -17,6 +17,8 @@ ModuleFont::~ModuleFont()
 
 void ModuleFont::renderText(const std::string& text, const WindowPosition& position, HAlignment hAlignment, VAlignment vAlignment, float scaleW, float scaleH, Uint8 modR, Uint8 modG, Uint8 modB, Uint8 modA) const
 {
+	assert(getGameEngine());
+
 	vector<const Texture*> characterTextures;
 	getCharacterTextures(text, characterTextures);
 
@@ -34,10 +36,15 @@ void ModuleFont::renderText(const std::string& text, const WindowPosition& posit
 
 	ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
 
+	assert(moduleRenderer);
+
 	SDL_Rect dstRect{ (int)(position.x - offsetX), (int)(position.y - offsetY) };
 
 	for(const Texture* characterTexture : characterTextures)
 	{
+		assert(characterTexture);
+		assert(characterTexture->r);
+
 		dstRect.w = (int)(scaleW * characterTexture->r->w);
 		dstRect.h = (int)(scaleH * characterTexture->r->h);
 
@@ -49,12 +56,17 @@ void ModuleFont::renderText(const std::string& text, const WindowPosition& posit
 
 bool ModuleFont::setUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleJson());
+
 	const char* jsonPath = "Resources/Configurations/Fonts/Font.json";
 
 	Document jsonDocument;
 	getGameEngine()->getModuleJson()->read(jsonPath, jsonDocument);
 
 	ModuleTexture* moduleTexture = getGameEngine()->getModuleTexture();
+
+	assert(moduleTexture);
 
 	const char* textureGroupPath = jsonDocument["textureGroupPath"].GetString();
 
@@ -79,6 +91,9 @@ bool ModuleFont::setUp()
 
 void ModuleFont::cleanUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleTexture());
+
 	getGameEngine()->getModuleTexture()->unload(textureGroupId);
 
 	characters.clear();
@@ -89,11 +104,13 @@ void ModuleFont::getTextWidthHeight(const vector<const Texture*>& characterTextu
 	width = height = 0.0f;
 
 	for(const Texture* characterTexture : characterTextures)
-		if(characterTexture)
-		{
-			width += characterTexture->r->w;
-			height = fmaxf(height, (float)characterTexture->r->h);
-		}
+	{
+		assert(characterTexture);
+		assert(characterTexture->r);
+
+		width += characterTexture->r->w;
+		height = fmaxf(height, (float)characterTexture->r->h);
+	}
 
 	width *= scaleW;
 	height *= scaleH;

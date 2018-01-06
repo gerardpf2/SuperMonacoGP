@@ -31,7 +31,11 @@ class Module
 
 	private:
 
-		GameEngine* gameEngine = nullptr;
+		GameEngine* gameEngine = nullptr; // Constructor
+
+		// There is no standard behaviour if blocked
+		// Generally it means that the module ignores the update part but it keeps rendering stuff
+		// Specific game modules use this feature
 
 		bool blocked = false;
 };

@@ -35,6 +35,8 @@ class ModuleSega : public Module
 
 		Animation* logoAnimation = nullptr;
 
+		// UI
+
 		SDL_Rect baseAllRect, logoRect;
 };
 

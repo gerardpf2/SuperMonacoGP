@@ -39,6 +39,8 @@ class ModuleAbout : public Module
 
 		Animation* carAnimation = nullptr;
 
+		// UI
+
 		SDL_Rect baseAllRect, carRect;
 
 		WindowPosition aboutPosition;
