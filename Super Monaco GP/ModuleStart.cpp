@@ -1,18 +1,39 @@
 #include "ModuleStart.h"
 
 #include "Utils.h"
-#include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModuleSwitch.h"
 #include "ModuleTexture.h"
+#include "ModuleStartUI.h"
 #include "ModuleRenderer.h"
 #include "ModuleRegistry.h"
-#include "ModuleFreePractice.h"
-#include "ModuleSuperMonacoGP.h"
 
 using namespace std;
+
+struct CarStart
+{
+	// Simple structure that helps managing the cars that appear in this menu
+
+	int y;
+	float x, v;
+	const Texture* t;
+
+	CarStart(const Texture* t) :
+		t(t)
+	{ }
+
+	bool isOut()
+	{
+		return x + CAR_START_W <= CAR_MIN_X;
+	}
+
+	void update(float deltaTimeS)
+	{
+		x -= v * deltaTimeS;
+	}
+};
 
 ModuleStart::ModuleStart(GameEngine* gameEngine) :
 	Module(gameEngine)
@@ -38,7 +59,11 @@ ModuleStart::~ModuleStart()
 
 bool ModuleStart::setUp()
 {
+	assert(getGameEngine());
+
 	ModuleTexture* moduleTexture = getGameEngine()->getModuleTexture();
+
+	assert(moduleTexture);
 
 	textureGroupId = moduleTexture->load("Resources/Configurations/Textures/Start.json");
 
@@ -59,6 +84,9 @@ bool ModuleStart::setUp()
 
 	carIndex = rand() % cars.size();
 
+	assert(getGameEngine()->getModuleAudio());
+	assert(getGameEngine()->getModuleRegistry());
+
 	getGameEngine()->getModuleRegistry()->setCurrentCourseId(0);
 
 	audioGroupId = getGameEngine()->getModuleAudio()->load("Resources/Configurations/Audios/Start.json");
@@ -72,21 +100,15 @@ bool ModuleStart::update(float deltaTimeS)
 {
 	if(!getBlocked())
 	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleInput());
+
 		if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN) return false;
 
 		updateCars(deltaTimeS);
-		// renderBase();
 
-		if(!enterPressed)
-		{
-			updateEnterNoPressed(deltaTimeS);
-			// renderEnterNoPressed();
-		}
-		else
-		{
-			updateEnterPressed(deltaTimeS);
-			// renderEnterPressed();
-		}
+		if(!enterPressed) updateEnterNoPressed(deltaTimeS);
+		else updateEnterPressed(deltaTimeS);
 	}
 
 	render();
@@ -96,6 +118,10 @@ bool ModuleStart::update(float deltaTimeS)
 
 void ModuleStart::cleanUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAudio());
+	assert(getGameEngine()->getModuleTexture());
+
 	getGameEngine()->getModuleAudio()->unload(audioGroupId);
 
 	getGameEngine()->getModuleTexture()->unload(textureGroupId);
@@ -129,7 +155,12 @@ void ModuleStart::updateCars(float deltaTimeS)
 
 	while(usedCars.size() < n)
 	{
+		assert(!cars.empty());
+
 		CarStart* car = cars[carIndex++ % cars.size()];
+
+		assert(car);
+
 		list<CarStart*>::iterator it = usedCars.begin();
 
 		car->x = CAR_START_MAX_X;
@@ -141,11 +172,13 @@ void ModuleStart::updateCars(float deltaTimeS)
 		}
 		else
 		{
+			assert(*it);
+
 			car->y = ((*it)->y == CAR_START_MIN_Y) ? CAR_START_MAX_Y : CAR_START_MIN_Y;
 			car->v = CAR_START_MIN_V;
 		}
 
-		while(it != usedCars.end() && (*it)->y <= car->y) ++it;
+		while(it != usedCars.end() && *it && (*it)->y <= car->y) ++it;
 
 		usedCars.insert(it, car);
 	}
@@ -154,10 +187,11 @@ void ModuleStart::updateCars(float deltaTimeS)
 	{
 		CarStart* car = *it;
 
+		assert(car);
+
 		car->update(deltaTimeS);
 
-		if(car->isOut())
-			it = usedCars.erase(it);
+		if(car->isOut()) it = usedCars.erase(it);
 
 		if(it != usedCars.end()) ++it;
 	}
@@ -176,12 +210,17 @@ void ModuleStart::updateEnterPressed(float deltaTimeS)
 
 void ModuleStart::updateEnterNoPressed(float deltaTimeS)
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleInput());
+
 	// Update press enter
 
 	pressEnterCounter = mod0L(pressEnterCounter + deltaTimeS, 1.0f);
 
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
 	{
+		assert(getGameEngine()->getModuleAudio());
+
 		enterPressed = true;
 
 		getGameEngine()->getModuleAudio()->playMusic(audioGroupId, 1);
@@ -190,24 +229,26 @@ void ModuleStart::updateEnterNoPressed(float deltaTimeS)
 
 void ModuleStart::checkSelectOption() const
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleInput());
+
 	// Selection has been done
 
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
 	{
+		assert(getGameEngine()->getModuleSwitch());
+
 		switch(selectedOption)
 		{
 			case 0: // SUPER MONACO GP
-				// getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
 				getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::SUPER_MONACO_GP);
 
 				break;
 			case 1: // COURSE_SELECT, FREE PRACTICE
-				// getGameEngine()->setGameModule(GameModule::COURSE_SELECT);
 				getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::COURSE_SELECT);
 
 				break;
 			case 2: // ABOUT
-				// getGameEngine()->setGameModule(GameModule::ABOUT);
 				getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::ABOUT);
 
 				break;
@@ -217,6 +258,10 @@ void ModuleStart::checkSelectOption() const
 
 void ModuleStart::checkChangeOption()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleInput());
+	assert(getGameEngine()->getModuleAudio());
+
 	// Update selected option
 
 	int tmpSelectedOption = selectedOption;
@@ -232,14 +277,17 @@ void ModuleStart::render() const
 {
 	renderBase();
 
-	if(!enterPressed)
-		renderEnterNoPressed();
-	else
-		renderEnterPressed();
+	if(!enterPressed) renderEnterNoPressed();
+	else renderEnterPressed();
 }
 
 void ModuleStart::renderBase() const
 {
+	assert(back);
+	assert(front);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
+
 	// Render back, cars and front
 
 	getGameEngine()->getModuleRenderer()->renderTexture(back->t, back->r, &backRect, back->hFlipped);
@@ -251,15 +299,30 @@ void ModuleStart::renderBase() const
 
 void ModuleStart::renderCars() const
 {
+	assert(getGameEngine());
+
+	ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
+
+	assert(moduleRenderer);
+
 	for(CarStart* car : usedCars)
 	{
+		assert(car);
+		assert(car->t);
+
 		SDL_Rect rect{ (int)car->x, car->y, CAR_START_W, CAR_START_H };
-		getGameEngine()->getModuleRenderer()->renderTexture(car->t->t, car->t->r, &rect, car->t->hFlipped);
+		moduleRenderer->renderTexture(car->t->t, car->t->r, &rect, car->t->hFlipped);
 	}
 }
 
 void ModuleStart::renderEnterPressed() const
 {
+	assert(arrow);
+	assert(options);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleFont());
+	assert(getGameEngine()->getModuleRenderer());
+
 	// Render optionsBox, options and arrow
 
 	getGameEngine()->getModuleRenderer()->renderTexture(options->t, options->r, &optionsRect, options->hFlipped);
@@ -274,6 +337,11 @@ void ModuleStart::renderEnterPressed() const
 
 void ModuleStart::renderEnterNoPressed() const
 {
+	assert(logo);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleFont());
+	assert(getGameEngine()->getModuleRenderer());
+
 	// Render logo and press enter
 
 	getGameEngine()->getModuleRenderer()->renderTexture(logo->t, logo->r, &logoRect, logo->hFlipped);

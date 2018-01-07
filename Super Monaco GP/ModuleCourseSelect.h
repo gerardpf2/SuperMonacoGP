@@ -5,7 +5,6 @@
 #include "Types.h"
 #include "Module.h"
 #include <SDL_rect.h>
-#include "ModuleCourseSelectUI.h"
 
 class Animation;
 
@@ -67,9 +66,13 @@ class ModuleCourseSelect : public Module
 
 		Animation* changeCourseAnimation = nullptr;
 
-		SDL_Rect baseRect, courseRect, backgroundRect;
-
 		float backgroundOffsetX = 0.0f;
+
+		std::string currentBestLapTimeStr;
+
+		// UI
+
+		SDL_Rect baseRect, courseRect, backgroundRect;
 
 		std::vector<SDL_Rect> changeCourseAnimationRects;
 
@@ -80,8 +83,6 @@ class ModuleCourseSelect : public Module
 		WindowPosition courseLengthPosition, courseLengthValuePosition;
 		
 		WindowPosition courseBestLapTimePosition, courseBestLapTimeValuePosition;
-
-		std::string currentBestLapTimeStr;
 };
 
 #endif

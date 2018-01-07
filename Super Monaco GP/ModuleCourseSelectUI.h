@@ -1,8 +1,6 @@
 #ifndef _MODULE_COURSE_SELECT_UI_
 #define _MODULE_COURSE_SELECT_UI_
 
-#include "Globals.h"
-
 #define BASE_RECT_X 0
 #define BASE_RECT_Y 0
 #define BASE_RECT_W WINDOW_WIDTH

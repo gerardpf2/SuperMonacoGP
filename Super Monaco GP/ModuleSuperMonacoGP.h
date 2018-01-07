@@ -48,11 +48,13 @@ class ModuleSuperMonacoGP : public ModuleWorld
 
 		float waitTimeGoResults = 0.0f;
 
+		// UI
+
 		WindowPosition lapTimesPosition;
 
 		WindowPosition positionPosition, positionValuePosition;
 
-		WindowPosition currentLapPosition; // , currentLapValuePosition;
+		WindowPosition currentLapPosition;
 };
 
 #endif

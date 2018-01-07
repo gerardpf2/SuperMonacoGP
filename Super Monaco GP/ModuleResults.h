@@ -60,25 +60,27 @@ class ModuleResults : public Module
 
 		Animation* baseAnimation = nullptr;
 
-		SDL_Rect baseAllRect, baseRect, grid0Rect, grid1Rect;
-
-		WindowPosition resultsPosition;
-
 		std::vector<std::pair<bool, float>> results;
 
 		std::vector<std::pair<bool, std::string>> resultsStr;
-
-		WindowPosition rank0TextPosition, rank1TextPosition;
-
-		WindowPosition time0TextPosition, time1TextPosition;
-
-		std::vector<std::pair<WindowPosition, WindowPosition>> resultsValuesPositions;
 
 		CarResult* carResult = nullptr;
 
 		bool carInUse = true;
 
 		float waitNextCarCounter = 0.0f;
+
+		// UI
+
+		SDL_Rect baseAllRect, baseRect, grid0Rect, grid1Rect;
+
+		WindowPosition resultsPosition;
+
+		WindowPosition rank0TextPosition, rank1TextPosition;
+
+		WindowPosition time0TextPosition, time1TextPosition;
+
+		std::vector<std::pair<WindowPosition, WindowPosition>> resultsValuesPositions;
 };
 
 #endif

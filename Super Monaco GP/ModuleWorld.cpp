@@ -7,17 +7,15 @@
 #include "Minimap.h"
 #include "Animation.h"
 #include "Background.h"
-#include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
-#include "ModuleStart.h"
 #include "ModuleSwitch.h"
 #include "CameraFollow.h"
 #include "ModuleTexture.h"
+#include "ModuleWorldUI.h"
 #include "ModuleRenderer.h"
 #include "ModuleRegistry.h"
-#include "ModuleCollision.h"
 #include "ModuleAnimation.h"
 #include "ModuleGameObject.h"
 
@@ -83,6 +81,12 @@ const Camera* ModuleWorld::getCameraMirror() const
 
 bool ModuleWorld::setUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAudio());
+	assert(getGameEngine()->getModuleTexture());
+	assert(getGameEngine()->getModuleRenderer());
+	assert(getGameEngine()->getModuleAnimation());
+
 	addRoad();
 
 	addMinimap();
@@ -112,13 +116,22 @@ bool ModuleWorld::setUp()
 	// Once the module is not blocked any more, that scene is correctly rendered
 	// By doing the previous steps it is possible for the player to see all being correctly rendered while the module is still blocked
 
+	assert(camera);
+	assert(cameraMirror);
+
 	camera->update(0.0f);
 	cameraMirror->update(0.0f);
+
+	assert(road);
 
 	road->render(camera, getGameEngine()->getModuleRenderer());
 
 	for(GameObject* gameObject : gameObjects)
+	{
+		assert(gameObject);
+
 		gameObject->update(0.0f);
+	}
 
 	return true;
 }
@@ -142,6 +155,10 @@ bool ModuleWorld::update(float deltaTimeS)
 
 void ModuleWorld::cleanUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAudio());
+	assert(getGameEngine()->getModuleAnimation());
+
 	getGameEngine()->getModuleAudio()->unload(audioGroupId);
 
 	getGameEngine()->getModuleAnimation()->unload(lightIdAnimationGroup);
@@ -165,8 +182,13 @@ void ModuleWorld::cleanUp()
 
 void ModuleWorld::registerLapTime(const Car* car)
 {
+	assert(car);
+
 	if(car->getType() == GameObjectType::PLAYER)
 	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleAudio());
+
 		currentLapTimeNotificate = true;
 		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 3, 1.0f, 4);
 	}
@@ -176,6 +198,9 @@ void ModuleWorld::playFxOutRoad()
 {
 	if(!outRoadFxPlayed)
 	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleAudio());
+
 		outRoadFxPlayed = true;
 		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 2);
 	}
@@ -183,20 +208,14 @@ void ModuleWorld::playFxOutRoad()
 
 void ModuleWorld::playFxCollision() const
 {
-	getGameEngine()->getModuleAudio()->playFx(audioGroupId, 4);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAudio());
 
-	/* if(!collisionFxPlayed)
-	{
-		collisionFxPlayed = true;
-		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 4);
-	} */
+	getGameEngine()->getModuleAudio()->playFx(audioGroupId, 4);
 }
 
 void ModuleWorld::addPlayer()
 {
-	// float z = 2700.0f;
-	// player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, z });
-
 	player = (Player*)addGameObject(0, WorldPosition{ 0.0f, 0.0f, -SEGMENT_LENGTH });
 }
 
@@ -205,31 +224,43 @@ void ModuleWorld::addCars()
 
 void ModuleWorld::renderUI() const
 {
+	assert(kmhT);
+	assert(player);
+	assert(lightAnimation);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRegistry());
+	
+	ModuleFont* moduleFont = getGameEngine()->getModuleFont();
+	ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
+
+	assert(moduleFont);
+	assert(moduleRenderer);
+
 	// Mirror border
 
-	getGameEngine()->getModuleRenderer()->renderTrapezoid(mirrorBorderTrapezoidTop, 0xFF202020);
-	getGameEngine()->getModuleRenderer()->renderTrapezoid(mirrorBorderTrapezoidLeft, 0xFF202020);
-	getGameEngine()->getModuleRenderer()->renderTrapezoid(mirrorBorderTrapezoidRight, 0xFF606060);
-	getGameEngine()->getModuleRenderer()->renderTrapezoid(mirrorBorderTrapezoidBottom, 0xFF606060);
+	moduleRenderer->renderTrapezoid(mirrorBorderTrapezoidTop, 0xFF202020);
+	moduleRenderer->renderTrapezoid(mirrorBorderTrapezoidLeft, 0xFF202020);
+	moduleRenderer->renderTrapezoid(mirrorBorderTrapezoidRight, 0xFF606060);
+	moduleRenderer->renderTrapezoid(mirrorBorderTrapezoidBottom, 0xFF606060);
 
 	// Best lap
 
-	getGameEngine()->getModuleFont()->renderText("BEST LAP", bestLapPosition, HAlignment::LEFT, VAlignment::BOTTOM, BEST_LAP_POSITION_SCALE, BEST_LAP_POSITION_SCALE, 224, 160, 0);
+	moduleFont->renderText("BEST LAP", bestLapPosition, HAlignment::LEFT, VAlignment::BOTTOM, BEST_LAP_POSITION_SCALE, BEST_LAP_POSITION_SCALE, 224, 160, 0);
 	
 	string bestLapTimeStr; time(getGameEngine()->getModuleRegistry()->getPlayerBestLapTime(), bestLapTimeStr);
-	getGameEngine()->getModuleFont()->renderText(bestLapTimeStr, bestLapValuePosition, HAlignment::LEFT, VAlignment::BOTTOM, BEST_LAP_VALUE_POSITION_SCALE, BEST_LAP_VALUE_POSITION_SCALE, 248, 252, 248);
+	moduleFont->renderText(bestLapTimeStr, bestLapValuePosition, HAlignment::LEFT, VAlignment::BOTTOM, BEST_LAP_VALUE_POSITION_SCALE, BEST_LAP_VALUE_POSITION_SCALE, 248, 252, 248);
 
 	// Current velocity
 
-	getGameEngine()->getModuleFont()->renderText(to_string(kmh(player->getVelocity())), currentVelocityPosition, HAlignment::RIGHT, VAlignment::TOP, CURRENT_VELOCITY_POSITION_SCALE, CURRENT_VELOCITY_POSITION_SCALE, 224, 160, 0);
-	getGameEngine()->getModuleRenderer()->renderTexture(kmhT->t, kmhT->r, &kmhRect, kmhT->hFlipped);
+	moduleFont->renderText(to_string(kmh(player->getVelocity())), currentVelocityPosition, HAlignment::RIGHT, VAlignment::TOP, CURRENT_VELOCITY_POSITION_SCALE, CURRENT_VELOCITY_POSITION_SCALE, 224, 160, 0);
+	moduleRenderer->renderTexture(kmhT->t, kmhT->r, &kmhRect, kmhT->hFlipped);
 
 	// Current lap time
 
 	if(renderCurrentLapTime)
 	{
 		string currentLapTimeStr; time(player->getCurrentLapTime(), currentLapTimeStr);
-		getGameEngine()->getModuleFont()->renderText(currentLapTimeStr, currentLapTimePosition, HAlignment::CENTER, VAlignment::BOTTOM, CURRENT_LAP_TIME_POSITION_SCALE, CURRENT_LAP_TIME_POSITION_SCALE, 224, 160, 0);
+		moduleFont->renderText(currentLapTimeStr, currentLapTimePosition, HAlignment::CENTER, VAlignment::BOTTOM, CURRENT_LAP_TIME_POSITION_SCALE, CURRENT_LAP_TIME_POSITION_SCALE, 224, 160, 0);
 	}
 
 	// Current lap time notification
@@ -238,10 +269,10 @@ void ModuleWorld::renderUI() const
 	{
 		if(roundf(currentLapTimeNotificationCounter) == (int)currentLapTimeNotificationCounter)
 		{
-			getGameEngine()->getModuleFont()->renderText("LAP TIME", currentLapTimeNotificationPosition, HAlignment::RIGHT, VAlignment::CENTER, CURRENT_LAP_TIME_NOTIFICATION_POSITION_SCALE, CURRENT_LAP_TIME_NOTIFICATION_POSITION_SCALE, 248, 252, 248);
+			moduleFont->renderText("LAP TIME", currentLapTimeNotificationPosition, HAlignment::RIGHT, VAlignment::CENTER, CURRENT_LAP_TIME_NOTIFICATION_POSITION_SCALE, CURRENT_LAP_TIME_NOTIFICATION_POSITION_SCALE, 248, 252, 248);
 
 			string currentLapTimeStoredStr; time(player->getCurrentLapTimeStored(), currentLapTimeStoredStr);
-			getGameEngine()->getModuleFont()->renderText(currentLapTimeStoredStr, currentLapTimeNotificationValuePosition, HAlignment::LEFT, VAlignment::CENTER, CURRENT_LAP_TIME_NOTIFICATION_VALUE_POSITION_SCALE, CURRENT_LAP_TIME_NOTIFICATION_VALUE_POSITION_SCALE, 224, 160, 0);
+			moduleFont->renderText(currentLapTimeStoredStr, currentLapTimeNotificationValuePosition, HAlignment::LEFT, VAlignment::CENTER, CURRENT_LAP_TIME_NOTIFICATION_VALUE_POSITION_SCALE, CURRENT_LAP_TIME_NOTIFICATION_VALUE_POSITION_SCALE, 224, 160, 0);
 		}
 	}
 
@@ -250,7 +281,10 @@ void ModuleWorld::renderUI() const
 	if(!lightAnimation->hasEnded())
 	{
 		const Texture* lightT = lightAnimation->getCurrentFrame();
-		getGameEngine()->getModuleRenderer()->renderTexture(lightT->t, lightT->r, &lightRect, lightT->hFlipped);
+
+		assert(lightT);
+
+		moduleRenderer->renderTexture(lightT->t, lightT->r, &lightRect, lightT->hFlipped);
 	}
 
 	// Pause
@@ -258,37 +292,51 @@ void ModuleWorld::renderUI() const
 	if(paused)
 	{
 		if(pauseCounter <= 0.5f)
-			getGameEngine()->getModuleFont()->renderText("P A U S E", pausePosition, HAlignment::CENTER, VAlignment::CENTER, PAUSE_POSITION_SCALE, PAUSE_POSITION_SCALE, 224, 160, 0);
+			moduleFont->renderText("P A U S E", pausePosition, HAlignment::CENTER, VAlignment::CENTER, PAUSE_POSITION_SCALE, PAUSE_POSITION_SCALE, 224, 160, 0);
 
-		getGameEngine()->getModuleFont()->renderText("PRESS ESCAPE FOR MENU", goMenuPosition, HAlignment::CENTER, VAlignment::CENTER, GO_MENU_POSITION_SCALE, GO_MENU_POSITION_SCALE, 248, 252, 248);
+		moduleFont->renderText("PRESS ESCAPE FOR MENU", goMenuPosition, HAlignment::CENTER, VAlignment::CENTER, GO_MENU_POSITION_SCALE, GO_MENU_POSITION_SCALE, 248, 252, 248);
 	}
 }
 
 GameObject* ModuleWorld::addGameObject(uint id, const WorldPosition& worldPosition, float xOffsetRoad)
 {
+	assert(road);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleGameObject());
+
 	GameObject* gameObject = getGameEngine()->getModuleGameObject()->getGameObject(id);
 
+	assert(gameObject);
+
 	gameObject->setModuleWorld(this);
-	// gameObject->enableCollider();
 
 	// Adjust game object's position
 
 	WorldPosition wP = worldPosition;
 
 	wP.x += xOffsetRoad * (ROAD_WIDTH / 2.0f);
-	wP.z = road->getSegmentAtZ(wP.z)->getZNear() + SEGMENT_LENGTH / 2.0f;
+
+	Segment* segment = road->getSegmentAtZ(wP.z);
+
+	assert(segment);
+
+	wP.z = segment->getZNear() + SEGMENT_LENGTH / 2.0f;
 
 	gameObject->setPosition(wP);
 	gameObject->elevate();
 
 	gameObjects.push_back(gameObject);
-	road->getSegmentAtZ(gameObject->getPosition()->z)->addGameObject(gameObject);
+
+	segment->addGameObject(gameObject);
 
 	return gameObject;
 }
 
 void ModuleWorld::addRoad()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRegistry());
+
 	const char* roadJsonFile;
 
 	if(getGameEngine()->getModuleRegistry()->getCurrentCourseId() == 0)
@@ -304,13 +352,20 @@ void ModuleWorld::removeRoad()
 {
 	if(road)
 	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleTexture());
+
 		road->unload(getGameEngine()->getModuleTexture());
+		
 		delete road; road = nullptr;
 	}
 }
 
 void ModuleWorld::addMinimap()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRegistry());
+
 	const char* minimapJsonFile;
 
 	if(getGameEngine()->getModuleRegistry()->getCurrentCourseId() == 0)
@@ -326,24 +381,35 @@ void ModuleWorld::removeMinimap()
 {
 	if(minimap)
 	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleTexture());
+
 		minimap->unload(getGameEngine()->getModuleTexture());
+		
 		delete minimap; minimap = nullptr;
 	}
 }
 
 void ModuleWorld::addRoadGameObjects()
 {
-	const vector<RoadGameObjectDefinition*>* gameObjectDefinitions = road->getGameObjectDefinitions();
+	assert(road);
+	assert(road->getGameObjectDefinitions());
 
-	for(uint i = 0; i < (uint)gameObjectDefinitions->size(); ++i)
+	for(RoadGameObjectDefinition* roadGameObjectDefinition : *road->getGameObjectDefinitions())
 	{
-		RoadGameObjectDefinition* gameObjectDefinition = (*gameObjectDefinitions)[i];
-		addGameObject(gameObjectDefinition->id, gameObjectDefinition->wp, gameObjectDefinition->offsetX);
+		assert(roadGameObjectDefinition);
+
+		addGameObject(roadGameObjectDefinition->id, roadGameObjectDefinition->wp, roadGameObjectDefinition->offsetX);
 	}
 }
 
 void ModuleWorld::addAllGameObjects()
 {
+	assert(road);
+	assert(minimap);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleGameObject());
+
 	getGameEngine()->getModuleGameObject()->load();
 
 	gameObjects.reserve(road->getGameObjectsCount() + 1);
@@ -359,9 +425,10 @@ void ModuleWorld::addAllGameObjects()
 	{
 		Car* car = (Car*)gameObjects[i];
 
+		assert(car);
+
 		car->setSpecificId(i);
 		minimap->registerCar(car);
-
 	}
 
 	addRoadGameObjects();
@@ -369,7 +436,8 @@ void ModuleWorld::addAllGameObjects()
 
 void ModuleWorld::removeAllGameObjects()
 {
-	// getGameEngine()->getModuleCollision()->removeColliders();
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleGameObject());
 
 	player = nullptr;
 
@@ -380,8 +448,7 @@ void ModuleWorld::removeAllGameObjects()
 
 void ModuleWorld::addCameras()
 {
-	// camera = new CameraFollow(true, road, gameObjects[5]->getPosition());
-	// cameraMirror = new CameraFollow(false, road, gameObjects[5]->getPosition(), 1.1f, 11.0f, WorldPosition{ 0.0f, 0.0f, -CAMERA_Y });
+	assert(player);
 
 	camera = new CameraFollow(true, road, player->getPosition());
 	cameraMirror = new CameraFollow(false, road, player->getPosition(), 1.1f, 11.0f, WorldPosition{ 0.0f, 0.0f, -CAMERA_Y });
@@ -402,26 +469,47 @@ void ModuleWorld::removeCameras()
 
 void ModuleWorld::addBackgrounds()
 {
+	assert(road);
+	assert(camera);
+	assert(cameraMirror);
+
+	ModuleTexture* moduleTexture = getGameEngine()->getModuleTexture();
+
+	assert(moduleTexture);
+
 	const RoadBackgroundDefinition* roadBackgroundDefinition = road->getRoadBackgroundDefinition();
 
-	background = new Background(getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureSkyId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureGroundId), camera->getProjectionY1());
-	backgroundMirror = new Background(getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureSkyId), getGameEngine()->getModuleTexture()->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureGroundId), cameraMirror->getProjectionY1());
+	background = new Background(moduleTexture->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureId), moduleTexture->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureSkyId), moduleTexture->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureGroundId), camera->getProjectionY1());
+	backgroundMirror = new Background(moduleTexture->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureId), moduleTexture->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureSkyId), moduleTexture->get(roadBackgroundDefinition->textureGroupId, roadBackgroundDefinition->textureGroundId), cameraMirror->getProjectionY1());
 }
 
 void ModuleWorld::removeBackgrounds()
 {
-	delete background; background = nullptr;
-	delete backgroundMirror; backgroundMirror = nullptr;
+	if(background)
+	{
+		delete background; background = nullptr;
+	}
+	
+	if(backgroundMirror)
+	{
+		delete backgroundMirror; backgroundMirror = nullptr;
+	}
 }
 
 void ModuleWorld::addRenderingLayers()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
+
 	layerRoad = getGameEngine()->getModuleRenderer()->addLayer(&textureRectRoad, &viewportRectRoad);
 	layerRoadMirror = getGameEngine()->getModuleRenderer()->addLayer(&textureRectRoadMirror, &viewportRectRoadMirror);
 }
 
 void ModuleWorld::removeRenderingLayers()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
+
 	getGameEngine()->getModuleRenderer()->removeLayer(layerRoad);
 	getGameEngine()->getModuleRenderer()->removeLayer(layerRoadMirror);
 
@@ -430,6 +518,9 @@ void ModuleWorld::removeRenderingLayers()
 
 void ModuleWorld::checkPauseMode()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleInput());
+
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
 	{
 		paused = !paused;
@@ -439,16 +530,29 @@ void ModuleWorld::checkPauseMode()
 
 void ModuleWorld::checkGoMenu() const
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleInput());
+
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
-		// getGameEngine()->setGameModule(GameModule::START);
+	{
+		assert(getGameEngine()->getModuleSwitch());
+
 		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::START);
+	}
 }
 
 void ModuleWorld::checkRenderCollisionBoxes() const
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleInput());
+
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_F1) == KeyState::DOWN)
 		for(GameObject* gameObject : gameObjects)
+		{
+			assert(gameObject);
+
 			gameObject->setRenderCollisionBox(!gameObject->getRenderCollisionBox());
+		}
 }
 
 void ModuleWorld::updatePaused(float deltaTimeS)
@@ -460,6 +564,11 @@ void ModuleWorld::updatePaused(float deltaTimeS)
 
 void ModuleWorld::updateNotPaused(float deltaTimeS)
 {
+	assert(camera);
+	assert(background);
+	assert(cameraMirror);
+	assert(backgroundMirror);
+
 	updateLightAnimation(deltaTimeS);
 
 	updateLightAnimationFx(deltaTimeS);
@@ -468,13 +577,15 @@ void ModuleWorld::updateNotPaused(float deltaTimeS)
 
 	updateOutRoadFxWaitTime(deltaTimeS);
 
-	// updateCollisionFxWaitTime(deltaTimeS);
-
 	if(currentLapTimeNotificate)
 		updateCurrentLapTimeNotificationCounter(deltaTimeS);
 
 	for(GameObject* gameObject : gameObjects)
+	{
+		assert(gameObject);
+
 		gameObject->update(deltaTimeS);
+	}
 
 	camera->update(deltaTimeS);
 	cameraMirror->update(deltaTimeS);
@@ -501,14 +612,22 @@ void ModuleWorld::updateCurrentLapTimeNotificationCounter(float deltaTimeS)
 
 void ModuleWorld::updateLightAnimationFx(float deltaTimeS)
 {
+	assert(lightAnimation);
+
 	if(!lightSFX0Done && lightAnimation->getTimePercent() >= 0.2f)
 	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleAudio());
+
 		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 0);
 		lightSFX0Done = true;
 	}
 
 	if(!lightSFX1Done && lightAnimation->getTimePercent() >= 0.6f)
 	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleAudio());
+
 		getGameEngine()->getModuleAudio()->playFx(audioGroupId, 1);
 		lightSFX1Done = true;
 	}
@@ -516,8 +635,13 @@ void ModuleWorld::updateLightAnimationFx(float deltaTimeS)
 
 void ModuleWorld::updateLightAnimationMusic(float deltaTimeS)
 {
+	assert(lightAnimation);
+
 	if(!lightMusicDone && lightAnimation->hasEnded())
 	{
+		assert(getGameEngine());
+		assert(getGameEngine()->getModuleAudio());
+
 		getGameEngine()->getModuleAudio()->playMusic(audioGroupId, 0, 0.75f);
 		lightMusicDone = true;
 	}
@@ -525,6 +649,8 @@ void ModuleWorld::updateLightAnimationMusic(float deltaTimeS)
 
 void ModuleWorld::updateLightAnimation(float deltaTimeS) const
 {
+	assert(lightAnimation);
+
 	if(!lightAnimation->hasEnded())
 	{
 		lightAnimation->update(deltaTimeS);
@@ -532,8 +658,12 @@ void ModuleWorld::updateLightAnimation(float deltaTimeS) const
 		if(lightAnimation->hasEnded())
 		{
 			for(GameObject* gameObject : gameObjects)
+			{
+				assert(gameObject);
+
 				if(gameObject->getType() == GameObjectType::CAR || gameObject->getType() == GameObjectType::PLAYER)
 					((Car*)gameObject)->setMovementEnabled(true);
+			}
 		}
 	}
 }
@@ -547,25 +677,28 @@ void ModuleWorld::updateOutRoadFxWaitTime(float deltaTimeS)
 	}
 }
 
-/* void ModuleWorld::updateCollisionFxWaitTime(float deltaTimeS)
-{
-	if(collisionFxPlayed && (fxCollisionCurrentWaitTime += deltaTimeS) >= 0.0f)
-	{
-		collisionFxPlayed = false;
-		fxCollisionCurrentWaitTime = 0.0f;
-	}
-} */
-
 void ModuleWorld::render() const
 {
-	getGameEngine()->getModuleRenderer()->setLayer(layerRoad);
-	background->render(!camera->getForward(), getGameEngine()->getModuleRenderer());
-	road->render(camera, getGameEngine()->getModuleRenderer());
-	minimap->render(getGameEngine()->getModuleRenderer());
+	assert(road);
+	assert(camera);
+	assert(minimap);
+	assert(background);
+	assert(cameraMirror);
+	assert(getGameEngine());
+	assert(backgroundMirror);
+
+	ModuleRenderer* moduleRenderer = getGameEngine()->getModuleRenderer();
+
+	assert(moduleRenderer);
+
+	moduleRenderer->setLayer(layerRoad);
+	background->render(!camera->getForward(), moduleRenderer);
+	road->render(camera, moduleRenderer);
+	minimap->render(moduleRenderer);
 
 	renderUI();
 
-	getGameEngine()->getModuleRenderer()->setLayer(layerRoadMirror);
-	backgroundMirror->render(!cameraMirror->getForward(), getGameEngine()->getModuleRenderer());
-	road->render(cameraMirror, getGameEngine()->getModuleRenderer());
+	moduleRenderer->setLayer(layerRoadMirror);
+	backgroundMirror->render(!cameraMirror->getForward(), moduleRenderer);
+	road->render(cameraMirror, moduleRenderer);
 }

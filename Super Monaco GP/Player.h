@@ -20,7 +20,7 @@ class Player : public Car
 
 		virtual void cleanUp() override;
 
-	protected:
+	private:
 
 		virtual void updateDirection(float deltaTimeS) override;
 
@@ -29,8 +29,6 @@ class Player : public Car
 		virtual void updateCurrentAnimation(float deltaTimeS) const override;
 		
 		virtual void updateOffsetX(float dX, float velocityPercent, float curve) override;
-
-	private:
 
 		virtual const Texture* getCurrentTexture(bool mirror) const override;
 

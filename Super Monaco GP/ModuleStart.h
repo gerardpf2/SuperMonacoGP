@@ -4,34 +4,11 @@
 #include <list>
 #include <vector>
 #include "Types.h"
-#include <cstdlib>
 #include "Module.h"
-#include "Globals.h"
 #include <SDL_rect.h>
-#include "ModuleStartUI.h"
-
-struct CarStart
-{
-	int y;
-	float x, v;
-	const Texture* t;
-
-	CarStart(const Texture* t) :
-		t(t)
-	{ }
-
-	bool isOut()
-	{
-		return x + CAR_START_W <= CAR_MIN_X;
-	}
-
-	void update(float deltaTimeS)
-	{
-		x -= v * deltaTimeS;
-	}
-};
 
 struct Texture;
+struct CarStart;
 
 class ModuleStart : public Module
 {
@@ -87,19 +64,11 @@ class ModuleStart : public Module
 
 		bool enterPressed = false;
 
-		float pressEnterCounter = 0.0;
+		float pressEnterCounter = 0.0f;
 
 		int selectedOption = 0;
 
-		float arrowCounter = 0.0;
-
-		SDL_Rect backRect, frontRect, logoRect, optionsRect;
-
-		SDL_Rect arrowRects[3];
-
-		WindowPosition pressEnterPosition;
-
-		WindowPosition option0Position, option1Position, option2Position;
+		float arrowCounter = 0.0f;
 
 		uint carIndex = 0;
 
@@ -108,6 +77,16 @@ class ModuleStart : public Module
 		std::vector<CarStart*> cars;
 
 		std::list<CarStart*> usedCars;
+
+		// UI
+
+		SDL_Rect backRect, frontRect, logoRect, optionsRect;
+
+		SDL_Rect arrowRects[3];
+
+		WindowPosition pressEnterPosition;
+
+		WindowPosition option0Position, option1Position, option2Position;
 };
 
 #endif

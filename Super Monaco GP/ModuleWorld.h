@@ -5,7 +5,6 @@
 #include "Types.h"
 #include "Module.h"
 #include <SDL_rect.h>
-#include "ModuleWorldUI.h"
 
 class Car;
 class Road;
@@ -104,8 +103,6 @@ class ModuleWorld : public Module
 
 		void updateOutRoadFxWaitTime(float deltaTimeS);
 
-		// void updateCollisionFxWaitTime(float deltaTimeS);
-
 		void render() const;
 
 	protected:
@@ -132,7 +129,7 @@ class ModuleWorld : public Module
 
 		Background* backgroundMirror = nullptr;
 
-		float pauseCounter = 0.0;
+		float pauseCounter = 0.0f;
 
 		const Texture* kmhT = nullptr;
 
@@ -146,23 +143,27 @@ class ModuleWorld : public Module
 
 		bool outRoadFxPlayed = false;
 
-		// bool collisionFxPlayed = false;
-
 		float fxOutRoadCurrentWaitTime = 0.0f;
 
-		// float fxCollisionCurrentWaitTime = 0.0f;
-
-		// float currentLapTime = 0.0f;
-
-		// Rendering layers and UI
-
 		uint layerRoad, layerRoadMirror;
+
+		bool currentLapTimeNotificate = false;
+
+		float currentLapTimeNotificationCounter = 0.0f;
+
+		uint lightIdAnimationGroup = -1;
+
+		Animation* lightAnimation = nullptr;
+
+		// UI
 
 		SDL_Rect textureRectRoad, viewportRectRoad;
 
 		SDL_Rect textureRectRoadMirror, viewportRectRoadMirror;
 
 		SDL_Rect kmhRect;
+
+		SDL_Rect lightRect;
 
 		WindowPosition pausePosition;
 
@@ -174,10 +175,6 @@ class ModuleWorld : public Module
 
 		WindowPosition currentLapTimePosition;
 
-		bool currentLapTimeNotificate = false;
-
-		float currentLapTimeNotificationCounter = 0.0;
-
 		WindowPosition currentLapTimeNotificationPosition;
 
 		WindowPosition currentLapTimeNotificationValuePosition;
@@ -185,12 +182,6 @@ class ModuleWorld : public Module
 		WindowPosition currentVelocityPosition;
 
 		WindowTrapezoid mirrorBorderTrapezoidLeft, mirrorBorderTrapezoidBottom, mirrorBorderTrapezoidRight, mirrorBorderTrapezoidTop;
-
-		SDL_Rect lightRect;
-
-		uint lightIdAnimationGroup;
-
-		Animation* lightAnimation = nullptr;
 };
 
 #endif

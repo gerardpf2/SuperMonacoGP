@@ -3,7 +3,6 @@
 #include "Utils.h"
 #include <algorithm>
 #include "Animation.h"
-#include "GameEngine.h"
 #include "ModuleFont.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -18,6 +17,8 @@ using namespace std;
 
 struct CarResult
 {
+	// Simple structure that helps managing the cars that appear in this menu
+
 	float x, y;
 
 	CarResult()
@@ -82,6 +83,11 @@ ModuleResults::~ModuleResults()
 
 bool ModuleResults::setUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAudio());
+	assert(getGameEngine()->getModuleTexture());
+	assert(getGameEngine()->getModuleAnimation());
+
 	baseAnimationGroupId = getGameEngine()->getModuleAnimation()->load("Resources/Configurations/Animations/Results.json");
 
 	baseAnimation = getGameEngine()->getModuleAnimation()->getAnimation(baseAnimationGroupId, 0);
@@ -117,6 +123,10 @@ bool ModuleResults::update(float deltaTimeS)
 
 void ModuleResults::cleanUp()
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleAudio());
+	assert(getGameEngine()->getModuleAnimation());
+
 	getGameEngine()->getModuleAudio()->unload(audioGroupId);
 
 	getGameEngine()->getModuleAnimation()->unload(baseAnimationGroupId);
@@ -138,6 +148,12 @@ void ModuleResults::cleanUp()
 
 void ModuleResults::addResults()
 {
+	assert(getGameEngine());
+
+	ModuleRegistry* moduleRegistry = getGameEngine()->getModuleRegistry();
+
+	assert(moduleRegistry);
+
 	results.reserve(N_CARS);
 
 	for(uint i = 0; i < N_CARS; ++i)
@@ -145,7 +161,7 @@ void ModuleResults::addResults()
 		float totalTime = 0.0f;
 
 		for(uint j = 0; j < N_LAPS; ++j)
-			totalTime += getGameEngine()->getModuleRegistry()->getCarLapTime(i, j);
+			totalTime += moduleRegistry->getCarLapTime(i, j);
 
 		results.push_back(pair<bool, float>(i == 0, totalTime)); // Player id is 0
 	}
@@ -183,6 +199,8 @@ void ModuleResults::addResultsValuesPositions(short x0, short x1, uint n)
 
 void ModuleResults::updateBase(float deltaTimeS)
 {
+	assert(baseAnimation);
+
 	baseAnimation->update(deltaTimeS);
 }
 
@@ -194,7 +212,11 @@ void ModuleResults::updateCar(float deltaTimeS)
 
 		if(carResult->isOut())
 		{
+			assert(getGameEngine());
+			assert(getGameEngine()->getModuleAudio());
+
 			carResult->reset();
+
 			carInUse = false;
 			waitNextCarCounter = 0.0f;
 
@@ -206,21 +228,18 @@ void ModuleResults::updateCar(float deltaTimeS)
 
 void ModuleResults::checkGoNextCourseOrMenu() const
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleInput());
+	assert(getGameEngine()->getModuleSwitch());
+	assert(getGameEngine()->getModuleRegistry());
+
 	if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_RETURN) == KeyState::DOWN)
 	{
-		// getGameEngine()->getModuleRegistry()->defaultValues();
-
 		getGameEngine()->getModuleRegistry()->setCurrentCourseId((getGameEngine()->getModuleRegistry()->getCurrentCourseId() + 1) % N_COURSES);
-		// getGameEngine()->setGameModule(GameModule::SUPER_MONACO_GP);
 		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::SUPER_MONACO_GP);
 	}
 	else if(getGameEngine()->getModuleInput()->getKeyState(SDL_SCANCODE_ESCAPE) == KeyState::DOWN)
-	{
-		// getGameEngine()->getModuleRegistry()->defaultValues();
-
-		// getGameEngine()->setGameModule(GameModule::START);
 		getGameEngine()->getModuleSwitch()->setNewGameModule(GameModule::START);
-	}
 }
 
 void ModuleResults::render() const
@@ -234,9 +253,15 @@ void ModuleResults::render() const
 
 void ModuleResults::renderBase() const
 {
+	assert(baseAnimation);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
+
 	getGameEngine()->getModuleRenderer()->renderRect(&baseAllRect, 176, 180, 144);
 
 	const Texture* baseT = baseAnimation->getCurrentFrame();
+
+	assert(baseT);
 
 	getGameEngine()->getModuleRenderer()->renderTexture(baseT->t, baseT->r, &baseRect, baseT->hFlipped);
 }
@@ -244,6 +269,12 @@ void ModuleResults::renderBase() const
 void ModuleResults::renderCar() const
 {
 	if(!carInUse) return;
+
+	assert(car);
+	assert(car->r);
+	assert(carResult);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
 
 	float scale = interpolate(carResult->distancePercent(), 0.0f, 1.0f, CAR_START_SCALE, CAR_END_SCALE);
 
@@ -261,18 +292,28 @@ void ModuleResults::renderCar() const
 
 void ModuleResults::renderResults() const
 {
-	getGameEngine()->getModuleFont()->renderText("RESULTS", resultsPosition, HAlignment::CENTER, VAlignment::BOTTOM, RESULTS_POSITION_SCALE, RESULTS_POSITION_SCALE, 248, 36, 32);
+	assert(grid);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
+
+	ModuleFont* moduleFont = getGameEngine()->getModuleFont();
+
+	assert(moduleFont);
+
+	moduleFont->renderText("RESULTS", resultsPosition, HAlignment::CENTER, VAlignment::BOTTOM, RESULTS_POSITION_SCALE, RESULTS_POSITION_SCALE, 248, 36, 32);
 
 	getGameEngine()->getModuleRenderer()->renderTexture(grid->t, grid->r, &grid0Rect, grid->hFlipped);
 	getGameEngine()->getModuleRenderer()->renderTexture(grid->t, grid->r, &grid1Rect, grid->hFlipped);
 
-	getGameEngine()->getModuleFont()->renderText("RANK", rank0TextPosition, HAlignment::CENTER, VAlignment::BOTTOM, RANK_TIME_POSITION_SCALE_W, RANK_TIME_POSITION_SCALE_H, 32, 252, 104);
-	getGameEngine()->getModuleFont()->renderText("RANK", rank1TextPosition, HAlignment::CENTER, VAlignment::BOTTOM, RANK_TIME_POSITION_SCALE_W, RANK_TIME_POSITION_SCALE_H, 32, 252, 104);
-	getGameEngine()->getModuleFont()->renderText("T. TIME", time0TextPosition, HAlignment::CENTER, VAlignment::BOTTOM, RANK_TIME_POSITION_SCALE_W, RANK_TIME_POSITION_SCALE_H, 32, 252, 104);
-	getGameEngine()->getModuleFont()->renderText("T. TIME", time1TextPosition, HAlignment::CENTER, VAlignment::BOTTOM, RANK_TIME_POSITION_SCALE_W, RANK_TIME_POSITION_SCALE_H, 32, 252, 104);
+	moduleFont->renderText("RANK", rank0TextPosition, HAlignment::CENTER, VAlignment::BOTTOM, RANK_TIME_POSITION_SCALE_W, RANK_TIME_POSITION_SCALE_H, 32, 252, 104);
+	moduleFont->renderText("RANK", rank1TextPosition, HAlignment::CENTER, VAlignment::BOTTOM, RANK_TIME_POSITION_SCALE_W, RANK_TIME_POSITION_SCALE_H, 32, 252, 104);
+	moduleFont->renderText("T. TIME", time0TextPosition, HAlignment::CENTER, VAlignment::BOTTOM, RANK_TIME_POSITION_SCALE_W, RANK_TIME_POSITION_SCALE_H, 32, 252, 104);
+	moduleFont->renderText("T. TIME", time1TextPosition, HAlignment::CENTER, VAlignment::BOTTOM, RANK_TIME_POSITION_SCALE_W, RANK_TIME_POSITION_SCALE_H, 32, 252, 104);
 
 	for(uint i = 0; i < (uint)resultsValuesPositions.size(); ++i)
 	{
+		assert((uint)resultsStr.size() > i);
+
 		bool isPlayer = resultsStr[i].first;
 		string resultValue = resultsStr[i].second;
 		string resultIndex; rankStr(i + 1, resultIndex);
@@ -281,7 +322,7 @@ void ModuleResults::renderResults() const
 		Uint8 g = isPlayer ? 36 : 216;
 		Uint8 b = isPlayer ? 32 : 0;
 
-		getGameEngine()->getModuleFont()->renderText(resultIndex, resultsValuesPositions[i].first, HAlignment::CENTER, VAlignment::BOTTOM, RESULT_POSITION_SCALE_W, RESULT_POSITION_SCALE_H, r, g, b);
-		getGameEngine()->getModuleFont()->renderText(resultValue, resultsValuesPositions[i].second, HAlignment::CENTER, VAlignment::BOTTOM, RESULT_POSITION_SCALE_W, RESULT_POSITION_SCALE_H, r, g, b);
+		moduleFont->renderText(resultIndex, resultsValuesPositions[i].first, HAlignment::CENTER, VAlignment::BOTTOM, RESULT_POSITION_SCALE_W, RESULT_POSITION_SCALE_H, r, g, b);
+		moduleFont->renderText(resultValue, resultsValuesPositions[i].second, HAlignment::CENTER, VAlignment::BOTTOM, RESULT_POSITION_SCALE_W, RESULT_POSITION_SCALE_H, r, g, b);
 	}
 }
