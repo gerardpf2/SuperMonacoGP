@@ -7,9 +7,6 @@
 #include "Types.h"
 #include "Module.h"
 
-struct Texture;
-struct SDL_Texture;
-
 class ModuleTexture : public Module
 {
 	public:
@@ -42,7 +39,23 @@ class ModuleTexture : public Module
 
 	private:
 
+		/*
+		
+		For each texture group
+			Vector of "big" textures (each one of these defines a textuure group)
+			Vector of specific textures (pointer to its corresponding "big" texture and the definition of its rect)
+		
+		*/
+
 		std::map<uint, std::pair<SDL_Texture*, std::vector<Texture*>*>> textureGroups;
+
+		/*
+		
+		For each used texture group
+			Path to its json file and its corresponding texture group id
+			Times loaded counter
+		
+		*/
 
 		std::list<std::pair<std::pair<std::string, uint>, uint>> loadedTextureGroups;
 };

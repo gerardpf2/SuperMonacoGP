@@ -7,8 +7,6 @@
 #include "Types.h"
 #include "Module.h"
 
-struct Texture;
-
 class Animation;
 class AnimationContainer;
 
@@ -42,15 +40,58 @@ class ModuleAnimation : public Module
 
 	private:
 
+		/*
+
+		For each used animation group
+			List of the base animations
+
+		*/
+
 		std::map<uint, std::pair<std::vector<std::vector<const Texture*>*>*, std::vector<Animation*>*>> animationGroups;
+
+		/*
+
+		For each used animation group
+			List of the base animation containers
+
+		*/
 
 		std::map<uint, std::vector<AnimationContainer*>*> animationContainerGroups;
 
+		/*
+
+		For each used animation group
+			Texture group id used by all the animations
+
+		*/
+
 		std::map<uint, uint> animationGroupsTextureGroupId;
+
+		/*
+
+		For each used animation group
+			List of the used animations
+
+		*/
 
 		std::map<uint, std::list<Animation*>*> usedAnimations;
 
+		/*
+
+		For each used animation group
+			List of the used animation containers
+
+		*/
+
 		std::map<uint, std::list<AnimationContainer*>*> usedAnimationContainers;
+
+		/*
+
+		For each used animation group
+			Path to its json file and its corresponding animation group id
+			Times loaded counter
+
+		*/
 
 		std::list<std::pair<std::pair<std::string, uint>, uint>> loadedAnimationGroups;
 };

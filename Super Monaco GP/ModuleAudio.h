@@ -50,7 +50,23 @@ class ModuleAudio : public Module
 
 	private:
 
+		/*
+
+		For each audio group
+			Vector of musics
+			Vector of fxs
+
+		*/
+
 		std::map<uint, std::pair<std::vector<Mix_Music*>*, std::vector<Mix_Chunk*>*>> audioGroups;
+
+		/*
+
+		For each used audio group
+			Path to its json file and its corresponding audio group id
+			Times loaded counter
+
+		*/
 
 		std::list<std::pair<std::pair<std::string, uint>, uint>> loadedAudioGroups;
 };

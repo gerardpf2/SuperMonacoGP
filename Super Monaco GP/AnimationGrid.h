@@ -6,10 +6,10 @@
 
 class Animation;
 
-// This class simplifies the management of the set of animations that the player game object uses
-
 class AnimationGrid
 {
+	// This class simplifies the management of the set of animations that the player game object uses
+
 	public:
 
 		AnimationGrid(Animation* animationCenterV);

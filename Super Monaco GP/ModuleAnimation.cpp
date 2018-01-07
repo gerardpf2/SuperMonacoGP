@@ -18,6 +18,10 @@ ModuleAnimation::~ModuleAnimation()
 
 uint ModuleAnimation::load(const char* jsonPath)
 {
+	assert(jsonPath);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleJson());
+
 	uint tmpAnimationGroupId;
 	if(isAlreadyLoaded(jsonPath, tmpAnimationGroupId))
 	{
@@ -29,6 +33,8 @@ uint ModuleAnimation::load(const char* jsonPath)
 	getGameEngine()->getModuleJson()->read(jsonPath, jsonDocument);
 
 	ModuleTexture* moduleTexture = getGameEngine()->getModuleTexture();
+
+	assert(moduleTexture);
 
 	// id, textureGroupId, animations, animationContainers
 
@@ -134,65 +140,90 @@ void ModuleAnimation::unload(uint idAnimationGroup)
 	incrementLoadedCounter(idAnimationGroup, -1);
 	if(getLoadedCounter(idAnimationGroup) > 0) return;
 
-	pair<vector<vector<const Texture*>*>*, vector<Animation*>*>& animationGroup = animationGroups[idAnimationGroup];
+	map<uint, pair<vector<vector<const Texture*>*>*, vector<Animation*>*>>::iterator it0 = animationGroups.find(idAnimationGroup);
+
+	assert(it0 != animationGroups.end());
+
+	pair<vector<vector<const Texture*>*>*, vector<Animation*>*>& animationGroup = it0->second;
 
 	vector<vector<const Texture*>*>*& animationGroupsTextures = animationGroup.first;
 
 	vector<Animation*>*& animations = animationGroup.second;
 
+	assert(animationGroupsTextures);
+	assert(animations);
+
+	// Unload animation group textures
+
 	for(int i = (int)animationGroupsTextures->size() - 1; i >= 0; --i)
 	{
-		(*animationGroupsTextures)[i]->clear();
-		
-		delete (*animationGroupsTextures)[i];
-		(*animationGroupsTextures)[i] = nullptr;
+		assert(animationGroupsTextures->at(i));
+
+		animationGroupsTextures->at(i)->clear();
+
+		delete animationGroupsTextures->at(i); animationGroupsTextures->at(i) = nullptr;
 	}
 
 	animationGroupsTextures->clear();
 	
-	delete animationGroupsTextures;
-	animationGroupsTextures = nullptr;
+	delete animationGroupsTextures; animationGroupsTextures = nullptr;
+
+	// Unload animation group animations
 
 	for(int i = (int)animations->size() - 1; i >= 0; --i)
 	{
-		(*animations)[i]->cleanUp();
+		assert(animations->at(i));
 
-		delete (*animations)[i];
-		(*animations)[i] = nullptr;
+		animations->at(i)->cleanUp();
+
+		delete animations->at(i); animations->at(i) = nullptr;
 	}
 
 	animations->clear();
 	
-	delete animations;
-	animations = nullptr;
-
-	// Unload animationContainers
-
-	for(map<uint, vector<AnimationContainer*>*>::reverse_iterator it = animationContainerGroups.rbegin(); it != animationContainerGroups.rend(); ++it)
-	{
-		for(int i = (int)it->second->size() - 1; i >= 0; --i)
-		{
-			(*(it->second))[i]->cleanUp();
-
-			delete (*(it->second))[i];
-			(*(it->second))[i] = nullptr;
-		}
-
-		it->second->clear();
-
-		delete it->second; it->second = nullptr;
-	}
-
-	animationContainerGroups.clear();
+	delete animations; animations = nullptr;
 
 	animationGroups.erase(idAnimationGroup);
 
+	// Unload animation containers
+
+	map<uint, vector<AnimationContainer*>*>::iterator it1 = animationContainerGroups.find(idAnimationGroup);
+
+	assert(it1 != animationContainerGroups.end());
+
+	vector<AnimationContainer*>*& animationContainerGroup = it1->second;
+
+	assert(animationContainerGroup);
+
+	for(int i = (int)animationContainerGroup->size() - 1; i >= 0; --i)
+	{
+		assert(animationContainerGroup->at(i));
+
+		animationContainerGroup->at(i)->cleanUp();
+
+		delete animationContainerGroup->at(i); animationContainerGroup->at(i) = nullptr;
+	}
+
+	animationContainerGroup->clear();
+
+	delete animationContainerGroup; animationContainerGroup = nullptr;
+
 	animationContainerGroups.erase(idAnimationGroup);
 
-	list<Animation*>*& usedAnimationsOfGroup = usedAnimations.at(idAnimationGroup);
+	// Unload used animations
+
+	map<uint, list<Animation*>*>::iterator it2 = usedAnimations.find(idAnimationGroup);
+
+	assert(it2 != usedAnimations.end());
+
+	list<Animation*>*& usedAnimationsOfGroup = it2->second;
+
+	assert(usedAnimationsOfGroup);
 
 	for(list<Animation*>::reverse_iterator it = usedAnimationsOfGroup->rbegin(); it != usedAnimationsOfGroup->rend(); ++it)
 	{
+		assert(*it);
+
 		(*it)->cleanUp();
 
 		delete *it; *it = nullptr;
@@ -204,10 +235,20 @@ void ModuleAnimation::unload(uint idAnimationGroup)
 
 	usedAnimations.erase(idAnimationGroup);
 
-	list<AnimationContainer*>*& usedAnimationContainersOfGroup = usedAnimationContainers.at(idAnimationGroup);
+	// Unload used animation containers
+
+	map<uint, list<AnimationContainer*>*>::iterator it3 = usedAnimationContainers.find(idAnimationGroup);
+
+	assert(it3 != usedAnimationContainers.end());
+
+	list<AnimationContainer*>*& usedAnimationContainersOfGroup = it3->second;
+
+	assert(usedAnimationContainersOfGroup);
 
 	for(list<AnimationContainer*>::reverse_iterator it = usedAnimationContainersOfGroup->rbegin(); it != usedAnimationContainersOfGroup->rend(); ++it)
 	{
+		assert(*it);
+
 		(*it)->cleanUp();
 
 		delete *it; *it = nullptr;
@@ -219,7 +260,15 @@ void ModuleAnimation::unload(uint idAnimationGroup)
 
 	usedAnimationContainers.erase(idAnimationGroup);
 
-	getGameEngine()->getModuleTexture()->unload(animationGroupsTextureGroupId[idAnimationGroup]);
+	// Unload associated texture group
+
+	map<uint, uint>::iterator it4 = animationGroupsTextureGroupId.find(idAnimationGroup);
+
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleTexture());
+	assert(it4 != animationGroupsTextureGroupId.end());
+
+	getGameEngine()->getModuleTexture()->unload(it4->second);
 
 	animationGroupsTextureGroupId.erase(idAnimationGroup);
 
@@ -228,27 +277,57 @@ void ModuleAnimation::unload(uint idAnimationGroup)
 
 Animation* ModuleAnimation::getAnimation(uint idAnimationGroup, uint idAnimation) const
 {
-	Animation* animation = new Animation(*(*animationGroups.at(idAnimationGroup).second)[idAnimation]);
+	map<uint, pair<vector<vector<const Texture*>*>*, vector<Animation*>*>>::const_iterator it0 = animationGroups.find(idAnimationGroup);
 
-	usedAnimations.at(idAnimationGroup)->push_back(animation);
+	assert(it0 != animationGroups.end());
+	assert(it0->second.second);
+	assert((uint)it0->second.second->size() > idAnimation);
+
+	Animation* animation = new Animation(*it0->second.second->at(idAnimation));
+
+	map<uint, list<Animation*>*>::const_iterator it1 = usedAnimations.find(idAnimationGroup);
+
+	assert(it1 != usedAnimations.end());
+	assert(it1->second);
+
+	it1->second->push_back(animation);
 
 	return animation;
 }
 
 AnimationContainer* ModuleAnimation::getAnimationContainer(uint idAnimationGroup, uint idAnimationContainer) const
 {
-	const AnimationContainer* baseAnimationContainer = (*animationContainerGroups.at(idAnimationGroup))[idAnimationContainer];
+	map<uint, vector<AnimationContainer*>*>::const_iterator it0 = animationContainerGroups.find(idAnimationGroup);
+
+	assert(it0 != animationContainerGroups.end());
+	assert(it0->second);
+	assert((uint)it0->second->size() > idAnimationContainer);
+
+	const AnimationContainer* baseAnimationContainer = it0->second->at(idAnimationContainer);
+
+	assert(baseAnimationContainer);
 
 	const map<uint, Animation*>* baseAnimations = baseAnimationContainer->getAnimations();
+
+	assert(baseAnimations);
 
 	map<uint, Animation*>* animations = new map<uint, Animation*>();
 
 	for(map<uint, Animation*>::const_iterator it = baseAnimations->begin(); it != baseAnimations->end(); ++it)
+	{
+		assert(it->second);
+
 		(*animations)[it->first] = getAnimation(idAnimationGroup, it->second->getId());
+	}
 
 	AnimationContainer* animationContainer = new AnimationContainer(baseAnimationContainer->getId(), baseAnimationContainer->getAnimationGroupId(), baseAnimationContainer->getCurrentAnimationId(), animations);
 
-	usedAnimationContainers.at(idAnimationGroup)->push_back(animationContainer);
+	map<uint, list<AnimationContainer*>*>::const_iterator it1 = usedAnimationContainers.find(idAnimationGroup);
+
+	assert(it1 != usedAnimationContainers.end());
+	assert(it1->second);
+
+	it1->second->push_back(animationContainer);
 
 	return animationContainer;
 }

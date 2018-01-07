@@ -7,7 +7,6 @@
 #include "Module.h"
 #include <SDL_rect.h>
 
-struct Texture;
 struct CarStart;
 
 class ModuleStart : public Module

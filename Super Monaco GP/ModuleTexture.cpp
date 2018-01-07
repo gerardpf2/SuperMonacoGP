@@ -1,6 +1,5 @@
 #include "ModuleTexture.h"
 
-#include <SDL.h>
 #include "ModuleJson.h"
 #include "GameEngine.h"
 #include "ModuleRenderer.h"
@@ -17,6 +16,10 @@ ModuleTexture::~ModuleTexture()
 
 uint ModuleTexture::load(const char* jsonPath)
 {
+	assert(jsonPath);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleJson());
+
 	uint tmpTextureGroupId;
 	if(isAlreadyLoaded(jsonPath, tmpTextureGroupId))
 	{
@@ -40,9 +43,8 @@ uint ModuleTexture::load(const char* jsonPath)
 
 	for(SizeType i = 0; i < texturesJson.Size(); ++i)
 	{
-		// textureId, rect, hFlipped
+		// rect, hFlipped
 
-		uint textureId = i; // ¿?
 		const Value& rectJson = texturesJson[i]["rect"];
 		bool hFlipped = texturesJson[i]["hFlipped"].GetBool();
 
@@ -66,13 +68,21 @@ void ModuleTexture::unload(uint idTextureGroup)
 	incrementLoadedCounter(idTextureGroup, -1);
 	if(getLoadedCounter(idTextureGroup) > 0) return;
 
-	pair<SDL_Texture*, vector<Texture*>*>& textureGroup = textureGroups[idTextureGroup];
+	map<uint, pair<SDL_Texture*, vector<Texture*>*>>::iterator it = textureGroups.find(idTextureGroup);
+
+	assert(it != textureGroups.end());
+
+	pair<SDL_Texture*, vector<Texture*>*>& textureGroup = it->second;
+
+	assert(textureGroup.second);
 
 	unloadTexture(textureGroup.first);
 
 	for(uint i = 0; i < textureGroup.second->size(); ++i)
 	{
-		Texture*& texture = (*textureGroup.second)[i];
+		Texture*& texture = textureGroup.second->at(i);
+
+		assert(texture);
 
 		texture->t = nullptr;
 		
@@ -83,8 +93,7 @@ void ModuleTexture::unload(uint idTextureGroup)
 
 	textureGroup.second->clear();
 	
-	delete textureGroup.second;
-	textureGroup.second = nullptr;
+	delete textureGroup.second; textureGroup.second = nullptr;
 
 	textureGroups.erase(idTextureGroup);
 
@@ -93,7 +102,13 @@ void ModuleTexture::unload(uint idTextureGroup)
 
 const Texture* ModuleTexture::get(uint idTextureGroup, uint idTexture) const
 {
-	return (*textureGroups.at(idTextureGroup).second)[idTexture];
+	map<uint, pair<SDL_Texture*, vector<Texture*>*>>::const_iterator it = textureGroups.find(idTextureGroup);
+
+	assert(it != textureGroups.end());
+	assert(it->second.second);
+	assert((uint)it->second.second->size() > idTexture);
+
+	return it->second.second->at(idTexture);
 }
 
 void ModuleTexture::cleanUp()
@@ -105,6 +120,9 @@ void ModuleTexture::cleanUp()
 
 SDL_Texture* ModuleTexture::loadTexture(const char* bmpPath) const
 {
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleRenderer());
+
 	SDL_Texture* texture = nullptr;
 	SDL_Surface* surface = SDL_LoadBMP(bmpPath);
 

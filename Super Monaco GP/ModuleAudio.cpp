@@ -17,6 +17,10 @@ ModuleAudio::~ModuleAudio()
 
 uint ModuleAudio::load(const char* jsonPath)
 {
+	assert(jsonPath);
+	assert(getGameEngine());
+	assert(getGameEngine()->getModuleJson());
+
 	uint tmpAudioGroupId;
 	if(isAlreadyLoaded(jsonPath, tmpAudioGroupId))
 	{
@@ -72,15 +76,24 @@ void ModuleAudio::unload(uint idAudioGroup)
 	incrementLoadedCounter(idAudioGroup, -1);
 	if(getLoadedCounter(idAudioGroup) > 0) return;
 
-	pair<vector<Mix_Music*>*, vector<Mix_Chunk*>*>& audioGroup = audioGroups[idAudioGroup];
+	map<uint, pair<vector<Mix_Music*>*, vector<Mix_Chunk*>*>>::iterator it = audioGroups.find(idAudioGroup);
+
+	assert(it != audioGroups.end());
+
+	pair<vector<Mix_Music*>*, vector<Mix_Chunk*>*>& audioGroup = it->second;
+
+	assert(audioGroup.first);
+	assert(audioGroup.second);
 
 	for(Mix_Music*& music : *audioGroup.first) unloadMusic(music);
 	for(Mix_Chunk*& fx : *audioGroup.second) unloadFx(fx);
 
 	audioGroup.first->clear();
+
 	delete audioGroup.first; audioGroup.first = nullptr;
 
 	audioGroup.second->clear();
+
 	delete audioGroup.second; audioGroup.second = nullptr;
 
 	audioGroups.erase(idAudioGroup);
@@ -90,13 +103,13 @@ void ModuleAudio::unload(uint idAudioGroup)
 
 void ModuleAudio::playFx(uint idAudioGroup, uint idFx, float volume, int loops) const
 {
-	/* uint left = 20;
-	uint distance = 100;
+	map<uint, pair<vector<Mix_Music*>*, vector<Mix_Chunk*>*>>::const_iterator it = audioGroups.find(idAudioGroup);
 
-	Mix_SetPanning(MIX_CHANNEL_POST, left, 254 - left);
-	Mix_SetDistance(MIX_CHANNEL_POST, distance); */
+	assert(it != audioGroups.end());
+	assert(it->second.second);
+	assert((uint)it->second.second->size() > idFx);
 
-	Mix_Chunk* fx = audioGroups.at(idAudioGroup).second->at(idFx);
+	Mix_Chunk* fx = it->second.second->at(idFx);
 
 	Mix_VolumeChunk(fx, (int)(volume * MIX_MAX_VOLUME));
 	Mix_PlayChannel(-1, fx, loops);
@@ -104,19 +117,29 @@ void ModuleAudio::playFx(uint idAudioGroup, uint idFx, float volume, int loops) 
 
 void ModuleAudio::playMusic(uint idAudioGroup, uint idMusic, float volume, int loops) const
 {
+	map<uint, pair<vector<Mix_Music*>*, vector<Mix_Chunk*>*>>::const_iterator it = audioGroups.find(idAudioGroup);
+
+	assert(it != audioGroups.end());
+	assert(it->second.first);
+	assert((uint)it->second.first->size() > idMusic);
+
 	Mix_VolumeMusic((int)(volume * MIX_MAX_VOLUME));
-	Mix_PlayMusic(audioGroups.at(idAudioGroup).first->at(idMusic), loops);
+	Mix_PlayMusic(it->second.first->at(idMusic), loops);
 }
 
 bool ModuleAudio::setUp()
 {
 	if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
 	{
+		printf("ModuleAudio::setUp -> ERROR: %s\n", SDL_GetError());
+
 		return false;
 	}
 
 	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0)
 	{
+		printf("ModuleAudio::setUp -> ERROR: %s\n", SDL_GetError());
+
 		return false;
 	}
 
@@ -143,8 +166,7 @@ void ModuleAudio::unloadMusic(Mix_Music*& music)
 {
 	if(music)
 	{
-		Mix_FreeMusic(music);
-		music = nullptr;
+		Mix_FreeMusic(music); music = nullptr;
 	}
 }
 
@@ -157,8 +179,7 @@ void ModuleAudio::unloadFx(Mix_Chunk*& fx)
 {
 	if(fx)
 	{
-		Mix_FreeChunk(fx);
-		fx = nullptr;
+		Mix_FreeChunk(fx); fx = nullptr;
 	}
 }
 
